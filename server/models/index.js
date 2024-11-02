@@ -1,43 +1,22 @@
-'use strict';
+const sequelize = require("../configs/sequelize");
+const Account = require("../models/account.model");
+const Admin = require("../models/admin.model");
+const Class = require("../models/class.model");
+const Major = require("../models/major.model");
+const Requirement = require("../models/requirement.model");
+const Student = require("../models/student.model");
+const Subject = require("../models/subject.model");
+const Teacher = require("../models/teacher.model");
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+// Set up relationships
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
+// Sync models with database
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database & tables created!");
   })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+  .catch((error) => {
+    console.error("Unable to create tables:", error);
   });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
