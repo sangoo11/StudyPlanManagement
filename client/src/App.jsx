@@ -8,6 +8,7 @@ import AboutPage from './components/Home/AboutPage';
 import OurTeamsPage from './components/Home/OurTeamsPage';
 import ContactPage from './components/Home/ContactPage';
 import HomePageLayout from './layouts/HomePageLayout'
+import SignUpInLayout from './layouts/SignUpInLayout';
 
 function App() {
   return (
@@ -21,8 +22,10 @@ function App() {
         <Route path='/contact' element={<ContactPage />}></Route>
 
       </Route>
-      <Route path='/signin' element={<SignInPage />}></Route>
-      <Route path='/signup' element={<SignUpPage />}></Route>
+      <Route element={<SignUpInLayout />}>
+        <Route path='/signin' element={<SignInPage />}></Route>
+        <Route path='/signup' element={<SignUpPage />}></Route>
+      </Route>
       <Route path='*' element={<ErrorPage />}></Route>
     </Routes>
   );
