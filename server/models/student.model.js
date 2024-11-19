@@ -7,7 +7,7 @@ const Student = sequelize.define("Student", {
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
+  fullname: {
     type: DataTypes.STRING,
     allowNull: false,
   },
