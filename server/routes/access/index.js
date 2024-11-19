@@ -6,15 +6,14 @@ const AccessController = require("../../controllers/access.controller");
 const router = express.Router();
 
 // Student-site API
-router.post("/customer-site/signup", asyncHandler(AccessController.customerSignUp));
-router.post("/customer-site/login", asyncHandler(AccessController.customerLogin));
+router.post("/customer-site/signup", asyncHandler(AccessController.studentSignUp));
+router.post("/customer-site/login", asyncHandler(AccessController.studentSignIn));
 
 // Teacher-site API
-router.post("/store-site/signup", asyncHandler(AccessController.staffSignUp));
-router.post("/store-site/login", asyncHandler(AccessController.staffLogin));
+router.post("/store-site/signup", asyncHandler(AccessController.teacherSignUp));
+router.post("/store-site/login", asyncHandler(AccessController.teacherSignIn));
 
 // Admin-site API
-router.post("/store-site/signup", asyncHandler(AccessController.staffSignUp));
-router.post("/store-site/login", asyncHandler(AccessController.staffLogin));
+router.post("/store-site/login", asyncHandler(AccessController.adminSignIn));
 
 module.exports = router;
