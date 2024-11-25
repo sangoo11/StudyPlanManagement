@@ -1,10 +1,12 @@
-import bycrypt from 'bcrypt'
-import Student from '../models/student.model'
-import Teacher from '../models/teacher.model'
-import Admin from '../models/admin.model'
-import Account from '../models/account.model'
-import { AuthFailureError } from '../core/error.response'
-import { getInfoData } from '../utils'
+require('dotenv').config();
+const bcrypt = require('bcrypt');
+const Student = require('../models/student.model');
+const Teacher = require('../models/teacher.model');
+const Admin = require('../models/admin.model');
+const Account = require('../models/account.model');
+const { AuthFailureError } = require('../core/error.response');
+const { getInfoData } = require('../utils');
+const jwt = require('jsonwebtoken')
 
 const RoleUser = {
     STUDENT: "student",
@@ -13,6 +15,7 @@ const RoleUser = {
 };
 
 class StudentAccessService {
+    //student signup
     static signUp = async ({
         username,
         password,
@@ -28,7 +31,7 @@ class StudentAccessService {
         }
 
         //hash password
-        const passwordHash = await bycrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(password, 10);
 
         //create new student
         const newStudent = await Student.create({
@@ -37,6 +40,7 @@ class StudentAccessService {
             email,
             major_id: 'CNPM',
             birth: '1/1/2006',
+            role,
             date_begin: '1/1/2006',
         })
 
@@ -62,23 +66,58 @@ class StudentAccessService {
         return {
             code: 201,
             metadata: {
-
+                //create new user object
+                user: getInfoData({
+                    fields: ["username", "password"],
+                    object: newStudentAccount
+                })
             }
         }
-
-
     }
-    static signIn
+
+    //student signin
+    static signIn = async ({
+        email,
+        password,
+    }) => {
+        //check if student exits or not 
+        const foundStudent = await Account.findOne({
+            where: {
+                email: email,
+                accountableType: RoleUser.STUDENT
+            }
+        })
+
+        //if student not exits
+        if (!foundStudent) {
+            throw new AuthFailureError("Student account not found");
+        }
+
+        //check password that hashed
+        const checkPassword = await bcrypt.compare(password, foundStudent.password)
+
+        //if password is wrong 
+        if (!checkPassword) {
+            throw new AuthFailureError("Invalid password");
+        }
+
+        //create acccess token
+        const payload = {
+            email: foundStudent.email,
+        }
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRE
+        })
+
+        return {
+            //create new user object
+            user: getInfoData({
+                fields: ["username", "accountableType"],
+                object: foundStudent,
+            })
+        }
+    }
 }
 
-class TeacherAccessService {
-    static signUp
-    static signIn
-}
-
-class AdminAccessService {
-    static signIn
-}
-
-module.exports = { StudentAccessService, TeacherAccessService, AdminAccessService }
+module.exports = { StudentAccessService }
 
