@@ -110,14 +110,16 @@ class StudentAccessService {
         })
 
         return {
-            //create new user object
+            // create new user object
             user: getInfoData({
                 fields: ["username", "accountableType"],
                 object: foundStudent,
-            })
-        }
-    }
-}
+            }),
+            // return user access token
+            accessToken: accessToken,
+        };
+    };
+};
 
 module.exports = { StudentAccessService }
 
