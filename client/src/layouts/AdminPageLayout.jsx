@@ -1,11 +1,7 @@
 import React from 'react';
+import './AdminPageLayout.css'
 import { Outlet } from 'react-router';
-import StudentsManagePage from '../components/AdminPage/StudentsManagePage/StudentsManagePage'
-import TeachersManagePage from '../components/AdminPage/TeachersManagePage/TeachersManagePage'
-import StatisticsManagePage from '../components/AdminPage/StatisticsManagePage/StatisticsManagePage'
-import ClassroomsManagePage from '../components/AdminPage/ClassroomsManagePage/ClassroomsManagePage'
-import OutputCriteriaManagePage from '../components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage'
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 
 function AdminPageLayout(props) {
@@ -14,18 +10,29 @@ function AdminPageLayout(props) {
     const appDescription = 'The app helps manage student and teacher data, track grades, monitor learning outcomes, and visualize academic progress, ensuring alignment with program standards and goals.';
     const appMail = 'eduorganizer@gmail.com';
 
+    const navLinkStyles = ({ isActive }) => {
+        return {
+            color: isActive ? "#1DA599" : "black",
+            fontWeight: 400,
+            textDecoration: "none",
+            borderBottom: isActive ? "1px solid #1DA599" : "none",
+            paddingBottom: isActive ? "5px" : "0",
+        };
+    };
+
     return (
+
         <div>
             <div className='fixed top-0 right-0 left-0 min-h-[10vh] bg-white border-b border-gray-400'>
                 <div className='flex items-center justify-between min-h-[10vh] h-full px-10'>
                     <h1 className='text-3xl text-black font-bold'>{appName}</h1>
-                    <ul className='flex gap-14 text-black text-xl'>
-                        <li><Link to="/admin/statistic">Statistics</Link></li>
-                        <li><Link to="/admin/students">Students</Link></li>
-                        <li><Link to="/admin/teachers">Teachers</Link></li>
-                        <li><Link to="/admin/outputcriteria">Output Criteria</Link></li>
-                        <li><Link to="/admin/classrooms">Classrooms</Link></li>
-                    </ul>
+                    <nav className='flex gap-14 text-black text-xl'>
+                        <NavLink style={navLinkStyles} to="/admin/statistic">Statistics</NavLink>
+                        <NavLink style={navLinkStyles} to="/admin/students">Students</NavLink>
+                        <NavLink style={navLinkStyles} to="/admin/teachers">Teachers</NavLink>
+                        <NavLink style={navLinkStyles} to="/admin/outputcriteria">Output Criteria</NavLink>
+                        <NavLink style={navLinkStyles} to="/admin/classrooms">Classrooms</NavLink>
+                    </nav>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="#1DA599" className="w-8 h-8" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
