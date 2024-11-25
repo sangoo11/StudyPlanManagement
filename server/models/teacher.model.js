@@ -27,6 +27,10 @@ const Teacher = sequelize.define("Teacher", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   date_begin: {
     type: DataTypes.DATE,
     allowNull: false,
