@@ -7,5 +7,6 @@ const router = express.Router();
 router.use(cors());
 
 router.use("/v1/api/access", require("./access"));
+router.use("/v1/api/student", require("./student"));
 
 module.exports = router;
