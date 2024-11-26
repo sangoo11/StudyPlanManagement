@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router';
+import UserLogo from '../assets/images/userlogo.png';
 
 function StudentPageLayout(props) {
 
@@ -24,19 +25,22 @@ function StudentPageLayout(props) {
 
     return (
         <div>
-            <div className="fixed top-0 right-0 left-0 min-h-[10vh] bg-white items-center justify-center mt-4">
+            <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center mt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-12">
                     <div className='fixed left-0'>
                         <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{appName}</h1>
                     </div>
 
-                    <NavLink style={navLinkStyles} to="/student">{title1}</NavLink>
-                    <NavLink style={navLinkStyles} to="/student/learningresults">{title2}</NavLink>
-                    <NavLink style={navLinkStyles} to="/student/learningoutcome">{title3}</NavLink>
+                    <NavLink style={navLinkStyles} to="/student" end>{title1}</NavLink>
+                    <NavLink style={navLinkStyles} to="/student/results">{title2}</NavLink>
+                    <NavLink style={navLinkStyles} to="/student/outcome">{title3}</NavLink>
 
-                    <div className='fixed right-0'>
-                        <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{studentName}</h1>
-                    </div>
+                    <button className='fixed right-10 space-x-2'>
+                        <div className='fixed w-6 h-6 items-center justify-center'>
+                            <img src={UserLogo}/>
+                        </div>
+                        <h1 className="text-[#1DA599] pl-10">{studentName}</h1>
+                    </button>
                 </div>
             </div>
             <div className='fixed bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
