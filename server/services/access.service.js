@@ -24,7 +24,7 @@ class StudentAccessService {
         phone_number,
         role,
     }) => {
-        //find student email exits or not
+        //check student email exits or not
         const holderStudent = await Account.findOne({ where: { email: email } });
         if (holderStudent) {
             throw new Error("Email already exists");
