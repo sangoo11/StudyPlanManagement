@@ -35,12 +35,12 @@ function App() {
   return (
     <Routes>
       <Route element={<HomePageLayout />}>
-        <Route path='/' element={<HomePage />}></Route>
-        <Route path='/home' element={<HomePage />}></Route>
-        <Route path='/service' element={<ServicePage />}></Route>
-        <Route path='/about' element={<AboutPage />}></Route>
-        <Route path='/ourteams' element={<OurTeamsPage />}></Route>
-        <Route path='/contact' element={<ContactPage />}></Route>
+        <Route path='' element={<HomePage />}></Route>
+        <Route path='home' element={<HomePage />}></Route>
+        <Route path='service' element={<ServicePage />}></Route>
+        <Route path='about' element={<AboutPage />}></Route>
+        <Route path='ourteams' element={<OurTeamsPage />}></Route>
+        <Route path='contact' element={<ContactPage />}></Route>
 
       </Route>
       <Route element={<SignUpInLayout />}>
@@ -55,7 +55,7 @@ function App() {
       </Route>
       <Route element={<TeacherPageLayout />}>
         <Route path='teacher' element={<TeacherPage />}>
-          
+
         </Route>
       </Route>
       <Route element={<AdminPageLayout />}>
