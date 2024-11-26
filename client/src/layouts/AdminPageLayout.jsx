@@ -1,5 +1,4 @@
 import React from 'react';
-import './AdminPageLayout.css'
 import { Outlet } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 
