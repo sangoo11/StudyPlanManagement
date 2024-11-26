@@ -24,7 +24,7 @@ class StudentAccessService {
         phone_number,
         role,
     }) => {
-        //find student email exits or not
+        //check student email exits or not
         const holderStudent = await Account.findOne({ where: { email: email } });
         if (holderStudent) {
             throw new Error("Email already exists");
@@ -110,14 +110,16 @@ class StudentAccessService {
         })
 
         return {
-            //create new user object
+            // create new user object
             user: getInfoData({
                 fields: ["username", "accountableType"],
                 object: foundStudent,
-            })
-        }
-    }
-}
+            }),
+            // return user access token
+            accessToken: accessToken,
+        };
+    };
+};
 
 module.exports = { StudentAccessService }
 
