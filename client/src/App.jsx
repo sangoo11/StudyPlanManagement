@@ -7,16 +7,14 @@ import ServicePage from './components/Home/ServicePage';
 import AboutPage from './components/Home/AboutPage';
 import OurTeamsPage from './components/Home/OurTeamsPage';
 import ContactPage from './components/Home/ContactPage';
-
-// Layouts
 import HomePageLayout from './layouts/HomePageLayout'
 import SignUpInLayout from './layouts/SignUpInLayout';
+import AdminPage from './components/AdminPage/AdminPage'
+
+
 import AdminPageLayout from './layouts/AdminPageLayout';
 import TeacherPageLayout from './layouts/TeacherPageLayout';
 import StudentPageLayout from './layouts/StudentPageLayout';
-
-// Admin
-import AdminPage from './components/AdminPage/AdminPage'
 import StudentsManagePage from './components/AdminPage/StudentsManagePage/StudentsManagePage';
 import StatisticsManagePage from './components/AdminPage/StatisticsManagePage/StatisticsManagePage';
 import TeachersManagePage from './components/AdminPage/TeachersManagePage/TeachersManagePage';
@@ -25,12 +23,12 @@ import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManag
 
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
-import LearningResults from './components/StudentPage/LearningResults'
-import LearningOutcome from './components/StudentPage/LearningOutcome'
+import LearningResults from './components/StudentPage/LearningResults/LearningResults'
+import StudentLearningOutcome from './components/StudentPage/LearningOutcome/LearningOutcome'
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
-import LearningOutcomeManage from './components/TeacherPage/LearningOutcomeManage/LearningOutcomeManage'
+import TeacherLearningOutcome from './components/TeacherPage/LearningOutcome/LearningOutcome';
 
 function App() {
   return (
@@ -49,15 +47,13 @@ function App() {
         <Route path='signup' element={<SignUpPage />}></Route>
       </Route>
       <Route element={<StudentPageLayout />}>
-        <Route path='student' element={<StudentPage />}>
-          <Route path='learningresults' element={<LearningResults />}></Route>
-          <Route path='learningoutcome' element={<LearningOutcome />}></Route>
-        </Route>
+        <Route path='student' element={<StudentPage />}></Route>
+        <Route path='student/results' element={<LearningResults />}></Route>
+        <Route path='student/outcome' element={<StudentLearningOutcome />}></Route>
       </Route>
       <Route element={<TeacherPageLayout />}>
         <Route path='teacher' element={<TeacherPage />}>
-          <Route path='outcome' element={<LearningOutcomeManage />}></Route>
-          <Route path='statistic' element={<StatisticsManagePage />}></Route>
+          <Route path='outcome' element={<TeacherLearningOutcome />}></Route>
         </Route>
       </Route>
       <Route element={<AdminPageLayout />}>
