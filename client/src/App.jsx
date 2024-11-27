@@ -30,6 +30,7 @@ import LearningOutcome from './components/StudentPage/LearningOutcome'
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
+import LearningOutcomeManage from './components/TeacherPage/LearningOutcomeManage/LearningOutcomeManage'
 
 function App() {
   return (
@@ -55,7 +56,8 @@ function App() {
       </Route>
       <Route element={<TeacherPageLayout />}>
         <Route path='teacher' element={<TeacherPage />}>
-
+          <Route path='outcome' element={<LearningOutcomeManage />}></Route>
+          <Route path='statistic' element={<StatisticsManagePage />}></Route>
         </Route>
       </Route>
       <Route element={<AdminPageLayout />}>

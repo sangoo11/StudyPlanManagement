@@ -1,33 +1,24 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/sequelize');
 
-const Subject = sequelize.define('Subject', {
+const LearningOutcome = sequelize.define('LearningOutcome', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
   code: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      min: 1,
+      max: 8
+    }
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  type: {
-    type: DataTypes.ENUM('major', 'industry'),
-    allowNull: false
-  },
-  multiplicationFactor: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
-    validate: {
-      min: 1,
-      max: 2
-    }
   },
   description: {
     type: DataTypes.TEXT
@@ -40,4 +31,4 @@ const Subject = sequelize.define('Subject', {
   timestamps: true
 });
 
-module.exports = Subject;
+module.exports = LearningOutcome;
