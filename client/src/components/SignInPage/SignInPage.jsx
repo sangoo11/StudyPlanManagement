@@ -1,8 +1,8 @@
 import React from "react";
-import Layout from "../../layouts/SignInUpLayout.jsx";
+
 const SignInScreen = () => {
     return (
-        <Layout>
+        <div>
             <div className="flex flex-col">
                 {/* Main Section */}
                 <main className="flex flex-1 items-center justify-center bg-white py-4">
@@ -62,7 +62,7 @@ const SignInScreen = () => {
                     </div>
                 </main>
             </div>
-        </Layout>
+        </div>
     );
 };
 

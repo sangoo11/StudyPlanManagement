@@ -1,10 +1,8 @@
 import React from "react";
-import Layout from "../../layouts/SignInUpLayout.jsx";
-import SignIn from "../SignInPage/SignInPage.jsx";
 
 const SignUpPage = () => {
   return (
-    <Layout>
+    <div>
       <div className="flex flex-col min-h-screen">
         {/* Main Section */}
         <main className="flex flex-1 items-center justify-center bg-white py-4">
@@ -65,7 +63,7 @@ const SignUpPage = () => {
           </div>
         </main>
       </div>
-    </Layout>
+    </div>
   );
 };
 
