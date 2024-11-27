@@ -24,10 +24,11 @@ import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManag
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
-import LearningOutcome from './components/StudentPage/LearningOutcome/LearningOutcome'
+import StudentLearningOutcome from './components/StudentPage/LearningOutcome/LearningOutcome'
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
+import TeacherLearningOutcome from './components/TeacherPage/LearningOutcome/LearningOutcome';
 
 function App() {
   return (
@@ -46,13 +47,14 @@ function App() {
         <Route path='signup' element={<SignUpPage />}></Route>
       </Route>
       <Route element={<StudentPageLayout />}>
-        <Route path='student' element={<StudentPage />}>
-          <Route path='results' element={<LearningResults />}></Route>
-          <Route path='outcome' element={<LearningOutcome />}></Route>
-        </Route>
+        <Route path='student' element={<StudentPage />}></Route>
+        <Route path='student/results' element={<LearningResults />}></Route>
+        <Route path='student/outcome' element={<StudentLearningOutcome />}></Route>
       </Route>
       <Route element={<TeacherPageLayout />}>
-        <Route path='teacher' element={<TeacherPage />}></Route>
+        <Route path='teacher' element={<TeacherPage />}>
+          <Route path='outcome' element={<TeacherLearningOutcome />}></Route>
+        </Route>
       </Route>
       <Route element={<AdminPageLayout />}>
         <Route path='admin' element={<AdminPage />}>
