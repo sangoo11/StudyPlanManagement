@@ -1,4 +1,5 @@
 import React from "react";
+import SignUpPicture from '../../assets/images/signup.png';
 
 const SignUpPage = () => {
   return (
@@ -6,34 +7,34 @@ const SignUpPage = () => {
       <div className="flex flex-col min-h-screen">
         {/* Main Section */}
         <main className="flex flex-1 items-center justify-center bg-white py-4">
-          <div className="flex flex-col md:flex-row items-center max-w-5xl w-full gap-8 px-10">
+          <div className="flex flex-col md:flex-row items-center max-w-[70vw] w-full gap-8 px-10">
             {/* Form Section */}
             <div className="bg-custom-teal text-white p-6 rounded-lg shadow-md max-w-md w-full">
               <h2 className="text-2xl font-semibold text-center mb-4">Create New Account</h2>
               <form className="space-y-4 space-x-2">
                 <div className="flex items-center space-x-5">
                   <label htmlFor="accountName" className="text-sm font-medium w-60 ml-2">Account Name</label>
-                  <input type="text" id="accountName" placeholder="Account Name" className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
+                  <input type="text" id="accountName" placeholder="Account Name" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
                 </div>
                 <div className="flex items-center space-x-4">
                   <label htmlFor="fullName" className="text-sm font-medium w-60">Full Name</label>
-                  <input type="text" id="fullName" placeholder="Full Name" className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
+                  <input type="text" id="fullName" placeholder="Full Name" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
                 </div>
                 <div className="flex items-center space-x-4">
                   <label htmlFor="phone" className="text-sm font-medium w-60">Phone</label>
-                  <input type="tel" id="phone" placeholder="Phone" className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
+                  <input type="tel" id="phone" placeholder="Phone" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
                 </div>
                 <div className="flex items-center space-x-4">
                   <label htmlFor="email" className="text-large font-medium w-60">Email</label>
-                  <input type="email" id="email" placeholder="Email" className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
+                  <input type="email" id="email" placeholder="Email" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
                 </div>
                 <div className="flex items-center space-x-4">
                   <label htmlFor="password" className="text-sm font-medium w-60">Password</label>
-                  <input type="password" id="password" placeholder="Password" className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
+                  <input type="password" id="password" placeholder="Password" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
                 </div>
                 <div className="flex items-center space-x-4">
                   <label htmlFor="confirmPassword" className="text-sm font-medium w-60">Confirm Password</label>
-                  <input type="password" id="confirmPassword" placeholder="Confirm Password" className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
+                  <input type="password" id="confirmPassword" placeholder="Confirm Password" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
                 </div>
                 <button
                   type="submit"
@@ -51,10 +52,10 @@ const SignUpPage = () => {
             </div>
 
             {/* Image Section */}
-            <div className="flex justify-center">
-              <div className="relative w-64 h-64 rounded-full border-4 border-dotted border-yellow-500 overflow-hidden">
+            <div className="flex justify-center pl-[10vw]">
+              <div className="relative w-full h-full overflow-hidden">
                 <img
-                  src="../../../assets/images/student.png"
+                  src={SignUpPicture}
                   alt="Student"
                   className="object-cover w-full h-full"
                 />

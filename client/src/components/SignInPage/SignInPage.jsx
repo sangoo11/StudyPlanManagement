@@ -1,17 +1,19 @@
 import React from "react";
+import SignInPicture from '../../assets/images/signin.png'
+
 
 const SignInScreen = () => {
     return (
         <div>
-            <div className="flex flex-col">
+            <div className="flex flex-col min-h-screen">
                 {/* Main Section */}
-                <main className="flex flex-1 items-center justify-center bg-white py-4">
+                <main className="flex flex-1 items-center justify-center bg-white py-4 h-full w-full">
                     <div className="flex flex-col md:flex-row items-center max-w-5xl w-full gap-8 px-10">
                         {/* Image Section */}
-                        <div className="flex justify-center">
-                            <div className="relative w-64 h-64 rounded-full border-4 border-dotted border-yellow-500 overflow-hidden">
+                        <div className="flex justify-center w-full">
+                            <div className="relative w-1/2 h-1/2  overflow-hidden">
                                 <img
-                                    src="~/public/images/Group2.png"
+                                    src={SignInPicture}
                                     alt="Student"
                                     className="object-cover w-full h-full"
                                 />
