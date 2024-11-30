@@ -1,0 +1,59 @@
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/sequelize');
+const bcrypt = require('bcrypt');
+const Role = require('./role.model');
+
+const User = sequelize.define('User', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+    },
+    username: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true,
+        validate: {
+            notEmpty: true,
+            len: [3, 50]
+        }
+    },
+    email: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true,
+        validate: {
+            isEmail: true
+        }
+    },
+    password: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            len: [6, 255]
+        }
+    },
+    fullName: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    role: {
+        type: DataTypes.ENUM('student', 'teacher', 'admin'),
+        allowNull: false
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    lastLogin: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+}, {
+    timestamps: true,
+});
+
+module.exports = User;
