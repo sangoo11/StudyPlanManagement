@@ -1,125 +1,96 @@
+const User = require('../models/user.model')
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-const Student = require('../models/student.model');
-const Teacher = require('../models/teacher.model');
-const Admin = require('../models/admin.model');
-const Account = require('../models/account.model');
-const { AuthFailureError } = require('../core/error.response');
-const { getInfoData } = require('../utils');
 const jwt = require('jsonwebtoken')
 
-const RoleUser = {
+const { AuthFailureError } = require('../core/error.response');
+const { getInfoData } = require('../utils');
+
+const ROLE = {
     STUDENT: "student",
     TEACHER: "teacher",
     ADMIN: "admin",
 };
 
-class StudentAccessService {
-    //student signup
+class AccessService {
     static signUp = async ({
-        username,
-        password,
         email,
+        password,
         fullname,
         phone_number,
         role,
     }) => {
-        //check student email exits or not
-        const holderStudent = await Account.findOne({ where: { email: email } });
-        if (holderStudent) {
-            throw new Error("Email already exists");
-        }
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) throw new Error('Email already exists');
+        const hashPassword = await bcrypt.hash(password, 10);
 
-        //hash password
-        const passwordHash = await bcrypt.hash(password, 10);
-
-        //create new student
-        const newStudent = await Student.create({
+        const newUser = await User.create({
+            email,
+            password: hashPassword,
             fullname,
             phone_number,
-            email,
-            major_id: 'CNPM',
-            birth: '1/1/2006',
-            role,
-            date_begin: '1/1/2006',
+            role: ROLE.STUDENT,
         })
 
-        //check student is created or not
-        if (!newStudent) {
-            throw new AuthFailureError("Student not created")
-        }
+        if (!newUser) throw new Error('Create student fail')
 
-        //create new account 
-        const newStudentAccount = await Account.create({
-            username,
-            email,
-            password: passwordHash,
-            accountableId: newStudent.id,
-            accountableType: RoleUser.STUDENT,
+        const payload = { userId: newUser.id, email: newUser.email, role: newUser.role }
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRE,
         })
-
-        //check student account create or not
-        if (!newStudentAccount) {
-            throw new AuthFailureError("Account not created");
-        }
 
         return {
             code: 201,
             metadata: {
-                //create new user object
-                user: getInfoData({
-                    fields: ["username", "password"],
-                    object: newStudentAccount
-                })
+                user: {
+                    id: newUser.id,
+                    email: newUser.email,
+                    role: newUser.role,
+                    createdAt: newUser.createdAt,
+                },
+                accessToken,
+                expiresIn: process.env.TOKEN_EXPIRE,
             }
         }
     }
 
-    //student signin
     static signIn = async ({
         email,
-        password,
+        password
     }) => {
-        //check if student exits or not 
-        const foundStudent = await Account.findOne({
-            where: {
-                email: email,
-                accountableType: RoleUser.STUDENT
-            }
-        })
+        const existingUser = await User.findOne({ where: { email } });
+        if (!existingUser) throw new AuthFailureError('Invalid email or password');
 
-        //if student not exits
-        if (!foundStudent) {
-            throw new AuthFailureError("Student account not found");
-        }
+        const checkPassword = await bcrypt.compare(password, existingUser.password);
+        if (!checkPassword) throw new AuthFailureError('Invalid email or password');
 
-        //check password that hashed
-        const checkPassword = await bcrypt.compare(password, foundStudent.password)
-
-        //if password is wrong 
-        if (!checkPassword) {
-            throw new AuthFailureError("Invalid password");
-        }
-
-        //create acccess token
         const payload = {
-            email: foundStudent.email,
+            userId: existingUser.id,
+            email: existingUser.email,
+            role: existingUser.role
         }
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRE
-        })
+
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRE,
+        });
 
         return {
-            // create new user object
-            user: getInfoData({
-                fields: ["username", "accountableType"],
-                object: foundStudent,
-            }),
-            // return user access token
-            accessToken: accessToken,
-        };
-    };
-};
+            code: 201,
+            metadata: {
+                user: {
+                    id: existingUser.id,
+                    email: existingUser.email,
+                    role: existingUser.role,
+                    createdAt: existingUser.createdAt,
+                },
+                accessToken,
+                expiresIn: process.env.TOKEN_EXPIRE,
+            },
+        }
+    }
 
-module.exports = { StudentAccessService }
+}
+
+
+module.exports = { AccessService, ROLE }
 
