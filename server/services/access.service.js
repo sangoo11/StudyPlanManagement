@@ -1,19 +1,96 @@
+const User = require('../models/user.model')
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-const { AuthFailureError } = require('../core/error.response');
-const { getInfoData } = require('../utils');
 const jwt = require('jsonwebtoken')
 
-const RoleUser = {
+const { AuthFailureError } = require('../core/error.response');
+const { getInfoData } = require('../utils');
+
+const ROLE = {
     STUDENT: "student",
     TEACHER: "teacher",
     ADMIN: "admin",
 };
 
-class StudentAccessService {
+class AccessService {
+    static signUp = async ({
+        email,
+        password,
+        fullname,
+        phone_number,
+        role,
+    }) => {
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) throw new Error('Email already exists');
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await User.create({
+            email,
+            password: hashPassword,
+            fullname,
+            phone_number,
+            role: ROLE.STUDENT,
+        })
+
+        if (!newUser) throw new Error('Create student fail')
+
+        const payload = { userId: newUser.id, email: newUser.email, role: newUser.role }
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRE,
+        })
+
+        return {
+            code: 201,
+            metadata: {
+                user: {
+                    id: newUser.id,
+                    email: newUser.email,
+                    role: newUser.role,
+                    createdAt: newUser.createdAt,
+                },
+                accessToken,
+                expiresIn: process.env.TOKEN_EXPIRE,
+            }
+        }
+    }
+
+    static signIn = async ({
+        email,
+        password
+    }) => {
+        const existingUser = await User.findOne({ where: { email } });
+        if (!existingUser) throw new AuthFailureError('Invalid email or password');
+
+        const checkPassword = await bcrypt.compare(password, existingUser.password);
+        if (!checkPassword) throw new AuthFailureError('Invalid email or password');
+
+        const payload = {
+            userId: existingUser.id,
+            email: existingUser.email,
+            role: existingUser.role
+        }
+
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRE,
+        });
+
+        return {
+            code: 201,
+            metadata: {
+                user: {
+                    id: existingUser.id,
+                    email: existingUser.email,
+                    role: existingUser.role,
+                    createdAt: existingUser.createdAt,
+                },
+                accessToken,
+                expiresIn: process.env.TOKEN_EXPIRE,
+            },
+        }
+    }
 
 }
 
 
-module.exports = { StudentAccessService, RoleUser }
+module.exports = { AccessService, ROLE }
 
