@@ -1,5 +1,4 @@
 const { CREATED } = require('../core/success.response');
-const Student = require('../models/student.model');
 const StudentService = require('../services/student.service')
 
 class StudentController {
