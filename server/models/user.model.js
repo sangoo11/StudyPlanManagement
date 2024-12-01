@@ -10,15 +10,6 @@ const User = sequelize.define('User', {
         autoIncrement: true,
         allowNull: false
     },
-    username: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        unique: true,
-        validate: {
-            notEmpty: true,
-            len: [3, 50]
-        }
-    },
     email: {
         type: DataTypes.STRING(255),
         allowNull: false,
