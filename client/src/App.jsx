@@ -11,12 +11,13 @@ import HomePageLayout from './layouts/HomePageLayout'
 import SignUpInLayout from './layouts/SignUpInLayout';
 import AdminPage from './components/AdminPage/AdminPage'
 
-
+// Layout
 import AdminPageLayout from './layouts/AdminPageLayout';
 import TeacherPageLayout from './layouts/TeacherPageLayout';
 import StudentPageLayout from './layouts/StudentPageLayout';
+
+// Admin
 import StudentsManagePage from './components/AdminPage/StudentsManagePage/StudentsManagePage';
-import StatisticsManagePage from './components/AdminPage/StatisticsManagePage/StatisticsManagePage';
 import TeachersManagePage from './components/AdminPage/TeachersManagePage/TeachersManagePage';
 import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
@@ -28,7 +29,7 @@ import StudentLearningOutcome from './components/StudentPage/LearningOutcome/Lea
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
-import TeacherLearningOutcome from './components/TeacherPage/LearningOutcome/LearningOutcome';
+import TeacherStatistics from './components/TeacherPage/Statistics/Statistics'
 
 function App() {
   return (
@@ -52,18 +53,15 @@ function App() {
         <Route path='student/outcome' element={<StudentLearningOutcome />}></Route>
       </Route>
       <Route element={<TeacherPageLayout />}>
-        <Route path='teacher' element={<TeacherPage />}>
-          <Route path='outcome' element={<TeacherLearningOutcome />}></Route>
-        </Route>
+        <Route path='teacher' element={<TeacherPage />}> </Route>
+        <Route path='teacher/statistics' element={<TeacherStatistics />}></Route>
       </Route>
       <Route element={<AdminPageLayout />}>
-        <Route path='admin' element={<AdminPage />}>
-          <Route path='statistic' element={<StatisticsManagePage />}></Route>
-          <Route path='students' element={<StudentsManagePage />}></Route>
-          <Route path='teachers' element={<TeachersManagePage />}></Route>
-          <Route path='outputcriteria' element={<ClassroomsManagePage />}></Route>
-          <Route path='classrooms' element={<OutputCriteriaManagePage />}></Route>
-        </Route>
+        <Route path='admin' element={<AdminPage />}></Route>
+        <Route path='admin/students' element={<StudentsManagePage />}></Route>
+        <Route path='admin/teachers' element={<TeachersManagePage />}></Route>
+        <Route path='admin/outputcriteria' element={<OutputCriteriaManagePage />}></Route>
+        <Route path='admin/classrooms' element={<ClassroomsManagePage />}></Route>
       </Route>
 
       <Route path='*' element={<ErrorPage />}></Route>
