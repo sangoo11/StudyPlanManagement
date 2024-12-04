@@ -7,9 +7,9 @@ function TeacherPageLayout(props) {
 
     const appName = 'EduOrganizer';
     const appMail = 'eduorganizer@gmail.com';
-    const teacherName = 'Teacher Name';
+    const studentName = 'Student Name';
     const title1 = 'Home Page';
-    const title2 = 'Learning Outcomes';
+    const title2 = 'Statistics';
 
     const navLinkStyles = ({ isActive }) => {
         return {
@@ -23,26 +23,31 @@ function TeacherPageLayout(props) {
 
 
     return (
-
-        <div>
-            <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center mt-4 border-b border-[#1DA599]">
+        <div> 
+            {/* Header */}
+            <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-12">
                     <div className='fixed left-0'>
                         <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{appName}</h1>
                     </div>
 
                     <NavLink style={navLinkStyles} to="/teacher" end>{title1}</NavLink>
-                    <NavLink style={navLinkStyles} to="/teacher/outcome">{title2}</NavLink>
+                    <NavLink style={navLinkStyles} to="/teacher/statistics">{title2}</NavLink>
 
                     <button className='fixed right-10 space-x-2'>
                         <div className='fixed w-6 h-6 items-center justify-center'>
-                            <img src={UserLogo} />
+                            <img src={UserLogo}/>
                         </div>
-                        <h1 className="text-[#1DA599] pl-10">{teacherName}</h1>
+                        <h1 className="text-[#1DA599] pl-10">{studentName}</h1>
                     </button>
                 </div>
             </div>
-            <div className='fixed bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
+            
+            {/* Content */}
+            <Outlet />
+
+            {/* Footer */}
+            <div className='flex-reverse bottom-0 right-0 left-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
                 <div className='grid grid-cols-[2fr_1fr_1fr_1fr_1fr] h-full min-h-[10vh] text-white'>
                     <div className='w-4/6'>
                         <h3 className='text-xl font-semibold mb-2'>{appName}</h3>
@@ -78,7 +83,6 @@ function TeacherPageLayout(props) {
                     </div>
                 </div>
             </div>
-            <Outlet />
         </div>
     );
 }
