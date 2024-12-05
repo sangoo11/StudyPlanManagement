@@ -2,7 +2,7 @@ import React from 'react';
 import ShowMore from '../../../assets/images/showmore.png';
 import ShowLess from '../../../assets/images/showless.png';
 
-function LearningResults(props) {
+function StudentLearningResults(props) {
 
     // State to track visibility for semesters
     const [visibleSemesters, setVisibleSemesters] = React.useState({});
@@ -125,4 +125,4 @@ function LearningResults(props) {
     );
 }
 
-export default LearningResults;
+export default StudentLearningResults;
