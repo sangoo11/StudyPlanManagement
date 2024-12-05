@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, INTEGER } = require('sequelize');
 const sequelize = require('../configs/sequelize');
 
 const Subject = sequelize.define('Subject', {
@@ -21,12 +21,21 @@ const Subject = sequelize.define('Subject', {
     allowNull: false
   },
   multiplicationFactor: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.DECIMAL(5, 2),
     allowNull: false,
     defaultValue: 1,
     validate: {
       min: 0,
       max: 1
+    }
+  },
+  credit: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+    validate: {
+      min: 1,
+      max: 20
     }
   },
   description: {
@@ -37,7 +46,7 @@ const Subject = sequelize.define('Subject', {
     defaultValue: true
   }
 }, {
-  timestamps: true
+  timestamps: false
 });
 
 module.exports = Subject;

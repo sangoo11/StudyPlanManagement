@@ -12,10 +12,10 @@ const SignUpPage = () => {
             <div className="bg-custom-teal text-white p-6 rounded-lg shadow-md max-w-md w-full">
               <h2 className="text-2xl font-semibold text-center mb-4">Create New Account</h2>
               <form className="space-y-4 space-x-2">
-                <div className="flex items-center space-x-5">
+                {/* <div className="flex items-center space-x-5">
                   <label htmlFor="accountName" className="text-sm font-medium w-60 ml-2">Account Name</label>
                   <input type="text" id="accountName" placeholder="Account Name" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
-                </div>
+                </div> */}
                 <div className="flex items-center space-x-4">
                   <label htmlFor="fullName" className="text-sm font-medium w-60">Full Name</label>
                   <input type="text" id="fullName" placeholder="Full Name" className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" />
@@ -47,7 +47,6 @@ const SignUpPage = () => {
                     Already have an account ?
                   </a>
                 </div>
-
               </form>
             </div>
 
