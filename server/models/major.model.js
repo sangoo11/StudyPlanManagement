@@ -19,7 +19,7 @@ const Major = sequelize.define("Major", {
         allowNull: false,
     },
 }, {
-    timestamps: true,
+    timestamps: false
 })
 
 module.exports = Major

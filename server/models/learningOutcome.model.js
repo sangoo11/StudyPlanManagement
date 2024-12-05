@@ -8,7 +8,7 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
     primaryKey: true
   },
   code: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     validate: {
@@ -28,7 +28,7 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
     defaultValue: true
   }
 }, {
-  timestamps: true
+  timestamps: false
 });
 
-module.exports = LearningOutcome;
+module.exports = LearningOutcome; 
