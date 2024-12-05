@@ -1,13 +1,39 @@
-class StudentService {
-    static getStudentList = async () => {
-        const studentList = await Student.findAll()
+const { Enrollment, Subject, User } = require('../models')
+const { sql, Op } = require('@sequelize/core');
 
-        if (!studentList) {
-            return {
-                throw: new Error("Student list not found")
+class StudentService {
+    static getCreditLearn = async ({ studentId }) => {
+        const student = await User.findOne({
+            where: {
+                id: studentId,
+                role: 'student'
             }
-        }
-        return studentList
+        });
+        if (!student) throw new Error('Student not found or student role is invalid');
+
+        const enrollments = await Enrollment.findAll({
+            where: {
+                studentId: studentId,
+                status: 'completed'
+            },
+            attributes: ['courseId'],
+        });
+
+        const courseIds = enrollments.map(enrollment => enrollment.courseId)
+
+        const subjects = await Subject.findAll({
+            where: {
+                id: courseIds
+            },
+            attributes: ['credit']
+        });
+
+        const totalCredits = subjects.reduce((accumulator, subject) => accumulator + subject.credit, 0);
+
+        return {
+            studentId: studentId,
+            creditLearned: totalCredits,
+        };
     }
 }
 

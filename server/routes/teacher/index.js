@@ -2,11 +2,11 @@
 
 const express = require("express");
 const asyncHandler = require("../../helpers/asyncHandler")
-const StudentController = require("../../controllers/student.controller")
+const TeacherController = require("../../controllers/teacher.controller")
 const router = express.Router();
 const { authUser } = require('../../authServer')
 
 //Student crud
-router.get("/get-credit-learn", asyncHandler(StudentController.getCreditLearn))
+router.post("/grade", asyncHandler(TeacherController.grade))
 
 module.exports = router;

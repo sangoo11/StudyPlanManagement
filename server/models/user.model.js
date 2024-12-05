@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/sequelize');
 const bcrypt = require('bcrypt');
-const Role = require('./role.model');
 
 const User = sequelize.define('User', {
     id: {
@@ -44,7 +43,7 @@ const User = sequelize.define('User', {
         allowNull: true
     },
 }, {
-    timestamps: true,
+    timestamps: false
 });
 
 module.exports = User;

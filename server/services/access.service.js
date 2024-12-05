@@ -41,16 +41,13 @@ class AccessService {
 
         return {
             code: 201,
-            metadata: {
-                user: {
-                    id: newUser.id,
-                    email: newUser.email,
-                    role: newUser.role,
-                    createdAt: newUser.createdAt,
-                },
-                accessToken,
-                expiresIn: process.env.TOKEN_EXPIRE,
-            }
+            user: {
+                id: newUser.id,
+                email: newUser.email,
+                role: newUser.role,
+            },
+            accessToken,
+            expiresIn: process.env.TOKEN_EXPIRE,
         }
     }
 
@@ -76,16 +73,14 @@ class AccessService {
 
         return {
             code: 201,
-            metadata: {
-                user: {
-                    id: existingUser.id,
-                    email: existingUser.email,
-                    role: existingUser.role,
-                    createdAt: existingUser.createdAt,
-                },
-                accessToken,
-                expiresIn: process.env.TOKEN_EXPIRE,
+            user: {
+                id: existingUser.id,
+                email: existingUser.email,
+                role: existingUser.role,
+                createdAt: existingUser.createdAt,
             },
+            accessToken,
+            expiresIn: process.env.TOKEN_EXPIRE,
         }
     }
 
