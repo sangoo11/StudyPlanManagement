@@ -11,12 +11,13 @@ import HomePageLayout from './layouts/HomePageLayout'
 import SignUpInLayout from './layouts/SignUpInLayout';
 import AdminPage from './components/AdminPage/AdminPage'
 
-
+// Layout
 import AdminPageLayout from './layouts/AdminPageLayout';
 import TeacherPageLayout from './layouts/TeacherPageLayout';
 import StudentPageLayout from './layouts/StudentPageLayout';
+
+// Admin
 import StudentsManagePage from './components/AdminPage/StudentsManagePage/StudentsManagePage';
-import StatisticsManagePage from './components/AdminPage/StatisticsManagePage/StatisticsManagePage';
 import TeachersManagePage from './components/AdminPage/TeachersManagePage/TeachersManagePage';
 import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
@@ -30,6 +31,7 @@ import StudentLearningOutcome from './components/StudentPage/LearningOutcome/Lea
 import TeacherPage from './components/TeacherPage/TeacherPage'
 import TeacherLearningOutcome from './components/TeacherPage/LearningOutcome/LearningOutcome';
 import ProtectedRouteUser from './components/ProtectedRoute/ProtectedRouteUser';
+import TeacherStatistics from './components/TeacherPage/Statistics/Statistics'
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn');
@@ -63,13 +65,12 @@ function App() {
             <Route path='results' element={<LearningResults />}></Route>
             <Route path='outcome' element={<StudentLearningOutcome />}></Route>
           </Route>
-
         </Route>
         {/* Teacher */}
-        <Route element={<TeacherPageLayout />}>
-          <Route path='teacher' element={<TeacherPage />}>
-            <Route path='outcome' element={<TeacherLearningOutcome />}></Route>
-          </Route>
+      <Route element={<TeacherPageLayout />}>
+        <Route path='teacher' element={<TeacherPage />}> </Route>
+        <Route path='teacher/statistics' element={<TeacherStatistics />}></Route>
+      </Route>
         </Route>
         {/* Admin */}
         <Route element={<AdminPageLayout />}>
