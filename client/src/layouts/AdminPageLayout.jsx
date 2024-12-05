@@ -26,7 +26,7 @@ function AdminPageLayout(props) {
 
 
     return (
-        <div> 
+        <div>
             {/* Header */}
             <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-12">
@@ -42,18 +42,18 @@ function AdminPageLayout(props) {
 
                     <button className='fixed right-10 space-x-2'>
                         <div className='fixed w-6 h-6 items-center justify-center'>
-                            <img src={UserLogo}/>
+                            <img src={UserLogo} />
                         </div>
                         <h1 className="text-[#1DA599] pl-10">{studentName}</h1>
                     </button>
                 </div>
             </div>
-            
+
             {/* Content */}
             <Outlet />
 
             {/* Footer */}
-            <div className='flex-reverse bottom-0 right-0 left-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
+            <div className='bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
                 <div className='grid grid-cols-[2fr_1fr_1fr_1fr_1fr] h-full min-h-[10vh] text-white'>
                     <div className='w-4/6'>
                         <h3 className='text-xl font-semibold mb-2'>{appName}</h3>

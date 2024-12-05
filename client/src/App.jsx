@@ -22,6 +22,7 @@ import TeachersManagePage from './components/AdminPage/TeachersManagePage/Teache
 import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
 
+
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
@@ -29,14 +30,12 @@ import StudentLearningOutcome from './components/StudentPage/LearningOutcome/Lea
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
-import TeacherLearningOutcome from './components/TeacherPage/LearningOutcome/LearningOutcome';
 import ProtectedRouteUser from './components/ProtectedRoute/ProtectedRouteUser';
 import TeacherStatistics from './components/TeacherPage/Statistics/Statistics'
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn');
   const userType = localStorage.getItem('userType');
-
 
   return (
     <Routes>
@@ -62,29 +61,31 @@ function App() {
         {/* Student */}
         <Route element={<StudentPageLayout />}>
           <Route path='student/:studentId' element={<StudentPage />}>
-            <Route path='results' element={<LearningResults />}></Route>
-            <Route path='outcome' element={<StudentLearningOutcome />}></Route>
+            <Route path='results' element={<LearningResults />} />
+            <Route path='outcome' element={<StudentLearningOutcome />} />
           </Route>
         </Route>
+
         {/* Teacher */}
-      <Route element={<TeacherPageLayout />}>
-        <Route path='teacher' element={<TeacherPage />}> </Route>
-        <Route path='teacher/statistics' element={<TeacherStatistics />}></Route>
-      </Route>
+        <Route element={<TeacherPageLayout />}>
+          <Route path='teacher' element={<TeacherPage />} />
+          <Route path='teacher/statistics' element={<TeacherStatistics />} />
         </Route>
+
         {/* Admin */}
         <Route element={<AdminPageLayout />}>
           <Route path='admin' element={<AdminPage />}>
-            <Route path='statistic' element={<StatisticsManagePage />}></Route>
-            <Route path='students' element={<StudentsManagePage />}></Route>
-            <Route path='teachers' element={<TeachersManagePage />}></Route>
-            <Route path='outputcriteria' element={<ClassroomsManagePage />}></Route>
-            <Route path='classrooms' element={<OutputCriteriaManagePage />}></Route>
+            {/* <Route path='statistic' element={<StatisticsManagePage />} /> */}
+            <Route path='students' element={<StudentsManagePage />} />
+            <Route path='teachers' element={<TeachersManagePage />} />
+            <Route path='outputcriteria' element={<ClassroomsManagePage />} />
+            <Route path='classrooms' element={<OutputCriteriaManagePage />} />
           </Route>
         </Route>
       </Route>
 
-      <Route path='*' element={<ErrorPage />}></Route>
+      {/* Catch-all route for undefined paths */}
+      <Route path='*' element={<ErrorPage />} />
     </Routes>
   );
 }
