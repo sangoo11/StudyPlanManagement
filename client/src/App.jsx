@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import SignInPage from './components/SignInPage/SignInPage'
 import SignUpPage from './components/SignUpPage/SignUpPage'
 import ErrorPage from './components/ErrorPage/ErrorPage'
@@ -29,40 +29,57 @@ import StudentLearningOutcome from './components/StudentPage/LearningOutcome/Lea
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
 import TeacherLearningOutcome from './components/TeacherPage/LearningOutcome/LearningOutcome';
+import ProtectedRouteUser from './components/ProtectedRoute/ProtectedRouteUser';
 
 function App() {
+  const isLoggedIn = localStorage.getItem('loggedIn');
+  const userType = localStorage.getItem('userType');
+
+
   return (
     <Routes>
-      <Route element={<HomePageLayout />}>
-        <Route path='' element={<HomePage />}></Route>
-        <Route path='home' element={<HomePage />}></Route>
-        <Route path='service' element={<ServicePage />}></Route>
-        <Route path='about' element={<AboutPage />}></Route>
-        <Route path='ourteams' element={<OurTeamsPage />}></Route>
-        <Route path='contact' element={<ContactPage />}></Route>
+      {!isLoggedIn && (
+        <>
+          <Route element={<HomePageLayout />}>
+            <Route path='' element={<HomePage />} />
+            <Route path='home' element={<HomePage />} />
+            <Route path='service' element={<ServicePage />} />
+            <Route path='about' element={<AboutPage />} />
+            <Route path='ourteams' element={<OurTeamsPage />} />
+            <Route path='contact' element={<ContactPage />} />
+          </Route>
+          <Route element={<SignUpInLayout />}>
+            <Route path='signin' element={<SignInPage />} />
+            <Route path='signup' element={<SignUpPage />} />
+          </Route>
+        </>
+      )}
 
-      </Route>
-      <Route element={<SignUpInLayout />}>
-        <Route path='signin' element={<SignInPage />}></Route>
-        <Route path='signup' element={<SignUpPage />}></Route>
-      </Route>
-      <Route element={<StudentPageLayout />}>
-        <Route path='student' element={<StudentPage />}></Route>
-        <Route path='student/results' element={<LearningResults />}></Route>
-        <Route path='student/outcome' element={<StudentLearningOutcome />}></Route>
-      </Route>
-      <Route element={<TeacherPageLayout />}>
-        <Route path='teacher' element={<TeacherPage />}>
-          <Route path='outcome' element={<TeacherLearningOutcome />}></Route>
+      {/* ProtectedRouteUser */}
+      <Route element={<ProtectedRouteUser />}>
+        {/* Student */}
+        <Route element={<StudentPageLayout />}>
+          <Route path='student/:studentId' element={<StudentPage />}>
+            <Route path='results' element={<LearningResults />}></Route>
+            <Route path='outcome' element={<StudentLearningOutcome />}></Route>
+          </Route>
+
         </Route>
-      </Route>
-      <Route element={<AdminPageLayout />}>
-        <Route path='admin' element={<AdminPage />}>
-          <Route path='statistic' element={<StatisticsManagePage />}></Route>
-          <Route path='students' element={<StudentsManagePage />}></Route>
-          <Route path='teachers' element={<TeachersManagePage />}></Route>
-          <Route path='outputcriteria' element={<ClassroomsManagePage />}></Route>
-          <Route path='classrooms' element={<OutputCriteriaManagePage />}></Route>
+        {/* Teacher */}
+        <Route element={<TeacherPageLayout />}>
+          <Route path='teacher' element={<TeacherPage />}>
+            <Route path='outcome' element={<TeacherLearningOutcome />}></Route>
+          </Route>
+        </Route>
+        {/* Admin */}
+        <Route element={<AdminPageLayout />}>
+          <Route path='admin' element={<AdminPage />}>
+            <Route path='statistic' element={<StatisticsManagePage />}></Route>
+            <Route path='students' element={<StudentsManagePage />}></Route>
+            <Route path='teachers' element={<TeachersManagePage />}></Route>
+            <Route path='outputcriteria' element={<ClassroomsManagePage />}></Route>
+            <Route path='classrooms' element={<OutputCriteriaManagePage />}></Route>
+          </Route>
         </Route>
       </Route>
 

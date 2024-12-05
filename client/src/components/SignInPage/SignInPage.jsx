@@ -1,68 +1,83 @@
-import React from "react";
+import React, { useState } from "react";
 import SignInPicture from '../../assets/images/signin.png'
-
+import axios from 'axios'
+import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
 
 const SignInScreen = () => {
+    const navigate = useNavigate();
+
+    const [inputValue, setInputValue] = useState({
+        email: "test@gmail.com",
+        password: "test"
+    });
+
+    //function control value of inputbox
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setInputValue(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const handleSignIn = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/v1/api/access/signin', {
+                email: inputValue.email,
+                password: inputValue.password
+            });
+
+            // Storing the access token and role in localStorage
+            const accessToken = response.data.metadata.accessToken;
+
+            const decoded = jwtDecode(accessToken)
+
+
+            const userRole = response.data.metadata.user.role || decoded.userRole;
+            const userId = response.data.metadata.user.id || decoded.userId;
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('role', userRole);
+            localStorage.setItem('loggedIn', true);
+
+            //Show res to user
+            console.log('Signin successful:', response.data);
+
+            // Navigating based on the role 
+            navigate(`/${userRole}`);
+        } catch (error) {
+            console.error('Error during signin:', error.response ? error.response.data : error.message);
+        }
+    };
+
     return (
-        <div>
-            <div className="flex flex-col min-h-screen">
-                {/* Main Section */}
-                <main className="flex flex-1 items-center justify-center bg-white py-4 h-full w-full">
-                    <div className="flex flex-col md:flex-row items-center max-w-5xl w-full gap-8 px-10">
-                        {/* Image Section */}
-                        <div className="flex justify-center w-full">
-                            <div className="relative w-1/2 h-1/2  overflow-hidden">
-                                <img
-                                    src={SignInPicture}
-                                    alt="Student"
-                                    className="object-cover w-full h-full"
-                                />
-                            </div>
-                        </div>
-                        {/* Form Section */}
-                        <div className="bg-custom-teal text-white p-6 rounded-lg shadow-md max-w-md w-full">
-                            <h2 className="text-2xl font-semibold text-center mb-4">Sign in</h2>
-                            <form className="space-y-4">
-                                <div>
-                                    <label
-                                        htmlFor="email"
-                                        className="block text-sm font-medium mb-1"
-                                    >
-                                        Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        placeholder="Email"
-                                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="password"
-                                        className="block text-sm font-medium mb-1"
-                                    >
-                                        Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        placeholder="Password"
-                                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                                    />
-                                </div>
-                                <div className="text-center space-y-1">
-                                    <a href="/" className="text-sm text-white underline">Forgot password?</a>
-                                    <div className="text-sm">or</div>
-                                    <a href="/signup" className="text-sm text-white underline">Create an account?</a>
-                                </div>
-                                <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded transition ">
-                                    Sign in
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </main>
+        <div className="flex mt-[12vh]">
+            <div className="flex-1">
+                <img className="w-full" src={SignInPicture}></img>
+            </div>
+            <div className="flex-1 m-auto flex flex-col items-center">
+                <div className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-2 items-center text-center p-8 text-white rounded-md">
+                    <h2 className="w-full text-4xl font-semibold mb-3">Sign in</h2>
+                    <input type="text"
+                        placeholder="Email"
+                        onChange={(event) => handleChange(event)}
+                        value={inputValue.email}
+                        name="email"
+                        className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3"
+                    />
+                    <input type="password"
+                        placeholder="Password"
+                        onChange={(event) => handleChange(event)}
+                        value={inputValue.password}
+                        name="password"
+                        className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3"
+                    />
+                    <button className="w-full">Forgot Password</button>
+                    <p className="w-full">Or</p>
+                    <button onClick={() => navigate('/signup')} className="w-full">Create an account</button>
+                    <button onClick={handleSignIn} className="w-fit text-[#1DA599] font-semibold py-1 px-3 bg-white rounded mt-2">Sign In</button>
+                </div>
             </div>
         </div>
     );

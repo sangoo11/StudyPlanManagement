@@ -3,10 +3,10 @@ const StudentService = require('../services/student.service')
 
 class StudentController {
     //handle get student list 
-    getStudentList = async (req, res, next) => {
+    getCreditLearn = async (req, res, next) => {
         new CREATED({
-            message: "GET all students OK",
-            metadata: await StudentService.getStudentList(),
+            message: "GET Student Credits OK",
+            metadata: await StudentService.getCreditLearn(req.body),
             options: {
                 limit: 10,
             }
