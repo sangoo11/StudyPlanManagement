@@ -98,7 +98,7 @@ const SignUpPage = () => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("role", userRole);
       localStorage.setItem("loggedIn", true);
-navigate("/signin"); // Navigate to signin after signup
+      navigate("/signin"); // Navigate to signin after signup
     } catch (error) {
       setErrors({
         apiError: error.response
