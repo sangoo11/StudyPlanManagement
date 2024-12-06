@@ -62,11 +62,14 @@ class TeacherService {
             return value.toFixed(precision);
         }
 
+        let finalGrade;
         const grades = studentGrades.map(studentGrades => studentGrades.score);
 
-        const finalGrade = formatToDecimal((calculateAverage(grades)), 2);
+        if (grades === null)
+            finalGrade = score
+        else
+            finalGrade = formatToDecimal((calculateAverage(grades)), 2);
 
-        console.log(grades, finalGrade)
         const updateFinalScore = await Enrollment.update(
             { finalGrade: finalGrade },
             {
