@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import First from '../../assets/images/stage_1.jpg';
 import Second from '../../assets/images/stage_2.jpg';
 import Third from '../../assets/images/stage_3.jpg';
@@ -17,6 +18,25 @@ function StudentPage(props) {
 
     const totalResult1 = 8.0;
     const content1 = 'Tiêu chí 1 : ' + totalResult1;
+
+    // State to store the credits learned
+    const [creditLearned, setCreditLearned] = useState(null);
+    const [error, setError] = useState(null);
+
+    // Fetch student credits using Axios
+    useEffect(() => {
+        axios
+            .get('http://localhost:8080/v1/api/student/get-credit-learn')
+            .then((response) => {
+                console.log('API Response:', response.data);
+                setCreditLearned(response.data.metadata?.creditLearned || 0);
+            })
+            .catch((error) => {
+                console.error('Error fetching credits:', error);
+                setError(error.response?.data?.message || error.message);
+            });
+    }, []);
+
 
     // State to manage visibility for multiple sections
     const [visibleSections, setVisibleSections] = React.useState({});
@@ -65,7 +85,14 @@ function StudentPage(props) {
             <div className="flex flex-col text-black w-1/2 h-auto  items-center justify-center">
                 <h1 className="text-3xl font-bold pb-[2vh]">{titleRightHandSide}</h1>
                 <div className='flex flex-col left-0 top-0 w-[40vw] h-auto pb-[4vh]'>
-                    <h2 className='text-2xl pb-[2vh]'>{content} </h2>
+                    {error ? (
+                        <h2 className="text-2xl text-red-500">Error: {error}</h2>
+                        ) : (
+                        <h2 className="text-2xl pb-[2vh]">
+                            Số tín chỉ đăng ký: {creditLearned !== null ? creditLearned : 'Loading...'}
+                        </h2>
+                        )
+                    }
 
                     {/* Tieu chi 1 */}
                     {sections.map((section) => (

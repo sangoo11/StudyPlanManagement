@@ -34,7 +34,8 @@ function AdminPageLayout(props) {
                         <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{appName}</h1>
                     </div>
 
-                    <NavLink style={navLinkStyles} to="/admin" end>{title1}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin" end></NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/statistics" >{title1}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/students">{title2}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/teachers">{title3}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/outputcriteria">{title4}</NavLink>
