@@ -8,13 +8,12 @@ const Enrollment = sequelize.define('Enrollment', {
         primaryKey: true
     },
     finalGrade: {
-        type: DataTypes.DECIMAL(5, 2),
-        allowNull: false,
+        type: DataTypes.DECIMAL(4, 2),
+        allowNull: true,
         validate: {
             min: 0,
             max: 10,
         },
-        defaultValue: 5
     },
     status: {
         type: DataTypes.ENUM('inProgress', 'completed'),

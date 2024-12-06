@@ -39,49 +39,41 @@ function App() {
 
   return (
     <Routes>
-      {!isLoggedIn && (
-        <>
-          <Route element={<HomePageLayout />}>
-            <Route path='' element={<HomePage />} />
-            <Route path='home' element={<HomePage />} />
-            <Route path='service' element={<ServicePage />} />
-            <Route path='about' element={<AboutPage />} />
-            <Route path='ourteams' element={<OurTeamsPage />} />
-            <Route path='contact' element={<ContactPage />} />
-          </Route>
-          <Route element={<SignUpInLayout />}>
-            <Route path='signin' element={<SignInPage />} />
-            <Route path='signup' element={<SignUpPage />} />
-          </Route>
-        </>
-      )}
+      {/* Public Routes */}
+      <Route element={<HomePageLayout />}>
+        <Route path='' element={<HomePage />} />
+        <Route path='home' element={<HomePage />} />
+        <Route path='service' element={<ServicePage />} />
+        <Route path='about' element={<AboutPage />} />
+        <Route path='ourteams' element={<OurTeamsPage />} />
+        <Route path='contact' element={<ContactPage />} />
+      </Route>
 
-      {/* ProtectedRouteUser */}
-      <Route element={<ProtectedRouteUser />}>
-        {/* Student */}
-        <Route element={<StudentPageLayout />}>
-          <Route path='student/:studentId' element={<StudentPage />}>
-            <Route path='results' element={<LearningResults />} />
-            <Route path='outcome' element={<StudentLearningOutcome />} />
-          </Route>
-        </Route>
+      <Route element={<SignUpInLayout />}>
+        <Route path='signin' element={<SignInPage />} />
+        <Route path='signup' element={<SignUpPage />} />
+      </Route>
 
-        {/* Teacher */}
-        <Route element={<TeacherPageLayout />}>
-          <Route path='teacher' element={<TeacherPage />} />
-          <Route path='teacher/statistics' element={<TeacherStatistics />} />
+      {/* Protected Routes */}
+      <Route element={<StudentPageLayout />}>
+        <Route path='student' element={<StudentPage />}>
+          <Route path='results' element={<LearningResults />} />
+          <Route path='outcome' element={<StudentLearningOutcome />} />
         </Route>
+      </Route>
 
-        {/* Admin */}
-        <Route element={<AdminPageLayout />}>
-          <Route path='admin' element={<AdminPage />}>
-            {/* <Route path='statistic' element={<StatisticsManagePage />} /> */}
-            <Route path='students' element={<StudentsManagePage />} />
-            <Route path='teachers' element={<TeachersManagePage />} />
-            <Route path='outputcriteria' element={<ClassroomsManagePage />} />
-            <Route path='classrooms' element={<OutputCriteriaManagePage />} />
-          </Route>
+      <Route element={<TeacherPageLayout />}>
+        <Route path='teacher' element={<TeacherPage />}>
+
+          <Route path='statistics' element={<TeacherStatistics />} />
         </Route>
+      </Route>
+
+      <Route path='admin' element={<AdminPageLayout />}>
+        <Route path='students' element={<StudentsManagePage />} />
+        <Route path='teachers' element={<TeachersManagePage />} />
+        <Route path='classrooms' element={<ClassroomsManagePage />} />
+        <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
       </Route>
 
       {/* Catch-all route for undefined paths */}
