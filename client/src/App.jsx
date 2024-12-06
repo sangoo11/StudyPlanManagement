@@ -21,6 +21,7 @@ import StudentsManagePage from './components/AdminPage/StudentsManagePage/Studen
 import TeachersManagePage from './components/AdminPage/TeachersManagePage/TeachersManagePage';
 import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
+import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage';
 
 
 // Student 
@@ -56,10 +57,9 @@ function App() {
 
       {/* Protected Routes */}
       <Route element={<StudentPageLayout />}>
-        <Route path='student' element={<StudentPage />}>
-          <Route path='results' element={<LearningResults />} />
-          <Route path='outcome' element={<StudentLearningOutcome />} />
-        </Route>
+        <Route path='student' element={<StudentPage />}></Route>
+        <Route path='student/results' element={<LearningResults />} />
+        <Route path='student/outcome' element={<StudentLearningOutcome />} />
       </Route>
 
       <Route element={<TeacherPageLayout />}>
@@ -70,6 +70,7 @@ function App() {
       </Route>
 
       <Route path='admin' element={<AdminPageLayout />}>
+        <Route path='statistics' element={<StatisticsPage />} />
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
         <Route path='classrooms' element={<ClassroomsManagePage />} />
