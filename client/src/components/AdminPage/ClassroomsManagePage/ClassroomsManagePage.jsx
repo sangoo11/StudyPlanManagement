@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';  // Import axios
 import AddButton from '../../../assets/images/addButton.png';
 import minusButton from '../../../assets/images/minusButton.png';
 
 function ClassroomManagement() {
+    // State to store the fetched courses
+    const [courses, setCourses] = useState([]);
+
+    // State to track the selected filters
+    const [selectedSemester, setSelectedSemester] = useState('HK1 2024-2025');
+    const [selectedClass, setSelectedClass] = useState('A');
+
+    // Fetch the courses from the API using axios
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/v1/api/admin/get-all-course');
+                console.log('API Response:', response.data); // Log the response to check its structure
+                
+                // Ensure that the data is an array
+                const courseData = Array.isArray(response.data) ? response.data : [];
+                setCourses(courseData); // Set the course data only if it's an array
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+                setCourses([]); // Set courses to an empty array on error
+            }
+        };
+
+        fetchCourses();
+    }, []); // Empty dependency array ensures the effect runs only once after the first render
+
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             {/* Page Title */}
@@ -14,12 +41,15 @@ function ClassroomManagement() {
 
             {/* Filters Section */}
             <div className="flex flex-col mb-8">
-                {/* Dropdown Filters */}
                 <div className="flex flex-col space-x-6">
                     {/* Time Period Dropdown */}
                     <div className='flex mb-4 items-center ml-6'>
                         <label className="flex text-gray-700 font-medium mr-4">Thời điểm:</label>
-                        <select className="flex px-4 py-2 border rounded-md bg-white">
+                        <select
+                            className="flex px-4 py-2 border rounded-md bg-white"
+                            value={selectedSemester}
+                            onChange={(e) => setSelectedSemester(e.target.value)}
+                        >
                             <option>HK1 2024-2025</option>
                             <option>HK2 2024-2025</option>
                         </select>
@@ -28,7 +58,11 @@ function ClassroomManagement() {
                     {/* Class Dropdown */}
                     <div className='flex items-center'>
                         <label className="flex text-gray-700 font-medium mr-10">Mã lớp:</label>
-                        <select className="flex px-4 py-2 border rounded-md bg-white">
+                        <select
+                            className="flex px-4 py-2 border rounded-md bg-white"
+                            value={selectedClass}
+                            onChange={(e) => setSelectedClass(e.target.value)}
+                        >
                             <option>A</option>
                             <option>B</option>
                             <option>C</option>
@@ -43,7 +77,6 @@ function ClassroomManagement() {
                             <button className="ml-4 text-[#1DA599] underline">Chỉnh sửa</button>
                         </span>
                     </div>
-
                 </div>
             </div>
 
@@ -56,31 +89,38 @@ function ClassroomManagement() {
                 />
             </div>
 
-            {/* Student Cards */}
+            {/* Course List */}
             <div className="space-y-4">
-                {[1, 2, 3].map((_, index) => (
-                    <div
-                        key={index}
-                        className="flex items-center justify-between p-4 border rounded-lg bg-white"
-                    >
-                        <div className="flex items-center space-x-4">
-                            {/* Avatar */}
-                            <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
-                                <span className="text-gray-500">👤</span>
+                {Array.isArray(courses) && courses.length > 0 ? (
+                    courses
+                        .filter(course => course.semester === selectedSemester) // Check the filter condition
+                        .map((course, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center justify-between p-4 border rounded-lg bg-white"
+                            >
+                                <div className="flex items-center space-x-4">
+                                    {/* Avatar */}
+                                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
+                                        <span className="text-gray-500">👤</span>
+                                    </div>
+                                    {/* Course Info */}
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-700">Mã lớp: {course.name}</p>
+                                        <p className="text-sm text-gray-700">Học kỳ: {course.semester}</p>
+                                        <p className="text-sm text-gray-700">Năm học: {course.year}</p>
+                                        <p className="text-sm text-gray-700">Trạng thái: {course.active ? 'Active' : 'Inactive'}</p>
+                                    </div>
+                                </div>
+                                {/* Action Button */}
+                                <button className="w-8 h-8 flex items-center justify-center bg-[#1DA599] text-white rounded-full">
+                                    <img src={AddButton} alt="" />
+                                </button>
                             </div>
-                            {/* Student Info */}
-                            <div>
-                                <p className="text-sm font-medium text-gray-700">Mã số sinh viên:</p>
-                                <p className="text-sm text-gray-700">Họ và tên:</p>
-                                <p className="text-sm text-gray-700">Tình trạng:</p>
-                            </div>
-                        </div>
-                        {/* Action Button */}
-                        <button className="w-8 h-8 flex items-center justify-center bg-[#1DA599] text-white rounded-full">
-                            <img src={AddButton} alt="" />
-                        </button>
-                    </div>
-                ))}
+                        ))
+                ) : (
+                    <p>No courses found for the selected semester.</p>
+                )}
             </div>
 
             {/* Add and Edit Buttons */}
