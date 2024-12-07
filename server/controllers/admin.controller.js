@@ -79,6 +79,27 @@ class AdminController {
         }).send(res);
     };
 
+    // Handle activate user
+    activateUser = async (req, res, next) => {
+        new CREATED({
+            message: 'User activated successfully',
+            metadata: await AdminService.activateUser(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
+
+    // Handle deactivate user
+    deactivateUser = async (req, res, next) => {
+        new CREATED({
+            message: 'User deactivated successfully',
+            metadata: await AdminService.deactivateUser(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 }
 
 module.exports = new AdminController();
