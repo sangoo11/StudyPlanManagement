@@ -100,6 +100,28 @@ class AdminController {
             },
         }).send(res);
     };
+
+    // Handle getUserById
+    getUserById = async (req, res, next) => {
+        new CREATED({
+            message: "GetUserById Success",
+            metadata: await AdminService.getUserById(req.params.userId),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
+
+    //Handle delete user
+    deleteUser = async (req, res, next) => {
+        new CREATED({
+            message: "DeleteUser Success",
+            metadata: await AdminService.deleteUser(req.params.userId),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 }
 
 module.exports = new AdminController();
