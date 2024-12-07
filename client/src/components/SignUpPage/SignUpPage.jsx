@@ -98,7 +98,8 @@ const SignUpPage = () => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("role", userRole);
       localStorage.setItem("loggedIn", true);
-      navigate("/signin"); // Navigate to signin after signup
+
+      navigate(`/${userRole}`); // Navigate to signin after signup
     } catch (error) {
       setErrors({
         apiError: error.response
@@ -130,17 +131,17 @@ const SignUpPage = () => {
                 <div className='flex flex-col'>
                   <div className="flex items-center space-x-4">
                     <label htmlFor="fullname" className="text-sm font-medium w-60 ml-2">Full Name</label>
-                    <input type="text" 
+                    <input type="text"
                       name="fullname"
-                      onChange={(event) => handleChange(event)}  
-                      value={inputValue.fullname} 
-                      placeholder="Full Name" 
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" 
-                    /> 
+                      onChange={(event) => handleChange(event)}
+                      value={inputValue.fullname}
+                      placeholder="Full Name"
+                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
+                    />
                   </div>
 
                   <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                      {errors.fullname && (
+                    {errors.fullname && (
                       <p className="text-green-200 text-sm font-bold">{errors.fullname}</p>
                     )}
                   </div>
@@ -149,36 +150,36 @@ const SignUpPage = () => {
                 <div className='flex flex-col'>
                   <div className="flex items-center space-x-3">
                     <label htmlFor="fullname" className="text-sm font-medium w-60 ml-2">Email</label>
-                    <input type="text" 
+                    <input type="text"
                       name="email"
-                      onChange={(event) => handleChange(event)}  
-                      value={inputValue.email} 
-                      placeholder="Email" 
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" 
-                    /> 
+                      onChange={(event) => handleChange(event)}
+                      value={inputValue.email}
+                      placeholder="Email"
+                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
+                    />
                   </div>
 
                   <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                      {errors.email && (
+                    {errors.email && (
                       <p className="text-green-200 text-sm font-bold">{errors.email}</p>
                     )}
                   </div>
                 </div>
 
                 <div className='flex flex-col'>
-<div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-4">
                     <label htmlFor="phone" className="text-sm font-medium w-60">Phone</label>
-                    <input type="tel" 
+                    <input type="tel"
                       name="phone"
-                      onChange={(event) => handleChange(event)}  
-                      value={inputValue.phone} 
-                      placeholder="Phone" 
+                      onChange={(event) => handleChange(event)}
+                      value={inputValue.phone}
+                      placeholder="Phone"
                       className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    /> 
+                    />
                   </div>
 
                   <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                      {errors.phone && (
+                    {errors.phone && (
                       <p className="text-green-200 text-sm font-bold">{errors.phone}</p>
                     )}
                   </div>
@@ -186,18 +187,18 @@ const SignUpPage = () => {
 
                 <div className='flex flex-col'>
                   <div className="flex items-center space-x-4">
-                  <label htmlFor="password" className="text-sm font-medium w-60">Password</label>
-                    <input type="password" 
-                      name="password" 
-                      onChange={(event) => handleChange(event)}  
-                      value={inputValue.password} 
-                      placeholder="Password" 
+                    <label htmlFor="password" className="text-sm font-medium w-60">Password</label>
+                    <input type="password"
+                      name="password"
+                      onChange={(event) => handleChange(event)}
+                      value={inputValue.password}
+                      placeholder="Password"
                       className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    /> 
+                    />
                   </div>
 
                   <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                      {errors.password && (
+                    {errors.password && (
                       <p className="text-green-200 text-sm font-bold">{errors.password}</p>
                     )}
                   </div>
@@ -211,12 +212,12 @@ const SignUpPage = () => {
                       onChange={(event) => handleChange(event)}
                       value={inputValue.confirmPassword}
                       placeholder="Confirm Password"
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black" 
-                    /> 
+                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
+                    />
                   </div>
 
                   <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                      {errors.confirmPassword && (
+                    {errors.confirmPassword && (
                       <p className="text-green-200 text-sm font-bold">{errors.confirmPassword}</p>
                     )}
                   </div>
@@ -228,7 +229,7 @@ const SignUpPage = () => {
                 >
                   Sign up
                 </button>
-<div className="text-center space-y-1">
+                <div className="text-center space-y-1">
                   <a href="/signin" className="text-sm text-white underline">
                     Already have an account ?
                   </a>
