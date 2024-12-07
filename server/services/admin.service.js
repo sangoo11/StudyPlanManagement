@@ -105,6 +105,71 @@ class AdminService {
             }
         }
     }
+
+    static deleteStudentFromCourse = async ({
+        studentId,
+        courseId,
+    }) => {
+        const student = await User.findOne({
+            where: {
+                id: studentId,
+                role: ROLE.STUDENT,
+            }
+        });
+        if (!student) throw new Error('Student not found or student role is invalid');
+
+        const course = await Course.findByPk(courseId);
+        if (!course) throw new Error('Course not found');
+
+        const enrollment = await Enrollment.findOne({
+            where: {
+                studentId,
+                courseId,
+                // status: 'inProgress', 
+            },
+        });
+        if (!enrollment) throw new Error('No active enrollment found for this student in the course');
+
+        const deletedEnrollment = await enrollment.destroy();
+        if (!deletedEnrollment) throw new Error('Error deleting enrollment');
+
+        return {
+            code: 200,
+            message: 'Student successfully removed from the course',
+        };
+    }
+
+    static deleteTeacherFromCourse = async ({
+        teacherId,
+        courseId,
+    }) => {
+        const teacher = await User.findOne({
+            where: {
+                id: teacherId,
+                role: ROLE.TEACHER,
+            }
+        });
+        if (!teacher) throw new Error('Teacher not found or teacher role is invalid');
+
+        const course = await Course.findByPk(courseId);
+        if (!course) throw new Error('Course not found');
+
+        if (course.teacherId != parseInt(teacherId)) {
+            throw new Error('Teacher is not assigned to this course');
+        }
+
+        const courseUpdate = await Course.update(
+            { teacherId: null },
+            { where: { id: courseId } }
+        );
+        if (!courseUpdate[0]) throw new Error('Error removing teacher from course');
+
+        return {
+            code: 200,
+            message: 'Teacher successfully removed from the course',
+        };
+    }
+
 }
 
 module.exports = { AdminService }

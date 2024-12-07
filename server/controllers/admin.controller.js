@@ -57,6 +57,28 @@ class AdminController {
         }).send(res);
     };
 
+    //handle delete student
+    deleteStudentFromCourse = async (req, res, next) => {
+        new CREATED({
+            message: 'Delete Student Success',
+            metadata: await AdminService.deleteStudentFromCourse(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
+
+    //handle delete teacher
+    deleteTeacherFromCourse = async (req, res, next) => {
+        new CREATED({
+            message: 'Delete Teacher Success',
+            metadata: await AdminService.deleteTeacherFromCourse(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
+
 }
 
 module.exports = new AdminController();
