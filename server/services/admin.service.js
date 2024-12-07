@@ -1,6 +1,5 @@
 const { ROLE } = require('../services/access.service');
 const { Enrollment, User, Course } = require('../models');
-const { where } = require('sequelize');
 
 class AdminService {
     static getAllCourse = async () => {
@@ -170,6 +169,19 @@ class AdminService {
         };
     }
 
+    static getUserById = async (userId) => {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) throw new Error("User not found");
+        return user;
+    }
+
+    static deleteUser = async (userId) => {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) throw new Error("User not found");
+        await user.destroy();
+        return { message: "User deleted successfully" };
+    }
+
     static activateUser = async (userId) => {
         const user = await User.findOne({ where: { id: userId } });
         if (!user) throw new Error("User not found");
@@ -189,26 +201,4 @@ class AdminService {
 }
 
 module.exports = { AdminService }
-
-const express = require('express');
-const router = express.Router();
-const asyncHandler = require("../../helpers/asyncHandler");
-const AdminController = require('../../controllers/admin.controller');
-
-router.get('/get-all-course', asyncHandler(AdminController.getAllCourse));
-
-router.get('/get-all-student', asyncHandler(AdminController.getAllStudent));
-
-router.get('/get-all-teacher', asyncHandler(AdminController.getAllTeacher));
-
-router.post('/enroll-student', asyncHandler(AdminController.enrollStudentInCourse));
-router.post('/enroll-teacher', asyncHandler(AdminController.enrollTeacherInCourse));
-
-router.delete('/delete-student-course', asyncHandler(AdminController.deleteStudentFromCourse));
-router.delete('/delete-teacher-course', asyncHandler(AdminController.deleteTeacherFromCourse));
-
-router.post('/activate-user', asyncHandler(AdminController.activateUser));
-router.post('/deactivate-user', asyncHandler(AdminController.deactivateUser));
-
-module.exports = router;
 
