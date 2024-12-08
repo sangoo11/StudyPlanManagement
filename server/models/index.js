@@ -91,149 +91,149 @@ sequelize
   .sync({ alter: true }).then(() => {
     console.log("Database & tables created!");
 
-    try {
-      // Create Users
-      User.create({
-        email: 'admin@example.com',
-        password: 'admin123',
-        fullName: 'System Admin',
-        role: 'admin',
-        isActive: true
-      });
+    // try {
+    //   // Create Users
+    //   User.create({
+    //     email: 'admin@example.com',
+    //     password: 'admin123',
+    //     fullName: 'System Admin',
+    //     role: 'admin',
+    //     isActive: true
+    //   });
 
-      User.bulkCreate([
-        {
-          email: 'teacher1@example.com',
-          password: 'teacher123',
-          fullName: 'John Smith',
-          role: 'teacher',
-          isActive: true
-        },
-        {
-          email: 'teacher2@example.com',
-          password: 'teacher123',
-          fullName: 'Jane Doe',
-          role: 'teacher',
-          isActive: true
-        }
-      ]);
+    //   User.bulkCreate([
+    //     {
+    //       email: 'teacher1@example.com',
+    //       password: 'teacher123',
+    //       fullName: 'John Smith',
+    //       role: 'teacher',
+    //       isActive: true
+    //     },
+    //     {
+    //       email: 'teacher2@example.com',
+    //       password: 'teacher123',
+    //       fullName: 'Jane Doe',
+    //       role: 'teacher',
+    //       isActive: true
+    //     }
+    //   ]);
 
-      User.bulkCreate([
-        {
-          email: 'student1@example.com',
-          password: 'student123',
-          fullName: 'Alice Johnson',
-          role: 'student',
-          isActive: true
-        },
-        {
-          email: 'student2@example.com',
-          password: 'student123',
-          fullName: 'Bob Wilson',
-          role: 'student',
-          isActive: true
-        },
-        {
-          email: 'student3@example.com',
-          password: 'student123',
-          fullName: 'Charlie Brown',
-          role: 'student',
-          isActive: true
-        }
-      ]);
+    //   User.bulkCreate([
+    //     {
+    //       email: 'student1@example.com',
+    //       password: 'student123',
+    //       fullName: 'Alice Johnson',
+    //       role: 'student',
+    //       isActive: true
+    //     },
+    //     {
+    //       email: 'student2@example.com',
+    //       password: 'student123',
+    //       fullName: 'Bob Wilson',
+    //       role: 'student',
+    //       isActive: true
+    //     },
+    //     {
+    //       email: 'student3@example.com',
+    //       password: 'student123',
+    //       fullName: 'Charlie Brown',
+    //       role: 'student',
+    //       isActive: true
+    //     }
+    //   ]);
 
-      // Create Subjects
-      Subject.bulkCreate([
-        {
-          code: 'CS101',
-          name: 'Introduction to Programming',
-          type: 'major',
-          multiplicationFactor: 0.5,
-          description: 'Basic programming concepts'
-        },
-        {
-          code: 'CS102',
-          name: 'Data Structures',
-          type: 'major',
-          multiplicationFactor: 1,
-          description: 'Fundamental data structures'
-        }
-      ]);
+    //   // Create Subjects
+    //   Subject.bulkCreate([
+    //     {
+    //       code: 'CS101',
+    //       name: 'Introduction to Programming',
+    //       type: 'major',
+    //       multiplicationFactor: 0.5,
+    //       description: 'Basic programming concepts'
+    //     },
+    //     {
+    //       code: 'CS102',
+    //       name: 'Data Structures',
+    //       type: 'major',
+    //       multiplicationFactor: 1,
+    //       description: 'Fundamental data structures'
+    //     }
+    //   ]);
 
-      // Create Learning Outcomes
-      LearningOutcome.bulkCreate([
-        {
-          "code": "LO1",
-          "name": "Problem Solving",
-          "description": "Ability to solve complex programming problems"
-        },
-        {
-          "code": "LO2",
-          "name": "Foundational Knowledge",
-          "description": "Mastering foundational and some specialized knowledge."
-        },
-        {
-          "code": "LO3",
-          "name": "Critical Thinking and Creative Solutions",
-          "description": "Surveying documents, reasoning, analyzing, and proposing creative solutions to problems, awareness of the need for lifelong learning."
-        },
-        {
-          "code": "LO4",
-          "name": "Design and Implementation",
-          "description": "Designing, implementing, and evaluating systems and solutions.."
-        },
-        {
-          "code": "LO5",
-          "name": "Communication and Collaboration",
-          "description": "Communicating, collaborating, and connecting effectively with individuals and teams in specific professional contexts."
-        },
-        {
-          "code": "LO6",
-          "name": "Professional Communication in Foreign Languages",
-          "description": "Communicating in professional settings, reading and understanding documents, and presenting industry solutions in foreign languages."
-        },
-        {
-          "code": "LO7",
-          "name": "Leadership and Management",
-          "description": "Understanding leadership and management."
-        },
-        {
-          "code": "LO8",
-          "name": "Professional Responsibility and Ethics",
-          "description": "Understanding professional responsibility, respecting the law, and ethical values."
-        }
-      ]);
+    //   // Create Learning Outcomes
+    //   LearningOutcome.bulkCreate([
+    //     {
+    //       "code": "LO1",
+    //       "name": "Problem Solving",
+    //       "description": "Ability to solve complex programming problems"
+    //     },
+    //     {
+    //       "code": "LO2",
+    //       "name": "Foundational Knowledge",
+    //       "description": "Mastering foundational and some specialized knowledge."
+    //     },
+    //     {
+    //       "code": "LO3",
+    //       "name": "Critical Thinking and Creative Solutions",
+    //       "description": "Surveying documents, reasoning, analyzing, and proposing creative solutions to problems, awareness of the need for lifelong learning."
+    //     },
+    //     {
+    //       "code": "LO4",
+    //       "name": "Design and Implementation",
+    //       "description": "Designing, implementing, and evaluating systems and solutions.."
+    //     },
+    //     {
+    //       "code": "LO5",
+    //       "name": "Communication and Collaboration",
+    //       "description": "Communicating, collaborating, and connecting effectively with individuals and teams in specific professional contexts."
+    //     },
+    //     {
+    //       "code": "LO6",
+    //       "name": "Professional Communication in Foreign Languages",
+    //       "description": "Communicating in professional settings, reading and understanding documents, and presenting industry solutions in foreign languages."
+    //     },
+    //     {
+    //       "code": "LO7",
+    //       "name": "Leadership and Management",
+    //       "description": "Understanding leadership and management."
+    //     },
+    //     {
+    //       "code": "LO8",
+    //       "name": "Professional Responsibility and Ethics",
+    //       "description": "Understanding professional responsibility, respecting the law, and ethical values."
+    //     }
+    //   ]);
 
-      // Create Courses
-      Course.bulkCreate([
-        {
-          name: 'CS101.P11',
-          semester: '1',
-          year: '2023-2024',
-          active: true
-        },
-        {
-          name: 'CS101.P12',
-          semester: '2',
-          year: '2023-2024',
-          active: true
-        },
-        {
-          name: 'CS102.A15',
-          semester: '2',
-          year: '2023-2024',
-          active: true
-        }
-      ]);
+    //   // Create Courses
+    //   Course.bulkCreate([
+    //     {
+    //       name: 'CS101.P11',
+    //       semester: '1',
+    //       year: '2023-2024',
+    //       active: true
+    //     },
+    //     {
+    //       name: 'CS101.P12',
+    //       semester: '2',
+    //       year: '2023-2024',
+    //       active: true
+    //     },
+    //     {
+    //       name: 'CS102.A15',
+    //       semester: '2',
+    //       year: '2023-2024',
+    //       active: true
+    //     }
+    //   ]);
 
-      // Create LearningOutcomeScore
+    //   // Create LearningOutcomeScore
 
-      //Create Enrollment (Student)
+    //   //Create Enrollment (Student)
 
-      console.log(("Create data success"));
-    } catch (err) {
-      console.log("Create data failed", err);
-    }
+    //   console.log(("Create data success"));
+    // } catch (err) {
+    //   console.log("Create data failed", err);
+    // }
   })
   .catch((error) => {
     console.error("Unable to create tables:", error);
