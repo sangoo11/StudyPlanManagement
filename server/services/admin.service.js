@@ -2,12 +2,6 @@ const { ROLE } = require('../services/access.service');
 const { Enrollment, User, Course } = require('../models');
 
 class AdminService {
-    static getAllCourse = async () => {
-        const courseList = await Course.findAll();
-        if (!courseList) throw new Error("Course list not found");
-        return courseList
-    }
-
     static getAllTeacher = async () => {
         const teacherList = await User.findAll({ where: { role: ROLE.TEACHER } });
         if (!teacherList) throw new Error("Teacher list not found");
@@ -172,11 +166,18 @@ class AdminService {
     static getUserById = async (userId) => {
         const user = await User.findOne({ where: { id: userId } });
         if (!user) throw new Error("User not found");
-        return user;
+        return {
+            code: 201,
+            user: user
+        };
     }
 
     static deleteUser = async (userId) => {
-        const user = await User.findOne({ where: { id: userId } });
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
         if (!user) throw new Error("User not found");
         await user.destroy();
         return { message: "User deleted successfully" };
@@ -187,7 +188,10 @@ class AdminService {
         if (!user) throw new Error("User not found");
         user.isActive = true;
         await user.save();
-        return user;
+        return {
+            code: 201,
+            message: "User activated successfully"
+        };
     }
 
     static deactivateUser = async (userId) => {
@@ -195,7 +199,10 @@ class AdminService {
         if (!user) throw new Error("User not found");
         user.isActive = false;
         await user.save();
-        return user;
+        return {
+            code: 201,
+            message: "User deactivated successfully"
+        };
     }
 
 }
