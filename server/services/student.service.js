@@ -35,6 +35,8 @@ class StudentService {
             creditLearned: totalCredits,
         };
     }
+
+    static
 }
 
 module.exports = StudentService;

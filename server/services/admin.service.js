@@ -1,6 +1,5 @@
 const { ROLE } = require('../services/access.service');
 const { Enrollment, User, Course } = require('../models');
-const { where } = require('sequelize');
 
 class AdminService {
     static getAllCourse = async () => {
@@ -170,6 +169,19 @@ class AdminService {
         };
     }
 
+    static getUserById = async (userId) => {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) throw new Error("User not found");
+        return user;
+    }
+
+    static deleteUser = async (userId) => {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) throw new Error("User not found");
+        await user.destroy();
+        return { message: "User deleted successfully" };
+    }
+
     static activateUser = async (userId) => {
         const user = await User.findOne({ where: { id: userId } });
         if (!user) throw new Error("User not found");
@@ -189,5 +201,4 @@ class AdminService {
 }
 
 module.exports = { AdminService }
-
 
