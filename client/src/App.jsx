@@ -22,6 +22,7 @@ import TeachersManagePage from './components/AdminPage/TeachersManagePage/Teache
 import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
 import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage';
+import AddClassroom from './components/AdminPage/ClassroomsManagePage/AddClassroom';
 
 
 // Student 
@@ -74,6 +75,7 @@ function App() {
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
         <Route path='classrooms' element={<ClassroomsManagePage />} />
+        <Route path='classrooms/addclassroom' element={<AddClassroom />} />
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
       </Route>
 
