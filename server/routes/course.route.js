@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const asyncHandler = require("../../helpers/asyncHandler");
-const CourseController = require('../../controllers/course.controller');
+const asyncHandler = require("../helpers/asyncHandler");
+const CourseController = require('../controllers/course.controller');
 
 // Create course route
 router.post('/create-new-course', asyncHandler(CourseController.createCourse));

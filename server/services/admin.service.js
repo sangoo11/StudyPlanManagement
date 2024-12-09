@@ -126,10 +126,7 @@ class AdminService {
         const deletedEnrollment = await enrollment.destroy();
         if (!deletedEnrollment) throw new Error('Error deleting enrollment');
 
-        return {
-            code: 200,
-            message: 'Student successfully removed from the course',
-        };
+        return 'Student successfully removed from the course'
     }
 
     static deleteTeacherFromCourse = async ({
@@ -157,10 +154,7 @@ class AdminService {
         );
         if (!courseUpdate[0]) throw new Error('Error removing teacher from course');
 
-        return {
-            code: 200,
-            message: 'Teacher successfully removed from the course',
-        };
+        return 'Teacher successfully removed from the course'
     }
 
     static getUserById = async (userId) => {

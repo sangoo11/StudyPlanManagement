@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const asyncHandler = require("../../helpers/asyncHandler");
-const AdminController = require('../../controllers/admin.controller')
+const asyncHandler = require("../helpers/asyncHandler");
+const AdminController = require('../controllers/admin.controller')
 
 router.get('/get-all-course', asyncHandler(AdminController.getAllCourse));
 router.get('/get-all-student', asyncHandler(AdminController.getAllStudent));
