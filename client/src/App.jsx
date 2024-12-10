@@ -22,8 +22,10 @@ import TeachersManagePage from './components/AdminPage/TeachersManagePage/Teache
 import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
 import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage';
+//Modal
 import AddClassroom from './components/AdminPage/ClassroomsManagePage/AddClassroom';
-
+import DeleteClassroom from './components/AdminPage/ClassroomsManagePage/DeleteClassroom';
+import EditClassroom from './components/AdminPage/ClassroomsManagePage/EditClassroom'; 
 
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
@@ -75,9 +77,13 @@ function App() {
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
         <Route path='classrooms' element={<ClassroomsManagePage />} />
-        <Route path='classrooms/addclassroom' element={<AddClassroom />} />
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
       </Route>
+
+      {/* Admin modals */}
+      <Route path='admin/classrooms/addclassroom' element={<AddClassroom />} />
+      <Route path='admin/classrooms/deleteclassroom' element={<DeleteClassroom />} />
+      <Route path='admin/classrooms/editclassroom' element={<EditClassroom />} />
 
       {/* Catch-all route for undefined paths */}
       <Route path='*' element={<ErrorPage />} />

@@ -27,14 +27,19 @@ class AccessService {
         const newUser = await User.create({
             email,
             password: hashPassword,
-            fullname,
+            fullName: fullname,
             phone_number,
             role: ROLE.STUDENT,
         })
 
         if (!newUser) throw new Error('Create student fail')
 
-        const payload = { userId: newUser.id, email: newUser.email, role: newUser.role }
+        const payload = { 
+            userId: newUser.id, 
+            email: newUser.email, 
+            role: newUser.role, 
+            fullName: newUser.fullName
+        }
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRE,
         })
@@ -43,6 +48,7 @@ class AccessService {
             code: 201,
             user: {
                 id: newUser.id,
+                fullName: newUser.fullname,
                 email: newUser.email,
                 role: newUser.role,
             },
