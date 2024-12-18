@@ -20,11 +20,10 @@ function EditClassroom({ course, onClose, onEditSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Course ID:", course.id);
-        console.log("Form Data:", formData);
         try {
+            console.log("Sending request for course ID:", course.id);
             const response = await axios.put(
-                `http://localhost:8080/v1/api/edit-course/${course.id}`,
+                `http://localhost:8080/v1/api/course/edit-course/${course.id}`,
                 formData
             );
             console.log("Course updated:", response.data);
@@ -73,7 +72,7 @@ function EditClassroom({ course, onClose, onEditSuccess }) {
                             className="w-full px-4 py-2 border rounded"
                         />
                     </div>
-                    
+
                     <div>
                         <label className="block text-gray-700">Teacher ID:</label>
                         <input
