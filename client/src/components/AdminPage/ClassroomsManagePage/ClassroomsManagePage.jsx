@@ -26,36 +26,45 @@ function ClassroomManagement() {
             try {
                 const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
                 console.log('API Response:', response.data);
-
-                // Extract course list and normalize data
-                const courseList = response.data?.metadata?.courseList || [];
+    
+                // Extract and normalize courses directly from metadata
+                const courseList = response.data?.metadata || []; // Access metadata directly
                 const normalizedCourses = courseList.map(course => ({
                     ...course,
-                    year: String(course.year),
+                    year: String(course.year), // Ensure year is a string
                 }));
-                setCourses(normalizedCourses);
+                setCourses(normalizedCourses); // Set the courses in state
             } catch (error) {
                 console.error('Error fetching courses:', error);
-                setCourses([]);
+                setCourses([]); // Handle error by resetting the courses
             }
         };
-
+    
         fetchCourses();
     }, []);
+    
 
     // Filter courses based on selected year and semester
-    const filteredCourses = courses.filter(
-        (course) => course.year === selectedYear && course.semester === selectedSemester
-    );
+    const filteredCourses = courses.filter(course => {
+        const match = course.year === selectedYear && course.semester === selectedSemester;
+        return match;
+    });
+    
 
     const handleDeleteSuccess = (deletedId) => {
         setCourses(courses.filter(course => course.id !== deletedId));
     };
 
+    // Edit Success Handler
     const handleEditSuccess = (updatedCourse) => {
         setCourses(courses.map(course =>
             course.id === updatedCourse.id ? updatedCourse : course
         ));
+        setEditClassroomVisible(false);
+    };
+
+    const handleCloseEdit = () => {
+        setEditClassroomVisible(false);
     };
 
     return (
@@ -77,6 +86,7 @@ function ClassroomManagement() {
                     >
                         <option value="2023-2024">2023-2024</option>
                         <option value="2024-2025">2024-2025</option>
+                        <option value="2025-2026">2025-2026</option>
                     </select>
                 </div>
 
@@ -114,28 +124,14 @@ function ClassroomManagement() {
                 </div>
             </div>
 
-            {/* Search Input */}
-            <div className="mb-8">
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-full px-4 py-2 border rounded-md"
-                />
-            </div>
-
             {/* Course List */}
             <div className="space-y-4">
                 {filteredCourses.length > 0 ? (
                     filteredCourses.map((course) => (
                         // Clicking on the button to edit 
-                        <button
+                        <div
                             key={course.id}
-                            className="group flex items-center justify-between border rounded-lg bg-white hover:bg-gray-200 w-full"
-                            onClick={() => {
-                                console.log("Editing this course:", course);
-                                setCourseToEdit(course);
-                                setEditClassroomVisible(true);
-                            }}
+                            className="group flex items-center justify-between border rounded-lg bg-white w-full"
                         >
                             <div className="flex justify-between items-center w-full h-full px-4 py-4">
                                 <div className="flex items-center space-x-4">
@@ -153,14 +149,27 @@ function ClassroomManagement() {
                                 </div>
                             </div>
 
-                             {/* Add the EditClassroom Modal */}
-                            {isEditClassroomVisible && (
-                                <EditClassroom
-                                    course={courseToEdit}
-                                    onClose={() => setEditClassroomVisible(false)}
-                                    onEditSuccess={handleEditSuccess}
-                                />
-                            )}
+                            {/* Edit button */}
+                            <div className="flex w-[8vw] h-[4vh] bg-gray-400 h-full items-center justify-center mr-[4vw] rounded-full hover:border-4 hover:border-yellow-400">
+                                <button
+                                    onClick={() => {
+                                        setEditClassroomVisible(true); // Show EditClassroom modal
+                                        setCourseToEdit(course); // Set the course to edit
+                                    }}
+                                    className="text-white font-bold flex items-center justify-center"
+                                >
+                                    Chỉnh sửa
+                                </button>
+
+                                {/* EditClassroom Modal */}
+                                {isEditClassroomVisible && courseToEdit && (
+                                    <EditClassroom
+                                        course={courseToEdit} 
+                                        onClose={handleCloseEdit} 
+                                        onEditSuccess={handleEditSuccess} 
+                                    />
+                                )}
+                            </div>
 
                             {/* Delete button */}
                             <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
@@ -174,7 +183,7 @@ function ClassroomManagement() {
                                     <img src={minusButton} alt="Remove" />
                                 </button>
 
-                                {/* AddClassroom Modal */}
+                                {/* DeleteClassroom Modal */}
                                 {isDeleteClassroomVisible && (
                                     <DeleteClassroom 
                                         courseId={classroomToDelete}
@@ -183,10 +192,10 @@ function ClassroomManagement() {
                                     />
                                 )}
                             </div>
-                        </button>
+                        </div>
                     ))
                 ) : (
-                    <p>No courses found for the selected semester.</p>
+                    <p>No courses found for the selected semester.</p> 
                 )}
             </div>
 
@@ -204,7 +213,6 @@ function ClassroomManagement() {
             {isAddClassroomVisible && (
                 <AddClassroom onClose={() => setAddClassroomVisible(false)} />
             )}
-
 
         </div>
     );
