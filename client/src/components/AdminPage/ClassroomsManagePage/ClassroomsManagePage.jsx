@@ -20,27 +20,40 @@ function ClassroomManagement() {
     const [isEditClassroomVisible, setEditClassroomVisible] = useState(false);
     const [courseToEdit, setCourseToEdit] = useState(null);
 
-    // Fetch courses data on component mount
+    // // Fetch courses data on component mount
+    // useEffect(() => {
+    //     const fetchCourses = async () => {
+    //         try {
+    //             const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
+    //             console.log('API Response:', response.data);
+
+    //             // Extract course list and normalize data
+    //             const courseList = response.data?.metadata?.courseList || [];
+    //             const normalizedCourses = courseList.map(course => ({
+    //                 ...course,
+    //                 year: String(course.year),
+    //             }));
+    //             setCourses(normalizedCourses);
+    //         } catch (error) {
+    //             console.error('Error fetching courses:', error);
+    //             setCourses([]);
+    //         }
+    //     };
+
+    //     fetchCourses();
+    // }, []);
+
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
+        axios
+            .get('http://localhost:8080/v1/api/admin/get-all-teacher')
+            .then((response) => {
                 console.log('API Response:', response.data);
-
-                // Extract course list and normalize data
-                const courseList = response.data?.metadata?.courseList || [];
-                const normalizedCourses = courseList.map(course => ({
-                    ...course,
-                    year: String(course.year),
-                }));
-                setCourses(normalizedCourses);
-            } catch (error) {
-                console.error('Error fetching courses:', error);
-                setCourses([]);
-            }
-        };
-
-        fetchCourses();
+                // Access the 'metadata' array in the response
+                setCourses(response.data.metadata || []);
+            })
+            .catch((error) => {
+                console.error('Error fetching teachers:', error);
+            });
     }, []);
 
     // Filter courses based on selected year and semester
@@ -57,6 +70,8 @@ function ClassroomManagement() {
             course.id === updatedCourse.id ? updatedCourse : course
         ));
     };
+
+    console.log('course:', courses);
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
@@ -125,8 +140,8 @@ function ClassroomManagement() {
 
             {/* Course List */}
             <div className="space-y-4">
-                {filteredCourses.length > 0 ? (
-                    filteredCourses.map((course) => (
+                {
+                    courses.map((course) => (
                         // Clicking on the button to edit 
                         <button
                             key={course.id}
@@ -153,7 +168,7 @@ function ClassroomManagement() {
                                 </div>
                             </div>
 
-                             {/* Add the EditClassroom Modal */}
+                            {/* Add the EditClassroom Modal */}
                             {isEditClassroomVisible && (
                                 <EditClassroom
                                     course={courseToEdit}
@@ -164,7 +179,7 @@ function ClassroomManagement() {
 
                             {/* Delete button */}
                             <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
-                                <button 
+                                <button
                                     onClick={() => {
                                         setDeleteClassroomVisible(true)
                                         setClassroomToDelete(course.id);
@@ -176,7 +191,7 @@ function ClassroomManagement() {
 
                                 {/* AddClassroom Modal */}
                                 {isDeleteClassroomVisible && (
-                                    <DeleteClassroom 
+                                    <DeleteClassroom
                                         courseId={classroomToDelete}
                                         onClose={() => setDeleteClassroomVisible(false)}
                                         onDeleteSuccess={handleDeleteSuccess}
@@ -185,14 +200,12 @@ function ClassroomManagement() {
                             </div>
                         </button>
                     ))
-                ) : (
-                    <p>No courses found for the selected semester.</p>
-                )}
+                }
             </div>
 
             {/* Add Button */}
             <div className="mt-6 flex justify-end space-x-4 mr-[4vw]">
-                <button 
+                <button
                     onClick={() => setAddClassroomVisible(true)} // Show AddClassroom
                     className="w-10 h-10 bg-[#1DA599] text-white rounded-full hover:border-4 hover:border-yellow-400 hover:text-gray-700 flex items-center justify-center"
                 >
