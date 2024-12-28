@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/sequelize');
 
-const Score = sequelize.define('score', {
+const Modification = sequelize.define('Modification', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -19,4 +19,4 @@ const Score = sequelize.define('score', {
     timestamps: false
 });
 
-module.exports = Score;
+module.exports = Modification;
