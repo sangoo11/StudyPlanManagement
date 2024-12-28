@@ -17,27 +17,32 @@ class AccessService {
         email,
         password,
         fullname,
-        phone_number,
         role,
+        major,
+        year,
     }) => {
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) throw new Error('Email already exists');
         const hashPassword = await bcrypt.hash(password, 10);
 
+        const status = role === ROLE.STUDENT ? 'active' : 'unactive';
+
         const newUser = await User.create({
             email,
             password: hashPassword,
             fullName: fullname,
-            phone_number,
-            role: ROLE.STUDENT,
+            role: role,
+            major,
+            year,
+            status: status,
         })
 
         if (!newUser) throw new Error('Create student fail')
 
-        const payload = { 
-            userId: newUser.id, 
-            email: newUser.email, 
-            role: newUser.role, 
+        const payload = {
+            userId: newUser.id,
+            email: newUser.email,
+            role: newUser.role,
             fullName: newUser.fullName
         }
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -51,6 +56,7 @@ class AccessService {
                 fullName: newUser.fullname,
                 email: newUser.email,
                 role: newUser.role,
+                status: newUser.status,
             },
             accessToken,
             expiresIn: process.env.TOKEN_EXPIRE,

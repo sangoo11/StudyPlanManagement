@@ -25,6 +25,7 @@ function TeacherManagement() {
         teacher.email?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    console.log('Filtered Teachers:', filteredTeachers.length);
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             {/* Page Title */}

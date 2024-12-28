@@ -15,9 +15,9 @@ const Enrollment = sequelize.define('Enrollment', {
             max: 10,
         },
     },
-    status: {
-        type: DataTypes.ENUM('inProgress', 'completed'),
-        allowNull: true,
+    completed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
     },
 }, {
     timestamps: false

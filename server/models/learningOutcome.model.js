@@ -7,13 +7,14 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
     autoIncrement: true,
     primaryKey: true
   },
-  code: {
+  learningOutcomeCode: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
     validate: {
-      min: 1,
-      max: 8
+      is: {
+        args: /^LO\d{1,2}$/,
+        msg: 'Invalid learning outcome code format.'
+      }
     }
   },
   name: {
@@ -21,10 +22,12 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
     allowNull: false
   },
   description: {
-    type: DataTypes.TEXT
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   active: {
     type: DataTypes.BOOLEAN,
+    allowNull: false,
     defaultValue: true
   }
 }, {
