@@ -7,27 +7,23 @@ const Subject = sequelize.define('Subject', {
     autoIncrement: true,
     primaryKey: true
   },
-  code: {
+  subjectCode: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    validate: {
+      is: {
+        args: /^[A-Z]{2,4}\d{3}$/, // Regular expression for the subject code format
+        msg: 'Invalid subject code format.'
+      }
+    }
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false
   },
   type: {
-    type: DataTypes.ENUM('major', 'industry'),
+    type: DataTypes.ENUM('major', 'core'),
     allowNull: false
-  },
-  multiplicationFactor: {
-    type: DataTypes.DECIMAL(5, 2),
-    allowNull: false,
-    defaultValue: 1,
-    validate: {
-      min: 0,
-      max: 1
-    }
   },
   credit: {
     type: DataTypes.INTEGER,
@@ -35,14 +31,16 @@ const Subject = sequelize.define('Subject', {
     defaultValue: 1,
     validate: {
       min: 1,
-      max: 20
+      max: 15
     }
   },
   description: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   active: {
     type: DataTypes.BOOLEAN,
+    allowNull: false,
     defaultValue: true
   }
 }, {

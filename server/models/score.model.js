@@ -14,8 +14,14 @@ const Score = sequelize.define('score', {
       min: 0,
       max: 10
     },
-    defaultValue: 5
-  }
+  },
+  scoreType: {
+    type: DataTypes.ENUM('progress', 'midterm', 'final'),
+    allowNull: false,
+    validate: {
+      isIn: [['progress', 'midterm', 'final']],
+    }
+  },
 }, {
   timestamps: false
 });
