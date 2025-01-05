@@ -20,29 +20,6 @@ function ClassroomManagement() {
     const [isEditClassroomVisible, setEditClassroomVisible] = useState(false);
     const [courseToEdit, setCourseToEdit] = useState(null);
 
-    // // Fetch courses data on component mount
-    // useEffect(() => {
-    //     const fetchCourses = async () => {
-    //         try {
-    //             const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
-    //             console.log('API Response:', response.data);
-
-    //             // Extract course list and normalize data
-    //             const courseList = response.data?.metadata?.courseList || [];
-    //             const normalizedCourses = courseList.map(course => ({
-    //                 ...course,
-    //                 year: String(course.year),
-    //             }));
-    //             setCourses(normalizedCourses);
-    //         } catch (error) {
-    //             console.error('Error fetching courses:', error);
-    //             setCourses([]);
-    //         }
-    //     };
-
-    //     fetchCourses();
-    // }, []);
-
     useEffect(() => {
         axios
             .get('http://localhost:8080/v1/api/admin/get-all-teacher')
@@ -50,7 +27,8 @@ function ClassroomManagement() {
                 console.log('API Response:', response.data);
 
                 // Extract course list and normalize data
-                const courseList = response.data?.metadata?.courseList || [];
+                const courseList = response.data?.metadata || [];
+
                 const normalizedCourses = courseList.map(course => ({
                     ...course,
                     year: String(course.year),
@@ -60,17 +38,16 @@ function ClassroomManagement() {
                 console.error('Error fetching courses:', error);
                 setCourses([]);
             }
-    };
 
-    fetchCourses();
-}, []);
+        };
 
+        fetchCourses();
+    }, []);
 
-// Filter courses based on selected year and semester
-const filteredCourses = courses.filter(course => {
-    const match = course.year === selectedYear && course.semester === selectedSemester;
-    return match;
-});
+    // Filter courses based on selected year and semester
+    const filteredCourses = courses.filter(course => {
+        return course.year === selectedYear && course.semester === selectedSemester;
+    });
 
 
 const handleDeleteSuccess = (deletedId) => {
@@ -124,6 +101,7 @@ return (
                 >
                     <option value={1}>1</option>
                     <option value={2}>2</option>
+                    <option value={3}>3</option>
                 </select>
             </div>
 
@@ -150,8 +128,8 @@ return (
 
         {/* Course List */}
         <div className="space-y-4">
-            {
-                courses.map((course) => (
+            {filteredCourses.length > 0 ? (
+                filteredCourses.map((course) => (
                     // Clicking on the button to edit 
                     <div
                         key={course.id}
@@ -172,43 +150,57 @@ return (
                                 </div>
                             </div>
                         </div>
-
-                        {/* Add the EditClassroom Modal */}
-                        {isEditClassroomVisible && (
-                            <EditClassroom
-                                course={courseToEdit}
-                                onClose={() => setEditClassroomVisible(false)}
-                                onEditSuccess={handleEditSuccess}
-                            />
-                        )}
-
+                
+                        {/* Edit button */}
+                        <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
+                            <button
+                                onClick={() => {
+                                    setEditClassroomVisible(true);
+                                    setCourseToEdit(course);
+                                }}
+                                className="w-8 h-8 text-white rounded-full hover:border-4 hover:border-blue-400"
+                            >
+                                ✏️
+                            </button>
+                        </div>
+                            
                         {/* Delete button */}
                         <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
                             <button
                                 onClick={() => {
-                                    setDeleteClassroomVisible(true)
+                                    setDeleteClassroomVisible(true);
                                     setClassroomToDelete(course.id);
-                                }} // Show DeleteClassroom
+                                }}
                                 className="w-8 h-8 text-white rounded-full hover:border-4 hover:border-yellow-400"
                             >
-                                <img src={minusButton} alt="Remove" />
+                                <img src={minusButton} alt="Delete Classroom" />
                             </button>
-
-                            {/* DeleteClassroom Modal */}
-                            {isDeleteClassroomVisible && (
-                                <DeleteClassroom
-                                    courseId={classroomToDelete}
-                                    onClose={() => setDeleteClassroomVisible(false)}
-                                    onDeleteSuccess={handleDeleteSuccess}
-                                />
-                            )}
                         </div>
                     </div>
                 ))
-                ) : (
-            <p>No courses found for the selected semester.</p>
-                )}
-        </div>
+            ) : (
+                <p>No courses found for the selected semester.</p>
+            )}
+
+    {/* EditClassroom Modal */}
+    {isEditClassroomVisible && (
+        <EditClassroom
+            course={courseToEdit}
+            onClose={() => setEditClassroomVisible(false)}
+            onEditSuccess={handleEditSuccess}
+        />
+    )}
+
+    {/* DeleteClassroom Modal */}
+    {isDeleteClassroomVisible && (
+        <DeleteClassroom
+            courseId={classroomToDelete}
+            onClose={() => setDeleteClassroomVisible(false)}
+            onDeleteSuccess={handleDeleteSuccess}
+        />
+    )}
+</div>
+
 
         {/* Add Button */}
         <div className="mt-6 flex justify-end space-x-4 mr-[4vw]">
