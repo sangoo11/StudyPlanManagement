@@ -21,13 +21,14 @@ function ClassroomManagement() {
     const [courseToEdit, setCourseToEdit] = useState(null);
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
+        axios
+            .get('http://localhost:8080/v1/api/admin/get-all-teacher')
+            .then((response) => {
                 console.log('API Response:', response.data);
 
                 // Extract course list and normalize data
                 const courseList = response.data?.metadata || [];
+
                 const normalizedCourses = courseList.map(course => ({
                     ...course,
                     year: String(course.year),
@@ -37,6 +38,7 @@ function ClassroomManagement() {
                 console.error('Error fetching courses:', error);
                 setCourses([]);
             }
+
         };
 
         fetchCourses();

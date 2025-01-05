@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/sequelize');
-const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
     id: {
@@ -12,7 +11,6 @@ const User = sequelize.define('User', {
     email: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        unique: true,
         validate: {
             isEmail: true
         }
@@ -31,19 +29,41 @@ const User = sequelize.define('User', {
     },
     role: {
         type: DataTypes.ENUM('student', 'teacher', 'admin'),
-        allowNull: false
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true
+        valdidate: {
+            isIn: [['student', 'teacher', 'admin']]
+        }
     },
-    lastLogin: {
-        type: DataTypes.DATE,
-        allowNull: true
+    status: {
+        type: DataTypes.ENUM('active', 'unactive', 'terminated'),
+        allowNull: false,
+        defaultValue: 'unactive'
     },
+    year: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            is: /^\d{4}-\d{4}$/,
+            isValidYearRange(value) {
+                const [startYear, endYear] = value.split('-').map(Number);
+                if (endYear <= startYear) {
+                    throw new Error('Not correct year');
+                }
+            }
+        },
+        defaultValue: '2020-2099'
+    },
+    major: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+    },
+    credit: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    }
 }, {
-    timestamps: false
+    timestamps: false,
 });
 
 module.exports = User;
