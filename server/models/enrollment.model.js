@@ -19,6 +19,18 @@ const Enrollment = sequelize.define('Enrollment', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
+    enrolledDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    studentID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    courseID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
 }, {
     timestamps: false
 });

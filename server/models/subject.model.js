@@ -17,7 +17,7 @@ const Subject = sequelize.define('Subject', {
       }
     }
   },
-  name: {
+  subjectName: {
     type: DataTypes.STRING,
     allowNull: false
   },

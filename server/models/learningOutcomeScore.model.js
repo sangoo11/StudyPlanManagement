@@ -14,6 +14,14 @@ const LearningOutcomeScore = sequelize.define('LearningOutcomeScore', {
             min: 0,
             max: 10
         },
+    },
+    studentID: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    learningOutcomeID: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     timestamps: false

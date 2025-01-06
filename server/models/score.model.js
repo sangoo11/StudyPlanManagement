@@ -22,6 +22,14 @@ const Score = sequelize.define('score', {
       isIn: [['progress', 'midterm', 'final']],
     }
   },
+  enrollmentID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  teacherID: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  }
 }, {
   timestamps: false
 });
