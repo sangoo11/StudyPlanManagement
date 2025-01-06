@@ -17,7 +17,7 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
       }
     }
   },
-  name: {
+  learningOutcomeName: {
     type: DataTypes.STRING,
     allowNull: false
   },

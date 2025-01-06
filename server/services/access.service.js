@@ -1,63 +1,81 @@
-const User = require('../models/user.model')
+const Student = require('../models/student.model');
+const Account = require('../models/account.model');
+const Teacher = require('../models/teacher.model');
+const Admin = require('../models/admin.model');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 const { AuthFailureError } = require('../core/error.response');
 const { getInfoData } = require('../utils');
-
-const ROLE = {
-    STUDENT: "student",
-    TEACHER: "teacher",
-    ADMIN: "admin",
-};
 
 class AccessService {
     static signUp = async ({
         email,
         password,
         fullname,
-        role,
+        accountableType,
         major,
-        year,
     }) => {
-        const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) throw new Error('Email already exists');
+        if (!email || !password || !fullname || !accountableType || !major) {
+            throw new Error('Missing input fields');
+        }
+        if (!validator.isEmail(email)) {
+            throw new Error('Invalid email format');
+        }
+        if (validator.isStrongPassword(password)) {
+            throw new Error('Password is too weak. { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }');
+        }
+        const foundUser = await Account.findOne({ where: { email } });
+        if (foundUser) throw new Error('Email already exists');
+
+        // Create account
         const hashPassword = await bcrypt.hash(password, 10);
 
-        const status = role === ROLE.STUDENT ? 'active' : 'unactive';
+        const active = accountableType === 'student' ? true : false;
 
-        const newUser = await User.create({
+        const newAccount = await Account.create({
             email,
             password: hashPassword,
-            fullName: fullname,
-            role: role,
-            major,
-            year,
-            status: status,
-        })
+            accountableType,
+            active: active,
+        });
+        if (!newAccount) throw new Error('Cannot create account');
 
-        if (!newUser) throw new Error('Create student fail')
+        let newUserID;
+
+        // Create user
+        if (accountableType === 'student') {
+            const newStudent = await Student.create({
+                fullName: fullname,
+                major,
+                accountID: newAccount.id,
+            })
+            if (!newStudent) throw new Error('Cannot create student');
+            newUserID = newStudent.id;
+        }
+        if (accountableType === 'teacher') {
+            const newTeacher = await Teacher.create({
+                fullName: fullname,
+                major,
+                accountID: newAccount.id,
+            })
+            if (!newTeacher) throw new Error('Cannot create teacher');
+            newUserID = newTeacher.id;
+        }
 
         const payload = {
-            userId: newUser.id,
-            email: newUser.email,
-            role: newUser.role,
-            fullName: newUser.fullName
+            accountableType,
+            accountID: newAccount.id,
+            userID: newUserID,
         }
+
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRE,
         })
 
         return {
-            code: 201,
-            user: {
-                id: newUser.id,
-                fullName: newUser.fullname,
-                email: newUser.email,
-                role: newUser.role,
-                status: newUser.status,
-            },
             accessToken,
             expiresIn: process.env.TOKEN_EXPIRE,
         }
@@ -67,30 +85,25 @@ class AccessService {
         email,
         password
     }) => {
-        const existingUser = await User.findOne({ where: { email } });
-        if (!existingUser) throw new AuthFailureError('Invalid email or password');
+        if (!email || !password) throw new Error('Missing input fields');
+        if (!validator.isEmail(email)) throw new Error('Invalid email format');
 
-        const checkPassword = await bcrypt.compare(password, existingUser.password);
+        const foundAccount = await Account.findOne({ where: { email } });
+        if (!foundAccount) throw new AuthFailureError('Invalid email or password');
+
+        const checkPassword = await bcrypt.compare(password, foundAccount.password);
         if (!checkPassword) throw new AuthFailureError('Invalid email or password');
 
         const payload = {
-            userId: existingUser.id,
-            email: existingUser.email,
-            role: existingUser.role
+            accountableType: foundAccount.accountableType,
+            accountID: foundAccount.id,
         }
 
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRE,
-        });
+        })
 
         return {
-            code: 201,
-            user: {
-                id: existingUser.id,
-                email: existingUser.email,
-                role: existingUser.role,
-                createdAt: existingUser.createdAt,
-            },
             accessToken,
             expiresIn: process.env.TOKEN_EXPIRE,
         }
@@ -98,6 +111,5 @@ class AccessService {
 
 }
 
-
-module.exports = { AccessService, ROLE }
+module.exports = { AccessService }
 
