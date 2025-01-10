@@ -44,8 +44,13 @@ const Student = sequelize.define('Student', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: new Date()
+    }
 }, {
-    timestamps: true,
+    timestamps: false,
     hooks: {
         beforeCreate: (student) => {
             const createdAt = student.createdAt || new Date();

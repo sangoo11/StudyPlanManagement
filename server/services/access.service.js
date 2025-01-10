@@ -89,10 +89,13 @@ class AccessService {
         if (!validator.isEmail(email)) throw new Error('Invalid email format');
 
         const foundAccount = await Account.findOne({ where: { email } });
-        if (!foundAccount) throw new AuthFailureError('Invalid email or password');
+        if (!foundAccount) throw new Error('Invalid email or password');
 
         const checkPassword = await bcrypt.compare(password, foundAccount.password);
-        if (!checkPassword) throw new AuthFailureError('Invalid email or password');
+        if (!checkPassword) throw new Error('Invalid email or password');
+
+        const checkStatus = foundAccount.active;
+        if (!checkStatus) throw new AuthFailureError('Account is not active');
 
         const payload = {
             accountableType: foundAccount.accountableType,

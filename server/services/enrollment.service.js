@@ -1,30 +1,127 @@
-// const { Enrollment, Course, User } = require('../models');
-// const { ROLE } = require('./access.service');
+const Account = require('../models/account.model');
+const Course = require('../models/course.model');
+const Enrollment = require('../models/enrollment.model');
+const Student = require('../models/student.model');
+const Teacher = require('../models/teacher.model');
+const Subject = require('../models/subject.model');
+const sequelize = require('../configs/sequelize');
+const { ROLE } = require('./access.service');
 
-// class EnrollmentService {
-//     static getEnrollmentsByStudentId = async (studentId) => {
-//         const user = await User.findByPk(userId);
-//         if (!user) throw new Error('User not found');
+class EnrollmentService {
+    static getIncompleteEnrollment = async (studentID) => {
+        if (!studentID) throw new Error('Student ID is required');
+        const student = await Student.findByPk(studentID);
+        if (!student) throw new Error('Student not found');
 
-//         const enrollments = await Enrollment.findAll({
-//             where: { studentId: userId },
-//             include: [{
-//                 model: Course,
-//                 attributes: ['id', 'name', 'semester', 'year'],
-//                 include: [{
-//                     model: User,
-//                     as: 'teacher',
-//                     attributes: ['id', 'fullname', 'email']
-//                 }]
-//             }]
-//         });
+        const subjectLists = [];
 
-//         if (!enrollments) throw new Error('No enrollments found');
+        const courseLists = await Enrollment.findAll({
+            where: {
+                studentID: studentID,
+                completed: false,
+            },
+        });
 
-//         return {
-//             message: "Enrollments retrieved successfully",
-//             enrollments: enrollments
-//         }
-//     }
-// }
-// module.exports = EnrollmentService;
+        const courseID = courseLists.map(course => course.courseID);
+        for (let course of courseID) {
+            const courseData = await Course.findByPk(course);
+            const subjectData = await Subject.findByPk(courseData.subjectID);
+            subjectLists.push(subjectData);
+        }
+
+        console.log(JSON.stringify(subjectLists));
+
+        return {
+            message: 'Incomplete enrollment',
+        }
+    }
+
+
+
+    static enrollStudentInCourse = async (data, courseID) => {
+        const transaction = await sequelize.transaction();
+
+        if (!data || data.length === 0 || !courseID) throw new Error('Student ID and Course ID are required');
+
+        const course = await Course.findByPk(courseID);
+        if (!course) throw new Error('Course not found');
+
+        const subject = await Subject.findByPk(course.subjectID);
+        const subjectCredit = subject.credit;
+
+        const studentListsID = [];
+
+        // Handle each student in the list
+        try {
+            for (let student of data.studentLists) {
+                const currentStudent = await Student.findByPk(student.studentID);
+                if (!currentStudent) throw new Error('Student not found');
+
+                const existingEnrollment = await Enrollment.findOne({
+                    where: {
+                        studentID: student.studentID,
+                        courseID: courseID,
+                        completed: false,
+                    }
+                });
+                if (existingEnrollment) throw new Error('Student already enrolled in course');
+
+
+
+                await Enrollment.create({
+                    studentID: student.studentID,
+                    courseID: courseID,
+                    enrolledDate: new Date(),
+                }, {
+                    transaction: transaction,
+                });
+
+                await currentStudent.update({
+                    credit: currentStudent.credit + subjectCredit,
+                }, {
+                    transaction: transaction,
+                });
+
+                await course.update({
+                    studentCount: course.studentCount + 1,
+                }, {
+                    transaction: transaction,
+                });
+
+                studentListsID.push(student.studentID);
+            }
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+            throw new Error(error.message);
+        }
+        return {
+            credit: subjectCredit,
+            courseID: courseID,
+            studentCount: course.studentCount,
+            studentLists: studentListsID,
+            enrollmentDate: new Date(),
+        }
+    }
+
+    static enrollTeacherInCourse = async (data, courseID) => {
+        if (!data || !courseID) throw new Error('Teacher ID and Course ID are required');
+
+        const course = await Course.findByPk(courseID);
+        if (!course) throw new Error('Course not found');
+        if (course.teacherID) throw new Error('Course already has a teacher');
+
+        const teacher = await Teacher.findByPk(data.teacherID);
+        if (!teacher) throw new Error('Teacher not found');
+
+        course.update({
+            teacherID: data.teacherID,
+        });
+
+        return {
+            courseID: parseInt(courseID),
+            teacherID: data.teacherID,
+        }
+    }
+}
+module.exports = EnrollmentService;

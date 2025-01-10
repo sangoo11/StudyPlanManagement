@@ -2,6 +2,17 @@ const { CREATED } = require('../core/success.response');
 const StudentService = require('../services/student.service')
 
 class StudentController {
+    //handle get all students
+    getAllStudents = async (req, res, next) => {
+        new CREATED({
+            message: "GET All Students OK",
+            metadata: await StudentService.getAllStudents(),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
+
     //handle get student by ID
     getStudentByID = async (req, res, next) => {
         new CREATED({

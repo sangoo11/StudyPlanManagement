@@ -12,7 +12,8 @@ const sequelize = new Sequelize(
     timezone: "+07:00",
     port: process.env.LOCAL_DB_PORT,
     define: {
-      freezeTableName: true
+      freezeTableName: true,
+      timestamps: false,
     },
     pool: {
       max: 3, // Maximum number of connections in pool

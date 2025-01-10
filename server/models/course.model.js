@@ -58,6 +58,11 @@ const Course = sequelize.define('Course', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  studentCount: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
   teacherID: {
     type: DataTypes.INTEGER,
     allowNull: true,
