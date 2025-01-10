@@ -127,16 +127,16 @@ const admins = [
 ];
 
 const students = [
-  { accountID: 4, fullName: 'John Doe', major: 'Computer Science', credit: 15, status: 'Active' },
-  { accountID: 5, fullName: 'Jane Smith', major: 'Mathematics', credit: 18, status: 'Terminated' },
-  { accountID: 6, fullName: 'Mark Johnson', major: 'Physics', credit: 12, status: 'Suspended' },
-  { accountID: 7, fullName: 'Lucy Brown', major: 'Engineering', credit: 16, status: 'Active' },
-  { accountID: 8, fullName: 'Michael Davis', major: 'Economics', credit: 20, status: 'On leave' },
-  { accountID: 9, fullName: 'Emma Wilson', major: 'Psychology', credit: 14, status: 'Active' },
-  { accountID: 10, fullName: 'Oliver Moore', major: 'Biology', credit: 17, status: 'Active' },
-  { accountID: 11, fullName: 'Sophia Taylor', major: 'Chemistry', credit: 13, status: 'Suspended' },
-  { accountID: 12, fullName: 'Liam Anderson', major: 'History', credit: 19, status: 'Active' },
-  { accountID: 13, fullName: 'Isabella Thomas', major: 'Literature', credit: 22, status: 'Terminated' },
+  { accountID: 4, fullName: 'John Doe', major: 'Computer Science', credit: 0, status: 'active' },
+  { accountID: 5, fullName: 'Jane Smith', major: 'Mathematics', credit: 0, status: 'terminated' },
+  { accountID: 6, fullName: 'Mark Johnson', major: 'Physics', credit: 0, status: 'suspended' },
+  { accountID: 7, fullName: 'Lucy Brown', major: 'Engineering', credit: 0, status: 'active' },
+  { accountID: 8, fullName: 'Michael Davis', major: 'Economics', credit: 0, status: 'onleave' },
+  { accountID: 9, fullName: 'Emma Wilson', major: 'Psychology', credit: 0, status: 'active' },
+  { accountID: 10, fullName: 'Oliver Moore', major: 'Biology', credit: 0, status: 'active' },
+  { accountID: 11, fullName: 'Sophia Taylor', major: 'Chemistry', credit: 0, status: 'suspended' },
+  { accountID: 12, fullName: 'Liam Anderson', major: 'History', credit: 0, status: 'active' },
+  { accountID: 13, fullName: 'Isabella Thomas', major: 'Literature', credit: 0, status: 'terminated' },
 ];
 
 const teachers = [
