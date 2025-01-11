@@ -1,58 +1,39 @@
 const { ROLE } = require('../services/access.service');
-const { Enrollment, User, Course } = require('../models');
+const Course = require('../models/course.model');
+const Enrollment = require('../models/enrollment.model');
+const Student = require('../models/student.model');
 
 class AdminService {
-    static getAllTeacher = async () => {
-        const teacherList = await User.findAll({ where: { role: ROLE.TEACHER } });
-        if (!teacherList) throw new Error("Teacher list not found");
-        return teacherList
-    }
-
-    static getAllStudent = async () => {
-        const studentList = await User.findAll({ where: { role: ROLE.STUDENT } });
-        if (!studentList) throw new Error("Student list not found");
-        return studentList
-    }
-
     static enrollStudentInCourse = async ({
         studentId,
         courseId,
     }) => {
-        const student = await User.findOne({
+        if (!studentId || !courseId) throw new Error('StudentId and courseId are required');
+
+        const student = await Student.findByPk({
             where: {
                 id: studentId,
-                role: ROLE.STUDENT,
             }
         });
-        if (!student) throw new Error('Student not found or student role is invalid');
+        if (!student) throw new Error('Student not found');
 
         const course = await Course.findByPk(courseId);
         if (!course) throw new Error('Course not found');
 
-        const existingEnrollment = await Enrollment.findOne({
+        const enrollment = await Enrollment.findOrCreate({
             where: {
                 studentId,
                 courseId,
-                status: 'inProgress'
+                comepleted: false,
             },
-        });
-        if (existingEnrollment) throw new Error('Student is already enrolled in this course');
-
-        const enrollment = await Enrollment.create({
-            studentId,
-            courseId,
-            status: 'inProgress'
         });
         if (!enrollment) throw new Error('Error enrolling student');
 
         return {
-            code: 201,
-            enrollment: {
-                enrollmentId: enrollment.id,
-                studentEnrolled: enrollment.studentId,
-                courseEnrolled: enrollment.courseId,
-                status: enrollment.status
-            }
+            enrollmentID: enrollment.id,
+            studentId: enrollment.studentId,
+            courseId: enrollment.courseId,
+            comepleted: enrollment.comepleted,
         }
 
     }
@@ -118,7 +99,7 @@ class AdminService {
             where: {
                 studentId,
                 courseId,
-                // status: 'inProgress', 
+                // status: 'inProgress',
             },
         });
         if (!enrollment) throw new Error('No active enrollment found for this student in the course');
@@ -176,29 +157,6 @@ class AdminService {
         await user.destroy();
         return { message: "User deleted successfully" };
     }
-
-    static activateUser = async (userId) => {
-        const user = await User.findOne({ where: { id: userId } });
-        if (!user) throw new Error("User not found");
-        user.isActive = true;
-        await user.save();
-        return {
-            code: 201,
-            message: "User activated successfully"
-        };
-    }
-
-    static deactivateUser = async (userId) => {
-        const user = await User.findOne({ where: { id: userId } });
-        if (!user) throw new Error("User not found");
-        user.isActive = false;
-        await user.save();
-        return {
-            code: 201,
-            message: "User deactivated successfully"
-        };
-    }
-
 }
 
 module.exports = { AdminService }

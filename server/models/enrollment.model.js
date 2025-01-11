@@ -18,9 +18,23 @@ const Enrollment = sequelize.define('Enrollment', {
     completed: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
+    },
+    enrolledDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: new Date(),
+    },
+    studentID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    courseID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
 }, {
-    timestamps: false
+    timestamps: false,
 });
 
 module.exports = Enrollment

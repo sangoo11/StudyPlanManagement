@@ -33,7 +33,7 @@ const Course = sequelize.define('Course', {
     allowNull: false,
     validate: {
       min: 1,
-      max: 3
+      max: 2
     }
   },
   year: {
@@ -53,6 +53,19 @@ const Course = sequelize.define('Course', {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true
+  },
+  subjectID: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  studentCount: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  teacherID: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
   }
 }, {
   timestamps: false
