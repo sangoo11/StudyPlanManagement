@@ -19,14 +19,23 @@ import StudentPageLayout from './layouts/StudentPageLayout';
 // Admin
 import StudentsManagePage from './components/AdminPage/StudentsManagePage/StudentsManagePage';
 import TeachersManagePage from './components/AdminPage/TeachersManagePage/TeachersManagePage';
-import ClassroomsManagePage from './components/AdminPage/ClassroomsManagePage/ClassroomsManagePage';
+import SubjectsManagePage from './components/AdminPage/SubjectsManagePage/SubjectsManagePage';
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
 import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage';
+import DetailClassroom from './components/AdminPage/SubjectsManagePage/components/DetailClassroom';
 //Modal
-import AddClassroom from './components/AdminPage/ClassroomsManagePage/AddClassroom';
-import DeleteClassroom from './components/AdminPage/ClassroomsManagePage/DeleteClassroom';
-import EditClassroom from './components/AdminPage/ClassroomsManagePage/EditClassroom'; 
-
+import AddClassroom from './components/AdminPage/SubjectsManagePage/components/AddClassroom';
+import DeleteClassroom from './components/AdminPage/SubjectsManagePage/components/DeleteClassroom';
+import EditClassroom from './components/AdminPage/SubjectsManagePage/components/EditClassroom';
+import AddStudent from './components/AdminPage/SubjectsManagePage/components/AddStudent';
+import DeleteStudent from './components/AdminPage/SubjectsManagePage/components/DeleteStudent';
+import EditStudent from './components/AdminPage/SubjectsManagePage/components/EditStudent'; 
+import AddSubject from './components/AdminPage/SubjectsManagePage/components/AddSubject';
+import DeleteSubject from './components/AdminPage/SubjectsManagePage/components/DeleteSubject';
+import EditSubject from './components/AdminPage/SubjectsManagePage/components/EditSubject'; 
+import AddCriteria from './components/AdminPage/OutputCriteriaManagePage/AddCriteria';
+import DeleteCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteCriteria';
+import EditCriteria from './components/AdminPage/OutputCriteriaManagePage/EditCriteria'; 
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
@@ -76,15 +85,27 @@ function App() {
         <Route path='statistics' element={<StatisticsPage />} />
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
-        <Route path='classrooms' element={<ClassroomsManagePage />} />
+        <Route path='subjects' element={<SubjectsManagePage/>} />
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
+        <Route path='detailclassroom' element={<DetailClassroom />} />
       </Route>
 
       {/* Admin modals */}
-      <Route path='admin/classrooms/addclassroom' element={<AddClassroom />} />
-      <Route path='admin/classrooms/deleteclassroom' element={<DeleteClassroom />} />
-      <Route path='admin/classrooms/editclassroom' element={<EditClassroom />} />
+      <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />
+      <Route path='admin/subjects/deleteclassroom' element={<DeleteClassroom />} />
+      <Route path='admin/subjects/editclassroom' element={<EditClassroom />} />
 
+      <Route path='admin/subjects/addstudent' element={<AddStudent />} />
+      <Route path='admin/subjects/deletestudent' element={<DeleteStudent />} />
+      <Route path='admin/subjects/editstudent' element={<EditStudent />} />
+
+      <Route path='admin/subjects/addsubject' element={<AddSubject />} />
+      <Route path='admin/subjects/deletesubject' element={<DeleteSubject />} />
+      <Route path='admin/subjects/editsubject' element={<EditSubject />} />
+
+      <Route path='admin/outputcriteria/addcriteria' element={<AddSubject />} />
+      <Route path='admin/outputcriteria/deletecriteria' element={<DeleteCriteria />} />
+      <Route path='admin/outputcriteria/editcriteria' element={<EditCriteria />} />
       {/* Catch-all route for undefined paths */}
       <Route path='*' element={<ErrorPage />} />
     </Routes>

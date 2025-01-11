@@ -59,68 +59,60 @@ function TeacherPage(props) {
     ];
 
     return (
-        <div className='flex-1 pt-[10vh] flex min-h-screen pb-[4vh]'>
-            <div className='flex flex-col w-full h-auto justify-center items-center'>
-                <h1 className='text-3xl font-bold pb-[4vh]'>Quản lý kết quả học tập</h1>
+        <div className='min-h-screen bg-gray-50 p-6'>
+            <div className="flex items-center justify-center mt-[8vh]">
+                <h1 className="text-3xl font-bold text-[#1DA599] mb-6 text-center">
+                    Quản lý kết quả học tập
+                </h1>
+            </div>
 
-                {/* HK1 2024-2025 */}
-                <div className="flex flex-col">
-                    {semesters.map((semester) => (
-                        <div key={semester.id} className="flex flex-col left-0 top-0 bg-white w-[80vw] h-[auto] border-2 border-black mb-[2vh]">
-                            {/* Semester Header */}
-                            <div className="flex items-center justify-between p-[1vh]">
-                                <h2 className="text-2xl">{semester.title}</h2>
-                                <button
-                                    className="flex w-[2vw] h-[2vh] justify-center items-center"
-                                    onClick={() => toggleSemesterVisibility(semester.id)}
-                                >
-                                    <img
-                                        src={visibleSemesters[semester.id] ? ShowLess : ShowMore}
-                                        alt={visibleSemesters[semester.id] ? 'Show Less' : 'Show More'}
-                                    />
-                                </button>
-                            </div>
-
-                            {/* Semester Table */}
-                            {visibleSemesters[semester.id] && (
-                                <div className="flex flex-col p-[2vh]">
-                                    <div className="flex h-[6vh] w-full bg-green-200 items-center justify-between space-x-4 font-bold border-2 border-black">
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Mã môn học</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Tên môn học</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">QT</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">GK</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">CK</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">TB</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-black pt-2">Hệ số</h2>
-                                    </div>
-                                    {semester.courses.map((course, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex h-auto w-full bg-green-200 items-center justify-between space-x-4 font-bold border-r-2 border-b-2 border-l-2 border-black"
-                                        >
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.code}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.name}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.qt}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.gk}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.ck}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.avg}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-black pt-2">{course.weight}</h2>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
+            <div className="flex flex-col mb-8">
+                {/* Major Dropdown */}
+                <div className="flex mb-4 items-center ml-6">
+                    <label className="text-gray-700 font-medium mr-4">Mã môn học:</label>
+                    <select
+                        className="px-4 py-2 border rounded-md bg-white"
+                        //value={selectedMajor}
+                        //onChange={(e) => setSelectedMajor(e.target.value)}
+                    >
+                        <option value="2023-2024">SE100</option>
+                        <option value="2024-2025">SE200</option>
+                        <option value="2025-2026">SE300</option>
+                    </select>
                 </div>
+                {/* Year Dropdown */}
+                <div className="flex mb-4 items-center ml-6">
+                    <label className="text-gray-700 font-medium mr-4">Năm học:</label>
+                    <select
+                        className="px-4 py-2 border rounded-md bg-white ml-[2.6vw]"
+                        //value={selectedYear}
+                        //onChange={(e) => setSelectedYear(e.target.value)}
+                    >
+                        <option value="2023-2024">2023-2024</option>
+                        <option value="2024-2025">2024-2025</option>
+                        <option value="2025-2026">2025-2026</option>
+                    </select>
+                </div>
+                {/* Semester Dropdown */}
+                <div className="flex mb-4 items-center ml-6">
+                    <label className="text-gray-700 font-medium mr-4">Học kỳ:</label>
+                    <select
+                        className="px-4 py-2 border rounded-md bg-white ml-[3.6vw]"
+                        //value={selectedSemester}
+                        //onChange={(e) => setSelectedSemester(Number(e.target.value))}
+                    >
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                    </select>
+                </div>
+            </div>
 
-
-                {/* Another term here  */}
+            <div className='border-t border-[1px] border-gray-200'></div>
                 
 
 
-            </div>    
-            
-        </div>
+        </div>    
     );
 }
 
