@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AddButton from '../../../assets/images/addButton.png';
 import minusButton from '../../../assets/images/minusButton.png';
 import ShowLess from '../../../assets/images/showLess.png';
 import ShowMore from '../../../assets/images/showMore.png';
+import AddCriteria from './AddCriteria';
+import DeleteCriteria from './DeleteCriteria';
+import EditCriteria from './EditCriteria';
 
 function OutputCriteriaManagePage(props) {
 
@@ -16,6 +19,12 @@ function OutputCriteriaManagePage(props) {
             [semesterId]: !prev[semesterId],
         }));
     };
+
+    const [isAddCriteriaVisible, setAddCriteriaVisible] = useState(false);
+
+    const [isDeleteCriteriaVisible, setDeleteCriteriaVisible] = useState(false);
+
+    const [isEditCriteriaVisible, setEditCriteriaVisible] = useState(false);
 
     // Table data
     const semesters = [
@@ -74,57 +83,99 @@ function OutputCriteriaManagePage(props) {
                         </select>
                     </div>
                     <div className='flex mb-4 items-center'>
-                        <label className="flex text-gray-700 font-medium mr-4">Năm học:</label>
+                        <label className="flex text-gray-700 font-medium mr-4">Năm áp dụng:</label>
                         <select className="flex px-4 py-2 border rounded-md bg-white">
-                            <option>HK1 2024-2025</option>
-                            <option>HK2 2024-2025</option>
+                            <option>2025</option>
+                            <option>2026</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             {/* HK1 2024-2025 */}
-            <div className="flex flex-col items-center">
-                    {semesters.map((semester) => (
-                        <div key={semester.id} className="flex flex-col left-0 top-0 bg-white w-[80vw] h-[auto] border-2 border-black mb-[2vh]">
-                            {/* Semester Header */}
-                            <div className="flex items-center justify-between p-[1vh]">
-                                <h2 className="text-2xl">{semester.title} {semester.id}</h2>  
+            <div className="flex flex-col mt-4 space-y-4">
+                {semesters.map((semester) => (
+                    <div key={semester.id} className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden">
+                        {/* Semester Header */}
+                        <div className="flex justify-between items-center p-4 bg-[#f9f9f9] border-b border-gray-200">
+                            <h2 className="text-xl font-semibold text-gray-800">{semester.title} {semester.id}</h2>  
+                            <button
+                                className="flex justify-center items-center w-8 h-8 rounded-full hover:bg-gray-200 transition mr-[60vw]"
+                                onClick={() => toggleSemesterVisibility(semester.id)}
+                            >
+                                <img
+                                    src={visibleSemesters[semester.id] ? ShowLess : ShowMore}
+                                    alt={visibleSemesters[semester.id] ? 'Show Less' : 'Show More'}
+                                />
+                            </button>
+                            <div className="flex items-center space-x-2">
+                                {/* Delete button */}
                                 <button
-                                    className="flex w-[2vw] h-[2vh] justify-center items-center"
-                                    onClick={() => toggleSemesterVisibility(semester.id)}
+                                    className="flex justify-center items-center w-11 h-full rounded-full hover:border-4 hover:border-yellow-400  transition border-4 border-white"
+                                    onClick={() => setDeleteCriteriaVisible(true)}
                                 >
-                                    <img
-                                        src={visibleSemesters[semester.id] ? ShowLess : ShowMore}
-                                        alt={visibleSemesters[semester.id] ? 'Show Less' : 'Show More'}
-                                    />
+                                    <img src={minusButton} alt="Delete Subject" />
                                 </button>
                             </div>
-
-                            {/* Semester Table */}
-                            {visibleSemesters[semester.id] && (
-                                <div className="flex flex-col p-[1vh] mb-[2vh]">
-                                    <h3 className="text-2xl mb-[1vw]">{semester.demand}</h3>
-                                    <div className="flex h-[6vh] w-full bg-green-200 items-center justify-between space-x-4 font-bold border-2 border-black">
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Mã môn học</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Tên môn học</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-black pt-2">Hệ số</h2>
-                                    </div>
-                                    {semester.courses.map((course, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex h-auto w-full bg-green-200 items-center justify-between space-x-4 font-bold border-r-2 border-b-2 border-l-2 border-black"
-                                        >
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.code}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.name}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-black pt-2">{course.weight}</h2>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
                         </div>
-                    ))}
-                </div>
+                        {/* Semester Table */}
+                        {visibleSemesters[semester.id] && (
+                            <div className="flex flex-col p-[1vh] mb-[2vh]">
+                                <h3 className="text-xl mb-[1vw]">{semester.demand}</h3>
+                                <div className="flex h-[6vh] w-full bg-green-200 items-center justify-between space-x-4 font-bold border-2 border-black">
+                                    <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Mã môn học</h2>
+                                    <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Tên môn học</h2>
+                                    <h2 className="flex w-1/3 h-full justify-center border-black pt-2">Hệ số</h2>
+                                </div>
+                                {semester.courses.map((course, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex h-auto w-full bg-green-200 items-center justify-between space-x-4 font-bold border-r-2 border-b-2 border-l-2 border-black"
+                                    >
+                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.code}</h2>
+                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.name}</h2>
+                                        <h2 className="flex w-1/3 h-full justify-center border-black pt-2">{course.weight}</h2>
+                                    </div>
+                                ))}
+                                <button
+                                    className="w-[14vw] px-4 py-2 text-white bg-[#1DA599] border-4 border-white rounded-md hover:border-4 hover:border-yellow-400 transition mt-[2vh]"
+                                    onClick={() => setEditCriteriaVisible(true)}
+                                >
+                                    Chỉnh sửa tiêu chuẩn
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+            <div className="mt-6 flex justify-end space-x-4 mr-[2vw]">
+                <button
+                    onClick={() => setAddCriteriaVisible(true)} 
+                    className="w-10 h-10 bg-[#1DA599] text-white rounded-full hover:border-4 hover:border-yellow-400 hover:text-gray-700 flex items-center justify-center"
+                >
+                    <img src={AddButton} alt="Add" />
+                </button>
+            </div>
+
+            {/* Modals */}
+            {isAddCriteriaVisible && (
+                <AddCriteria onClose={() => setAddCriteriaVisible(false)} />
+            )}
+            {isEditCriteriaVisible && (
+                <EditCriteria
+                    //course={courseToEdit}
+                    onClose={() => setEditCriteriaVisible(false)}
+                    //onEditSuccess={handleEditSuccess}
+                />
+            )}
+            {isDeleteCriteriaVisible && (
+                <DeleteCriteria
+                    //courseId={subjectToDelete}
+                    onClose={() => setDeleteCriteriaVisible(false)}
+                    //onDeleteSuccess={handleDeleteSuccess}
+                />
+            )}
+
         </div>
     );
 }
