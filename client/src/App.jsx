@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router';
+import 'react-toastify/dist/ReactToastify.css';
 import SignInPage from './components/SignInPage/SignInPage'
 import SignUpPage from './components/SignUpPage/SignUpPage'
 import ErrorPage from './components/ErrorPage/ErrorPage'
@@ -27,12 +28,21 @@ import DetailClassroom from './components/AdminPage/SubjectsManagePage/component
 import AddClassroom from './components/AdminPage/SubjectsManagePage/components/AddClassroom';
 import DeleteClassroom from './components/AdminPage/SubjectsManagePage/components/DeleteClassroom';
 import EditClassroom from './components/AdminPage/SubjectsManagePage/components/EditClassroom';
+
 import AddStudent from './components/AdminPage/SubjectsManagePage/components/AddStudent';
 import DeleteStudent from './components/AdminPage/SubjectsManagePage/components/DeleteStudent';
 import EditStudent from './components/AdminPage/SubjectsManagePage/components/EditStudent'; 
+
+import AddStudentInManagePage from './components/AdminPage/StudentsManagePage/AddStudent';
+
+import AddTeacher from './components/AdminPage/TeachersManagePage/AddTeacher';
+import DeleteTeacher from './components/AdminPage/TeachersManagePage/DeleteTeacher';
+import EditTeacher from './components/AdminPage/TeachersManagePage/EditTeacher'; 
+
 import AddSubject from './components/AdminPage/SubjectsManagePage/components/AddSubject';
 import DeleteSubject from './components/AdminPage/SubjectsManagePage/components/DeleteSubject';
 import EditSubject from './components/AdminPage/SubjectsManagePage/components/EditSubject'; 
+
 import AddCriteria from './components/AdminPage/OutputCriteriaManagePage/AddCriteria';
 import DeleteCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteCriteria';
 import EditCriteria from './components/AdminPage/OutputCriteriaManagePage/EditCriteria'; 
@@ -94,6 +104,12 @@ function App() {
       <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />
       <Route path='admin/subjects/deleteclassroom' element={<DeleteClassroom />} />
       <Route path='admin/subjects/editclassroom' element={<EditClassroom />} />
+
+      <Route path='admin/students/addstudent' element={<AddStudentInManagePage />} />
+
+      <Route path='admin/teachers/addteacher' element={<AddTeacher/>} />
+      <Route path='admin/teachers/editteacher' element={<EditTeacher/>} />
+      <Route path='admin/teachers/deleteteacher' element={<DeleteTeacher/>} />
 
       <Route path='admin/subjects/addstudent' element={<AddStudent />} />
       <Route path='admin/subjects/deletestudent' element={<DeleteStudent />} />

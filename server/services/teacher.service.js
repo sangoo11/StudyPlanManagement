@@ -3,8 +3,83 @@
 // const Enrollment = require('../models/enrollment.model');
 // const Score = require('../models/score.model');
 // const { sql, Op } = require('@sequelize/core');
+const Teacher = require('../models/teacher.model');
+const sequelize = require('../configs/sequelize');
+class TeacherService {
+    static getAllTeachers = async () => {
+        const teachers = await Teacher.findAll();
+        return teachers;
+    }
+    static getTeacherByID = async (teacherID) => {
+        if (!teacherID) throw new Error('Missing teacher ID');
 
-// class TeacherService {
+        const teacher = await Teacher.findOne({
+            where: {
+                id: teacherID,
+            }
+        });
+        if (!teacher) throw new Error('Teacher not found');
+
+        return teacher;
+    }
+
+    static updateTeacherByID = async (updateData, teacherID) => {
+        if (!updateData) throw new Error('Missing update data');
+        if (!teacherID) throw new Error('Missing teacher ID');
+
+        const teacher = await Teacher.findOne({
+            where: {
+                id: teacherID
+            }
+        });
+        if (!teacher) throw new Error('Teacher not found');
+
+        await teacher.update(updateData);
+
+        return teacher;
+    }
+
+    static deleteTeacherByID = async (teacherID) => {
+        if (!teacherID) throw new Error('Missing teacher ID');
+
+        const transaction = await sequelize.transaction();
+        try {
+            const teacher = await Teacher.findOne({
+                where: {
+                    id: teacherID
+                }
+            });
+            if (!teacher) throw new Error('Teacher not found');
+
+            await teacher.update({
+                status: 'terminated',
+            }, {
+                transaction: transaction,
+            });
+
+            const accountID = teacher.accountID;
+
+            await Account.update({
+                active: false,
+            }, {
+                where: {
+                    id: accountID,
+                },
+                transaction: transaction,
+            });
+
+            await transaction.commit();
+            return {
+                teacherID: teacherID,
+                status: teacher.status,
+                accountID: accountID,
+                active: false,
+            };
+        } catch (error) {
+            await transaction.rollback();
+            throw new Error("Delete unsucessfully", error.message);
+        }
+    }
 //     static grade = async ({
 //         studentId,
 //         teacherId,
@@ -101,6 +176,6 @@
 //             finalGrade: finalGrade
 //         }
 //     }
-// }
+}
 
-// module.exports = TeacherService;
+module.exports = TeacherService;
