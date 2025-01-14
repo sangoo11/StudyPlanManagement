@@ -9,9 +9,9 @@ const Admin = sequelize.define('Admin', {
         allowNull: false
     },
     status: {
-        type: DataTypes.ENUM("Active", "Terminated", "On leave", "Suspended"),
+        type: DataTypes.ENUM("active", "terminated", "onleave", "suspended"),
         allowNull: false,
-        defaultValue: "Active",
+        defaultValue: "active",
     },
     accountID: {
         type: DataTypes.INTEGER,

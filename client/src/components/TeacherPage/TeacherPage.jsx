@@ -3,8 +3,14 @@ import ShowMore from '../../assets/images/showmore.png';
 import ShowLess from '../../assets/images/showless.png';
 import minusButton from '../../assets/images/minusButton.png';
 import axios from 'axios'
+import { useSearchParams } from 'react-router-dom';
 
 function TeacherPage(props) {
+    const [seacrhParams, setSearchParams] = useSearchParams({ subjectCode: '', year: '', semester: '' });
+    const subjectCode = seacrhParams.get('subjectCode');
+    const year = seacrhParams.get('year');
+    const semester = seacrhParams.get('semester');
+
 
     // State to track visibility for semesters
     const [visibleSemesters, setVisibleSemesters] = React.useState({});
@@ -21,8 +27,8 @@ function TeacherPage(props) {
     // Table data
     const semesters = [
         {
-            id: 'semester1',
-            title: 'Mã tiêu chuẩn 1: ',
+            id: 'Năm học 2024-2025',
+            title: 'Học kỳ 1: ',
             demand: 'Nội dung tiêu chuẩn 1 : Thông hiểu kiến thức và có thể áp dụng trên thực tế',
             courses: [
                 {
