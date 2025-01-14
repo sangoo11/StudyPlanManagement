@@ -1,9 +1,61 @@
 import React from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import ShowMore from '../../assets/images/showmore.png';
+import ShowLess from '../../assets/images/showless.png';
+import minusButton from '../../assets/images/minusButton.png';
+import axios from 'axios'
+import { useSearchParams } from 'react-router-dom';
 
 function TeacherPage(props) {
-    const navigate = useNavigate();
+    const [seacrhParams, setSearchParams] = useSearchParams({ subjectCode: '', year: '', semester: '' });
+    const subjectCode = seacrhParams.get('subjectCode');
+    const year = seacrhParams.get('year');
+    const semester = seacrhParams.get('semester');
+
+
+    // State to track visibility for semesters
+    const [visibleSemesters, setVisibleSemesters] = React.useState({});
+
+    // Toggle visibility for a specific semester
+    const toggleSemesterVisibility = (semesterId) => {
+        setVisibleSemesters((prev) => ({
+            ...prev,
+            [semesterId]: !prev[semesterId],
+        }));
+    };
+
+
+    // Table data
+    const semesters = [
+        {
+            id: 'Năm học 2024-2025',
+            title: 'Học kỳ 1: ',
+            demand: 'Nội dung tiêu chuẩn 1 : Thông hiểu kiến thức và có thể áp dụng trên thực tế',
+            courses: [
+                {
+                    code: 'DSA',
+                    name: 'Cấu trúc dữ liệu và giải thuật',
+                    weight: '0.6',
+                },
+                {
+                    code: 'SE100',
+                    name: 'Nhập môn phần mềm',
+                    weight: '0.5',
+                },
+            ],
+        },
+        {
+            id: 'semester2',
+            title: 'Mã tiêu chuẩn 1: ',
+            demand: 'Thông hiểu kiến thức và có thể áp dụng trên thực tế',
+            courses: [
+                {
+                    code: 'Math101',
+                    name: 'Toán cao cấp',
+                    weight: '0.7',
+                },
+            ],
+        },
+    ];
     const [selectedSemester, setSelectedSemester] = React.useState('');
     const [selectedYear, setSelectedYear] = React.useState('');
     const [yearArray, setYearArray] = React.useState([]);

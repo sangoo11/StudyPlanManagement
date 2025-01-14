@@ -6,7 +6,6 @@ const TeacherController = require("../controllers/teacher.controller")
 const router = express.Router();
 const { authUser } = require('../authServer')
 
-//Student crud
 router.post("/grade", asyncHandler(TeacherController.grade))
 
 router.get("/get-all-teacher", asyncHandler(TeacherController.getAllTeachers))

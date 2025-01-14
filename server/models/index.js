@@ -123,7 +123,7 @@ const accounts = [
 ];
 
 const admins = [
-  { accountID: 1, status: 'Active' } // Single admin entry
+  { accountID: 1, status: 'active' } // Single admin entry
 ];
 
 const students = [
@@ -140,9 +140,9 @@ const students = [
 ];
 
 const teachers = [
-  { accountID: 14, fullName: 'Dr. Alan Green', major: 'Mathematics', status: 'Active' },
-  { accountID: 15, fullName: 'Prof. Sarah White', major: 'Computer Science', status: 'On leave' },
-  { accountID: 16, fullName: 'Dr. Henry Black', major: 'Physics', status: 'Suspended' },
+  { accountID: 14, fullName: 'Dr. Alan Green', major: 'Mathematics', status: 'active' },
+  { accountID: 15, fullName: 'Prof. Sarah White', major: 'Computer Science', status: 'onleave' },
+  { accountID: 16, fullName: 'Dr. Henry Black', major: 'Physics', status: 'suspended' },
 ];
 
 const subjects = [
