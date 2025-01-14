@@ -2,14 +2,24 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AddButton from '../../../assets/images/addButton.png';
 import minusButton from '../../../assets/images/minusButton.png';
+import AddStudent from './AddStudent';
+import EditStudent from '../SubjectsManagePage/components/EditStudent';
+import DeleteStudent from '../SubjectsManagePage/components/DeleteStudent';
 
 function StudentManagement() {
     const [students, setStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedYear, setSelectedYear] = useState('');
+
+    const [isAddStudentVisible, setAddStudentVisible] = useState('');
+
+    const [isEditStudentVisible, setEditStudentVisible] = useState('');
+
+    const [isDeleteStudentVisible, setDeleteStudentVisible] = useState('');
 
     useEffect(() => {
         axios
-            .get('http://localhost:8080/v1/api/admin/get-all-student')
+            .get('http://localhost:8080/v1/api/student/get-all-student')
             .then((response) => {
                 console.log('API Response:', response.data);
                 setStudents(response.data.metadata || []);
@@ -19,28 +29,13 @@ function StudentManagement() {
             });
     }, []);
 
+    const uniqueYears = [...new Set(students.map(student => student.year))];
+
     const filteredStudents = students.filter(student =>
-        student.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        student.email?.toLowerCase().includes(searchQuery.toLowerCase())
+        (student.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        student.id === parseInt(searchQuery)) &&
+        (selectedYear === '' || student.year === selectedYear)
     );
-
-    // Function to handle student deletion
-    const handleDelete = (studentId) => {
-        axios
-            .delete(`http://localhost:8080/v1/api/admin/delete-student/${studentId}`)
-            .then(() => {
-                setStudents(students.filter(student => student.id !== studentId));
-            })
-            .catch((error) => {
-                console.error('Error deleting student:', error);
-            });
-    };
-
-    // Function to handle student edit (This could open a modal or redirect to an edit page)
-    const handleEdit = (studentId) => {
-        console.log(`Edit student with ID: ${studentId}`);
-        // You can implement navigation to an edit page or open a modal here
-    };
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
@@ -56,9 +51,17 @@ function StudentManagement() {
                 <div className="flex flex-col space-x-6">
                     <div className='flex mb-4 items-center'>
                         <label className="flex text-gray-700 font-medium mr-4">Thời điểm:</label>
-                        <select className="flex px-4 py-2 border rounded-md bg-white">
-                            <option>HK1 2024-2025</option>
-                            <option>HK2 2024-2025</option>
+                        <select
+                            className="flex px-4 py-2 border rounded-md bg-white"
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(e.target.value)}
+                        >
+                            {/* <option value="">Chọn thời điểm</option> */}
+                            {uniqueYears.map((year, index) => (
+                                <option key={index} value={year}>
+                                    {year}
+                                </option>
+                            ))}
                         </select>
                     </div>
                 </div>
@@ -77,52 +80,88 @@ function StudentManagement() {
 
             {/* Student Cards */}
             <div className="space-y-4">
-                {filteredStudents.map((student) => (
-                    <div
-                        key={student.id}
-                        className="flex items-center justify-between p-4 border rounded-lg bg-white"
-                    >
-                        <div className="flex items-center space-x-4">
-                            {/* Avatar */}
-                            <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
-                                <span className="text-gray-500">👤</span>
+                {filteredStudents.map((student) => {
+                    // Determine the status color
+                    const statusColors = {
+                        active: "bg-green-500 text-white",
+                        terminated: "bg-red-500 text-white",
+                        onleave: "bg-yellow-500 text-white",
+                        suspended: "bg-orange-500 text-white",
+                    };
+                    const statusClass = statusColors[student.status] || "bg-gray-300 text-black";
+                
+                    return (
+                        <div
+                            key={student.id}
+                            className="flex items-center justify-between p-4 border rounded-lg bg-white"
+                        >
+                            <div className="flex items-center space-x-4">
+                                {/* Avatar */}
+                                <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
+                                    <span className="text-gray-500">👤</span>
+                                </div>
+                                {/* Student Info */}
+                                <div>
+                                    <p className="text-sm font-medium text-gray-700">Mã số sinh viên: {student.id}</p>
+                                    <p className="text-sm text-gray-700">Họ và tên: {student.fullName || 'N/A'}</p>
+                                    <div className="flex items-center space-x-2">
+                                        <p className="text-sm text-gray-700">Tình trạng:</p>
+                                        <span
+                                            className={`px-2 py-1 rounded-full text-xs font-semibold ${statusClass}`}
+                                        >
+                                            {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            {/* Student Info */}
-                            <div>
-                                <p className="text-sm font-medium text-gray-700">Mã số sinh viên: {student.id}</p>
-                                <p className="text-sm text-gray-700">Họ và tên: {student.fullName || 'N/A'}</p>
-                                <p className="text-sm text-gray-700">Tình trạng: {student.isActive ? 'Active' : 'Inactive'}</p>
+                            {/* Action Buttons */}
+                            <div className="flex space-x-4">
+                                {/* Edit Button */}
+                                <button
+                                    onClick={() => setEditStudentVisible(student)} 
+                                    className="w-auto h-8 flex items-center p-2 justify-center bg-[#1DA599] text-white rounded-full"
+                                >
+                                    <span className="text-white">Chỉnh sửa</span>
+                                </button>
+                                {/* Delete Button */}
+                                <button
+                                    onClick={() => setDeleteStudentVisible(student)}
+                                    className="w-8 h-8 flex items-center justify-center text-white rounded-full"
+                                >
+                                    <img src={minusButton} alt="Minus" />
+                                </button>
                             </div>
                         </div>
-                        {/* Action Buttons */}
-                        <div className="flex space-x-4">
-                            {/* Edit Button */}
-                            <button 
-                                onClick={() => handleEdit(student.id)}
-                                className="w-8 h-8 flex items-center justify-center bg-[#1DA599] text-white rounded-full"
-                            >
-                                <span className="text-white">✏️</span>
-                            </button>
-                            {/* Delete Button */}
-                            <button 
-                                onClick={() => handleDelete(student.id)}
-                                className="w-8 h-8 flex items-center justify-center bg-[#FF6347] text-white rounded-full"
-                            >
-                                <img src={minusButton} alt="Minus" />
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
+
             <div className="mt-6 flex justify-end space-x-4">
-                <button className="px-4 py-2 bg-[#1DA599] text-white rounded-md">
-                    Chỉnh sửa
-                </button>
-                <button className="w-10 h-10 bg-[#1DA599] text-white rounded-full flex items-center justify-center">
+                <button 
+                    className="w-10 h-10 bg-[#1DA599] text-white rounded-full flex items-center justify-center"
+                    onClick={() => setAddStudentVisible(true) }
+                >
                     <img src={AddButton} alt="Add" />
                 </button>
             </div>
+            
+            {/* Modals */}
+            {isAddStudentVisible && (
+                <AddStudent onClose={() => setAddStudentVisible(false)} />
+            )}
+            {isEditStudentVisible && (
+                <EditStudent
+                    onClose={() => setEditStudentVisible(false)}
+                    studentData={isEditStudentVisible}
+                />
+            )}
+            {isDeleteStudentVisible && (
+                <DeleteStudent
+                    onClose={() => setDeleteStudentVisible(false)}
+                    studentData={isDeleteStudentVisible}
+                />
+            )}
         </div>
     );
 }
