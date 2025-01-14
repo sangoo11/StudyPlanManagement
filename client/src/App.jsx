@@ -54,7 +54,9 @@ import StudentLearningOutcome from './components/StudentPage/LearningOutcome/Lea
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
 import ProtectedRouteUser from './components/ProtectedRoute/ProtectedRouteUser';
-import TeacherStatistics from './components/TeacherPage/Statistics/Statistics'
+import TeacherStatistics from './components/TeacherPage/Statistics/Statistics';
+import CourseDetail from './components/TeacherPage/CourseDetail';
+import EditPoint from './components/TeacherPage/EditPoint';
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn');
@@ -85,11 +87,11 @@ function App() {
       </Route>
 
       <Route element={<TeacherPageLayout />}>
-        <Route path='teacher' element={<TeacherPage />}>
-
-          <Route path='statistics' element={<TeacherStatistics />} />
-        </Route>
+        <Route path='teacher' element={<TeacherPage />}> </Route>
+        <Route path='teacher/coursedetail' element={<CourseDetail />}></Route>
+        <Route path='teacher/statistics' element={<TeacherStatistics />} />
       </Route>
+      <Route path='teacher/coursedetail/editpoint' element={<EditPoint />}></Route>
 
       <Route path='admin' element={<AdminPageLayout />}>
         <Route path='statistics' element={<StatisticsPage />} />
