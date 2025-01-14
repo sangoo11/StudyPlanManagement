@@ -16,25 +16,16 @@ const SignUpPage = () => {
     confirmPassword: ""
   });
 
-  const [errors, setErrors] = useState({});
-
-  // Handle input changes
-  const handleChange = (event) => {
+  function handleChange(event) {
     const { name, value } = event.target;
-    setInputValue((prevState) => ({
+    setInputValue(prevState => ({
       ...prevState,
       [name]: value
     }));
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "" // Clear error when the user starts typing
-    }));
-  };
+  }
 
   // Validation function
   const validate = () => {
-    const newErrors = {};
-
     if (!inputValue.fullname.trim() || inputValue.fullname.length < 2) {
       newErrors.fullname = "* Full Name must be at least 2 characters.";
     } else if (!/^[A-Za-z\s]+$/.test(inputValue.fullname)) {
@@ -70,187 +61,60 @@ const SignUpPage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validate()) {
-      console.error("Form submission");
-      return; // Stop submission if validation fails
-    }
-
-    console.log(inputValue);
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    const isValid = validate();
+    if (!isValid) return;
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/v1/api/access/signup",
-        {
-          fullname: inputValue.fullname,
-          phone_number: inputValue.phone,
-          email: inputValue.email,
-          password: inputValue.password
-        }
-      );
-
-      const accessToken = response.data.metadata.accessToken;
-      const decoded = jwtDecode(accessToken);
-      const userRole = response.data.metadata.user.role || decoded.userRole;
-
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("role", userRole);
-      localStorage.setItem("loggedIn", true);
-
-      navigate(`/${userRole}`); // Navigate to userrole after signup
-    } catch (error) {
-      setErrors({
-        apiError: error.response
-          ? error.response.data.message
-          : "Signup failed. Please try again."
+      const response = await axios.post('http://localhost:8080/v1/api/access/signup', {
+        fullname: inputValue.fullname,
+        phone: inputValue.phone,
+        email: inputValue.email,
+        password: inputValue.password
       });
+
+      const decoded = jwtDecode(response.data.metadata.accessToken);
+
+      localStorage.setItem('accountID', decoded.accountID);
+      localStorage.setItem('accountableType', decoded.accountableType);
+
+      navigate('/');
+    } catch (error) {
+      console.error('Error during signup:', error.response.data.message);
     }
   };
 
 
   return (
-    <div>
-      <div className="flex flex-col min-h-screen">
-        {/* Main Section */}
-        <main className="flex flex-1 items-center justify-center bg-white py-4 mt-[20vh] mb-[10vh]">
-          <div className="flex flex-col md:flex-row items-center max-w-[70vw] w-full gap-8 px-10">
-            {/* Form Section */}
-            <div className="bg-custom-teal text-white p-6 rounded-lg shadow-md max-w-md w-full h-auto">
-              <h2 className="text-2xl font-semibold text-center mb-4">Create New Account</h2>
-              <form onSubmit={handleSubmit} className="space-y-4 space-x-2">
-                {/* Error Show */}
-                {errors.apiError && (
-                  <div className="text-red-500 text-center mb-4 font-bold">
-                    {errors.apiError}
-                  </div>
-                )}
-
-                {/* Content */}
-                <div className='flex flex-col'>
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor="fullname" className="text-sm font-medium w-60 ml-2">Full Name</label>
-
-                    <input type="text"
-                      name="fullname"
-                      onChange={(event) => handleChange(event)}
-                      value={inputValue.fullname}
-                      placeholder="Full Name"
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    />
-                  </div>
-
-                  <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                    {errors.fullname && (
-
-                      <p className="text-green-200 text-sm font-bold">{errors.fullname}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className='flex flex-col'>
-                  <div className="flex items-center space-x-3">
-                    <label htmlFor="fullname" className="text-sm font-medium w-60 ml-2">Email</label>
-                    <input type="text"
-                      name="email"
-                      onChange={(event) => handleChange(event)}
-                      value={inputValue.email}
-                      placeholder="Email"
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    />
-                  </div>
-
-                  <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                    {errors.email && (
-                      <p className="text-green-200 text-sm font-bold">{errors.email}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className='flex flex-col'>
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor="phone" className="text-sm font-medium w-60">Phone</label>
-                    <input type="tel"
-                      name="phone"
-                      onChange={(event) => handleChange(event)}
-                      value={inputValue.phone}
-                      placeholder="Phone"
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    />
-                  </div>
-
-                  <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                    {errors.phone && (
-                      <p className="text-green-200 text-sm font-bold">{errors.phone}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className='flex flex-col'>
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor="password" className="text-sm font-medium w-60">Password</label>
-                    <input type="password"
-                      name="password"
-                      onChange={(event) => handleChange(event)}
-                      value={inputValue.password}
-                      placeholder="Password"
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    />
-                  </div>
-
-                  <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                    {errors.password && (
-                      <p className="text-green-200 text-sm font-bold">{errors.password}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className='flex flex-col'>
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor="confirmPassword" className="text-sm font-medium w-60">Confirm Password</label>
-                    <input type="password"
-                      name="confirmPassword"
-                      onChange={(event) => handleChange(event)}
-                      value={inputValue.confirmPassword}
-                      placeholder="Confirm Password"
-                      className="w-[50vw] px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400 text-black"
-                    />
-                  </div>
-
-                  <div className='flex h-[3vh] w-full h-full mt-2 h-[2vh]'>
-                    {errors.confirmPassword && (
-                      <p className="text-green-200 text-sm font-bold">{errors.confirmPassword}</p>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded transition"
-                >
-                  Sign up
-                </button>
-                <div className="text-center space-y-1">
-                  <a href="/signin" className="text-sm text-white underline">
-                    Already have an account ?
-                  </a>
-                </div>
-              </form>
-            </div>
-
-            {/* Image Section */}
-            <div className="flex justify-center pl-[10vw]">
-              <div className="relative w-full h-full overflow-hidden">
-                <img
-                  src={SignUpPicture}
-                  alt="Student"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-            </div>
-          </div>
-        </main>
+    <div className="flex mt-[12vh]">
+      <div className="flex-1">
+        <img className="w-3/4" src={SignInPicture}></img>
+      </div>
+      <div className="flex-1 m-auto flex flex-col items-center">
+        <form onSubmit={handleSignUp} className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-2 items-center text-center p-8 text-white rounded-md">
+          <h2 className="w-full text-4xl font-semibold mb-3">Sign in</h2>
+          <input type="text"
+            autoComplete="true"
+            placeholder="Email"
+            onChange={(event) => handleChange(event)}
+            value={inputValue.email}
+            name="email"
+            className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
+          />
+          <input type="password"
+            autoComplete="true"
+            placeholder="Password"
+            onChange={(event) => handleChange(event)}
+            value={inputValue.password}
+            name="password"
+            className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
+          />
+          <button className="w-full underline">Forgot Password</button>
+          <p className="w-full">Or</p>
+          <button onClick={() => navigate('/signup')} className="w-full underline">Create an account</button>
+          <button onClick={handleSignUp} className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign In</button>
+        </form>
       </div>
     </div>
   );

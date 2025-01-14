@@ -67,7 +67,7 @@ function OutputCriteriaManagePage(props) {
                     Quản lý tiêu chuẩn đầu ra
                 </h1>
             </div>
-            
+
 
             {/* Filters Section */}
             <div className="flex flex-col mb-8">
@@ -98,7 +98,7 @@ function OutputCriteriaManagePage(props) {
                     <div key={semester.id} className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden">
                         {/* Semester Header */}
                         <div className="flex justify-between items-center p-4 bg-[#f9f9f9] border-b border-gray-200">
-                            <h2 className="text-xl font-semibold text-gray-800">{semester.title} {semester.id}</h2>  
+                            <h2 className="text-xl font-semibold text-gray-800">{semester.title} {semester.id}</h2>
                             <button
                                 className="flex justify-center items-center w-8 h-8 rounded-full hover:bg-gray-200 transition mr-[60vw]"
                                 onClick={() => toggleSemesterVisibility(semester.id)}
@@ -150,7 +150,7 @@ function OutputCriteriaManagePage(props) {
             </div>
             <div className="mt-6 flex justify-end space-x-4 mr-[2vw]">
                 <button
-                    onClick={() => setAddCriteriaVisible(true)} 
+                    onClick={() => setAddCriteriaVisible(true)}
                     className="w-10 h-10 bg-[#1DA599] text-white rounded-full hover:border-4 hover:border-yellow-400 hover:text-gray-700 flex items-center justify-center"
                 >
                     <img src={AddButton} alt="Add" />
@@ -165,14 +165,14 @@ function OutputCriteriaManagePage(props) {
                 <EditCriteria
                     //course={courseToEdit}
                     onClose={() => setEditCriteriaVisible(false)}
-                    //onEditSuccess={handleEditSuccess}
+                //onEditSuccess={handleEditSuccess}
                 />
             )}
             {isDeleteCriteriaVisible && (
                 <DeleteCriteria
                     //courseId={subjectToDelete}
                     onClose={() => setDeleteCriteriaVisible(false)}
-                    //onDeleteSuccess={handleDeleteSuccess}
+                //onDeleteSuccess={handleDeleteSuccess}
                 />
             )}
 

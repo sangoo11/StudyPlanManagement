@@ -66,6 +66,7 @@ class EnrollmentService {
     static enrollStudentInCourse = async (data, courseID) => {
         const transaction = await sequelize.transaction();
 
+        // check input data
         if (!data || data.length === 0 || !courseID) throw new Error('Student ID and Course ID are required');
 
         const currentCourse = await Course.findByPk(courseID);
