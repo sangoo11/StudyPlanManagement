@@ -20,6 +20,8 @@ class AccountService {
 
         const account = await Account.findByPk(accountID);
         if (!account) throw new Error('Account not found');
+        const accountActive = account.active;
+        if (accountActive) throw new Error('Account is already active');
         const accountRole = account.accountableType;
 
         try {
@@ -59,6 +61,7 @@ class AccountService {
             return {
                 accountID: account.id,
                 active: true,
+                status: 'active',
             };
         } catch (error) {
             await transaction.rollback();
@@ -66,13 +69,60 @@ class AccountService {
         }
     }
 
-    static deactiveAccount = async (accountID) => {
+    static deactiveAccount = async (accountID, userStatus) => {
         const transaction = await sequelize.transaction();
+
         const account = await Account.findByPk(accountID);
         if (!account) throw new Error('Account not found');
-        account.active = false;
-        await account.save();
-        return account;
+        const accountActive = account.active;
+        if (accountActive === false) throw new Error('Account is already deactive');
+
+        if (!userStatus) throw new Error('Missing user status');
+        if (!['terminated', 'onleave', 'suspended'].includes(userStatus.userStatus)) throw new Error('Invalid user status');
+        const accountRole = account.accountableType;
+        try {
+            if (accountRole === 'teacher') {
+                const teacher = await Teacher.findOne({
+                    where: {
+                        accountID: accountID,
+                    },
+                });
+                if (!teacher) throw new Error('Teacher not found');
+                teacher.update({
+                    status: userStatus.userStatus,
+                },
+                    { transaction }
+                );
+            }
+            if (accountRole === 'student') {
+                const student = await Student.findOne({
+                    where: {
+                        accountID: accountID,
+                    },
+                });
+                if (!student) throw new Error('Student not found');
+                student.update({
+                    status: userStatus.userStatus,
+                },
+                    { transaction }
+                );
+            }
+
+            await account.update({
+                active: false,
+            },
+                { transaction }
+            );
+            transaction.commit();
+            return {
+                accountID: account.id,
+                active: false,
+                status: userStatus,
+            };
+        } catch (error) {
+            await transaction.rollback();
+            throw new Error(error);
+        }
     }
 }
 
