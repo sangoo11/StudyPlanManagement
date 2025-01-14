@@ -19,7 +19,7 @@ const Teacher = sequelize.define('Teacher', {
     status: {
         type: DataTypes.ENUM("Active", "Terminated", "On leave", "Suspended"),
         allowNull: false,
-        defaultValue: "Active",
+        defaultValue: "On leave",
     },
     accountID: {
         type: DataTypes.INTEGER,

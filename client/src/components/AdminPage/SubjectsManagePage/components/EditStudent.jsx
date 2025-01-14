@@ -80,7 +80,7 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Active"
+                                    value="active"
                                     checked={formData.status === "active"}
                                     onChange={handleChange}
                                     className="mr-2"
@@ -91,7 +91,7 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Terminated"
+                                    value="terminated"
                                     checked={formData.status === "terminated"}
                                     onChange={handleChange}
                                     className="mr-2"
@@ -102,7 +102,7 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Onleave"
+                                    value="onleave"
                                     checked={formData.status === "onleave"}
                                     onChange={handleChange}
                                     className="mr-2"
@@ -113,7 +113,7 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Suspended"
+                                    value="suspended"
                                     checked={formData.status === "suspended"}
                                     onChange={handleChange}
                                     className="mr-2"
