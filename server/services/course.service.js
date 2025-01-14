@@ -1,113 +1,149 @@
-// const { where } = require('sequelize');
-// const Course = require('../models/course.model');
-// const { ROLE } = require('./access.service');
-// const axios = require('axios');
+const { where } = require('sequelize');
+const Course = require('../models/course.model');
+const { ROLE } = require('./access.service');
+const axios = require('axios');
+const Teacher = require('../models/teacher.model');
+const Subject = require('../models/subject.model');
 
-// class CourseService {
-//     static async checkUserRole(userId) {
-//         try {
-//             const response = await axios.get(`http://localhost:8080/v1/api/user/check-role/${userId}`);
-//             return response.data.metadata.user.userRole;
-//         } catch (error) {
-//             throw new Error(`Failed to check user role: ${error.message}`);
-//         }
-//     }
+class CourseService {
+    static createCourse = async (subjectID, {
+        courseCode,
+        semester,
+        year,
+        teacherID,
+    }) => {
+        // Validation
+        if (!courseCode || !semester || !year || !subjectID) {
+            throw new Error('Missing required fields');
+        }
 
-//     static createCourse = async ({
-//         name,
-//         semester,
-//         year,
-//         teacherId,
-//     }) => {
-//         if (teacherId) {
-//             const roleCheck = await CourseService.checkUserRole(teacherId);
-//             if (roleCheck !== ROLE.TEACHER) {
-//                 throw new Error('User is not a teacher');
-//             }
-//         }
+        // TeacherID
+        if (teacherID) {
+            const currentTeacher = await Teacher.findByPk(teacherID);
+            if (!currentTeacher) throw new Error('Teacher not found');
+        }
 
-//         const courseExists = await Course.findOne({
-//             where: {
-//                 name: name,
-//             }
-//         })
-//         if (courseExists) throw new Error('Course name already exists');
+        // SubjectID
+        const currentSubject = await Subject.findByPk(subjectID);
+        if (!currentSubject) throw new Error('Subject not found');
 
-//         // Create new course
-//         const newCourse = await Course.create({
-//             name,
-//             semester,
-//             year,
-//             teacherId,
-//         });
-//         if (!newCourse) throw new Error('Failed to create course');
+        // CourseCode
+        const courseExist = await Course.findOne({
+            where: {
+                courseCode: courseCode,
+                active: true,
+            }
+        })
+        if (courseExist) throw new Error('Course code already exists');
 
-//         return {
-//             course: newCourse
-//         }
-//     }
+        const subjectCode = courseCode.split('.')[0];
+        console.log(subjectCode, currentSubject.subjectCode);
+        if (subjectCode !== currentSubject.subjectCode) throw new Error('Subject code does not match');
 
-//     static deleteCourse = async (courseId) => {
-//         const course = await Course.findByPk(courseId);
-//         if (!course) throw new Error('Course not found');
+        // Year
+        const yearPattern = /^\d{4}-\d{4}$/;
+        if (!yearPattern.test(year)) throw new Error('Invalid year format');
 
-//         await course.destroy();
+        const [startYear, endYear] = year.split('-').map(Number);
+        if (endYear !== startYear + 1) throw new Error('Invalid year range');
 
-//         return `Course ${courseId} deleted successfully`
-//     }
+        // Semester
+        if (semester < 1 || semester > 2) throw new Error('Invalid semester');
 
-//     static editCourse = async (courseId, {
-//         name,
-//         semester,
-//         year,
-//         teacherId,
-//         active
-//     }) => {
-//         const course = await Course.findByPk(courseId);
-//         if (!course) throw new Error('Course not found');
+        // Create new course
+        const newCourse = await Course.create({
+            courseCode: courseCode,
+            semester: semester,
+            year: year,
+            subjectID: subjectID,
+            teacherID: teacherID || null,
+        });
+        if (!newCourse) throw new Error('Failed to create course');
 
-//         if (teacherId) {
-//             const roleCheck = await CourseService.checkUserRole(teacherId);
-//             if (roleCheck !== ROLE.TEACHER) {
-//                 throw new Error('User is not a teacher');
-//             }
-//         }
+        return {
+            course: newCourse
+        }
+    }
 
-//         if (name && name !== course.name) {
-//             const courseName = await Course.findOne({
-//                 where: {
-//                     name: name,
-//                 }
-//             })
-//             if (courseName) throw new Error('Course name already exists');
-//         }
+    static deleteCourseByID = async (courseID) => {
+        if (!courseID) throw new Error('Missing student ID');
 
-//         const updatedCourse = await course.update({
-//             name: name || course.name,
-//             semester: semester || course.semester,
-//             year: year || course.year,
-//             teacherId: teacherId || course.teacherId,
-//             active: active !== undefined ? active : course.active
-//         });
+        const currentCourse = await Course.findByPk(courseID);
+        if (!currentCourse) throw new Error('Course not found');
 
-//         return {
-//             message: "Course updated successfully",
-//             course: updatedCourse
-//         };
-//     }
+        await currentCourse.update({
+            active: false
+        });
 
-//     static getCourseById = async (courseId) => {
-//         const course = await Course.findByPk(courseId);
-//         if (!course) throw new Error('Course not found');
+        return {
+            courseID: courseID,
+            active: false
+        };
+    }
 
-//         return course
-//     }
+    static editCourse = async (courseID, {
+        semester,
+        year,
+        teacherID,
+        active,
+    }) => {
+        // Validation
+        if (!courseID) throw new Error('Missing course ID');
+        const currentCourse = await Course.findByPk(courseID);
+        if (!currentCourse) throw new Error('Course not found');
 
-//     static getAllCourses = async () => {
-//         const courseList = await Course.findAll();
-//         if (!courseList) throw new Error("Course list not found");
-//         return courseList
-//     }
-// }
+        // TeacherID
+        if (teacherID) {
+            const currentTeacher = await Teacher.findByPk(teacherID);
+            if (!currentTeacher) throw new Error('Teacher not found');
+        };
 
-// module.exports = CourseService;
+        // Year
+        if (year) {
+            const yearPattern = /^\d{4}-\d{4}$/;
+            if (!yearPattern.test(year)) throw new Error('Invalid year format');
+
+
+            const [startYear, endYear] = year.split('-').map(Number);
+            if (endYear !== startYear + 1) throw new Error('Invalid year range');
+        };
+
+        // Semester
+        if (semester && (semester < 1 || semester > 2)) throw new Error('Invalid semester');
+
+        await currentCourse.update({
+            semester: semester || currentCourse.semester,
+            year: year || currentCourse.year,
+            teacherID: teacherID || currentCourse.teacherId,
+            active: active || currentCourse.active,
+        });
+
+        return {
+            course: currentCourse
+        };
+    }
+
+    static getCourseById = async (courseId) => {
+        const course = await Course.findByPk(courseId);
+        if (!course) throw new Error('Course not found');
+
+        return course
+    }
+
+    static getAllCourses = async () => {
+        const courseList = await Course.findAll();
+        if (!courseList) throw new Error("Course list not found");
+        return courseList
+    }
+
+    static getAllCourseYear = async () => {
+        const courseList = await Course.findAll({
+            attributes: ['year'],
+            group: ['year'],
+        });
+        if (!courseList) throw new Error("Course list not found");
+        return courseList
+    }
+}
+
+module.exports = CourseService;

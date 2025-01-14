@@ -5,7 +5,7 @@ class CourseController {
     createCourse = async (req, res, next) => {
         new CREATED({
             message: "Create Course Success",
-            metadata: await CourseService.createCourse(req.body),
+            metadata: await CourseService.createCourse(req.params.subjectID, req.body),
             options: {
                 limit: 10,
             },
@@ -15,7 +15,7 @@ class CourseController {
     deleteCourse = async (req, res, next) => {
         new CREATED({
             message: "Delete Course Success",
-            metadata: await CourseService.deleteCourse(req.params.courseId),
+            metadata: await CourseService.deleteCourseByID(req.params.courseID),
             options: {
                 limit: 10,
             },
@@ -25,7 +25,7 @@ class CourseController {
     editCourse = async (req, res, next) => {
         new CREATED({
             message: "Edit Course Success",
-            metadata: await CourseService.editCourse(req.params.courseId, req.body),
+            metadata: await CourseService.editCourse(req.params.courseID, req.body),
             options: {
                 limit: 10,
             },
@@ -44,6 +44,14 @@ class CourseController {
         new CREATED({
             message: "Get All Courses Success",
             metadata: await CourseService.getAllCourses(),
+            options: { limit: 10 }
+        }).send(res);
+    }
+
+    getAllCoursesYear = async (req, res, next) => {
+        new CREATED({
+            message: "Get All Courses Success",
+            metadata: await CourseService.getAllCourseYear(),
             options: { limit: 10 }
         }).send(res);
     }

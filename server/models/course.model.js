@@ -21,7 +21,7 @@ const Course = sequelize.define('Course', {
       // Custom validation to check if the subject code exists
       async isSubjectExist(value) {
         const subjectCode = value.split('.')[0];  // Extract the subject code before the period
-        const subject = await Subject.findOne({ where: { code: subjectCode } });
+        const subject = await Subject.findOne({ where: { subjectCode: subjectCode } });
         if (!subject) {
           throw new Error(`Subject with code ${subjectCode} does not exist.`);
         }
