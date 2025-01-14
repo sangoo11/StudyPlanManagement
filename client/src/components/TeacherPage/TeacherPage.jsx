@@ -56,11 +56,14 @@ function TeacherPage(props) {
             ],
         },
     ];
-
     const [selectedSemester, setSelectedSemester] = React.useState('');
-
     const [selectedYear, setSelectedYear] = React.useState('');
     const [yearArray, setYearArray] = React.useState([]);
+    const [selectedSubject, setSelectedSubject] = React.useState('');
+    const [subjectArray, setSubjectArray] = React.useState([]);
+    const [filteredCourses, setFilteredCourses] = React.useState([]);
+    const [courseArray, setCourseArray] = React.useState([]);
+
     React.useEffect(() => {
         const getAllCoursesYear = async () => {
             try {
@@ -73,8 +76,7 @@ function TeacherPage(props) {
         getAllCoursesYear();
     }, []);
 
-    const [selectedSubject, setSelectedSubject] = React.useState('')
-    const [subjectArray, setSubjectArray] = React.useState([])
+
     React.useEffect(() => {
         const getAllSubjectCode = async () => {
             try {
@@ -86,6 +88,32 @@ function TeacherPage(props) {
         }
         getAllSubjectCode()
     })
+
+    // Fetch all courses
+    React.useEffect(() => {
+        const getAllCourses = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
+                setCourseArray(response.data.metadata);
+            } catch (error) {
+                console.error(error.response?.data?.message || 'Error fetching courses');
+            }
+        };
+        getAllCourses();
+    }, []);
+
+    // Filter courses based on selected dropdown values
+    React.useEffect(() => {
+        const filtered = courseArray.filter((course) => {
+            return (
+                (selectedSubject ? course.subjectID === selectedSubject : true) &&
+                (selectedYear ? course.year === selectedYear : true) &&
+                (selectedSemester ? course.semester === Number(selectedSemester) : true)
+                
+            );
+        });
+        setFilteredCourses(filtered);
+    }, [selectedSemester, selectedYear, selectedSubject, courseArray]);
 
     return (
         <div className='min-h-screen bg-gray-50 p-6'>
@@ -144,63 +172,30 @@ function TeacherPage(props) {
             </div>
 
             <div className='border-t border-[1px] border-gray-200'>
-                {/* HK1 2024-2025 */}
                 <div className="flex flex-col mt-4 space-y-4">
-                    {semesters.map((semester) => (
-                        <div key={semester.id} className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden">
-                            {/* Semester Header */}
-                            <div className="flex justify-between items-center p-4 bg-[#f9f9f9] border-b border-gray-200">
-                                <h2 className="text-xl font-semibold text-gray-800">{semester.title} {semester.id}</h2>
-                                <button
-                                    className="flex justify-center items-center w-8 h-8 rounded-full hover:bg-gray-200 transition mr-[60vw]"
-                                    onClick={() => toggleSemesterVisibility(semester.id)}
-                                >
-                                    <img
-                                        src={visibleSemesters[semester.id] ? ShowLess : ShowMore}
-                                        alt={visibleSemesters[semester.id] ? 'Show Less' : 'Show More'}
-                                    />
-                                </button>
-                                <div className="flex items-center space-x-2">
-                                    {/* Delete button */}
-                                    <button
-                                        className="flex justify-center items-center w-11 h-full rounded-full hover:border-4 hover:border-yellow-400  transition border-4 border-white"
-                                        onClick={() => setDeleteCriteriaVisible(true)}
-                                    >
-                                        <img src={minusButton} alt="Delete Subject" />
-                                    </button>
+                    {filteredCourses.length > 0 ? (
+                        filteredCourses.map((course) => (
+                            <button
+                                key={course.id}
+                                onClick={() => navigate(`/teacher/coursedetail/${course.courseCode}`)}
+                                className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
+                            >
+                                <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                                    <h2 className="text-xl font-semibold text-gray-800">
+                                        {course.courseCode}
+                                    </h2>
                                 </div>
-                            </div>
-                            {/* Semester Table */}
-                            {visibleSemesters[semester.id] && (
-                                <div className="flex flex-col p-[1vh] mb-[2vh]">
-                                    <h3 className="text-xl mb-[1vw]">{semester.demand}</h3>
-                                    <div className="flex h-[6vh] w-full bg-green-200 items-center justify-between space-x-4 font-bold border-2 border-black">
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Mã môn học</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">Tên môn học</h2>
-                                        <h2 className="flex w-1/3 h-full justify-center border-black pt-2">Hệ số</h2>
-                                    </div>
-                                    {semester.courses.map((course, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex h-auto w-full bg-green-200 items-center justify-between space-x-4 font-bold border-r-2 border-b-2 border-l-2 border-black"
-                                        >
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.code}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-r-2 border-black pt-2">{course.name}</h2>
-                                            <h2 className="flex w-1/3 h-full justify-center border-black pt-2">{course.weight}</h2>
-                                        </div>
-                                    ))}
-                                    <button
-                                        className="w-[14vw] px-4 py-2 text-white bg-[#1DA599] border-4 border-white rounded-md hover:border-4 hover:border-yellow-400 transition mt-[2vh]"
-                                        onClick={() => setEditCriteriaVisible(true)}
-                                    >
-                                        Chỉnh sửa tiêu chuẩn
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                            </button>
+                        ))
+                    ) : (
+                        <p className="text-center text-gray-500 mt-4">
+                            Không tìm thấy khóa học nào.
+                        </p>
+                    )}
                 </div>
             </div>
+
+
         </div>
     );
 }

@@ -89,7 +89,7 @@ const SignUpPage = () => {
   return (
     <div className="flex mt-[12vh]">
       <div className="flex-1">
-        <img className="w-3/4" src={SignInPicture}></img>
+        <img className="w-3/4" src={SignUpPicture}></img>
       </div>
       <div className="flex-1 m-auto flex flex-col items-center">
         <form onSubmit={handleSignUp} className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-2 items-center text-center p-8 text-white rounded-md">

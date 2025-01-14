@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function EditStudent({ onClose, studentData }) {
+function EditTeacher({ onClose, teacherData }) {
     const [formData, setFormData] = useState({
-        fullName: studentData?.fullName || "",
-        year: studentData?.year || "",
-        major: studentData?.major || "",
-        status: studentData?.status || "",  
+        fullName: teacherData?.fullName || "",
+        year: teacherData?.year || "",
+        major: teacherData?.major || "",
+        status: teacherData?.status || "",  // Default status
     });
 
     const handleChange = (e) => {
@@ -22,22 +22,22 @@ function EditStudent({ onClose, studentData }) {
         e.preventDefault();
         try {
             const response = await axios.put(
-                `http://localhost:8080/v1/api/student/update-student/${studentData.id}`,
+                `http://localhost:8080/v1/api/teacher/update-teacher/${teacherData.id}`,
                 formData
             );
-            toast.success("Student updated successfully!");
-            console.log("Student updated successfully:", response.data);
+            toast.success("teacher updated successfully!");
+            console.log("teacher updated successfully:", response.data);
             onClose();
         } catch (error) {
-            toast.error("Failed to update student.");
-            console.error("Error updating student:", error);
+            toast.error("Failed to update teacher.");
+            console.error("Error updating teacher:", error);
         }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
             <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
-                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Chỉnh sửa sinh viên</h2>
+                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Chỉnh sửa giáo viên</h2>
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-gray-700">Họ và tên:</label>
@@ -45,17 +45,6 @@ function EditStudent({ onClose, studentData }) {
                             type="text"
                             name="fullName"
                             value={formData.fullName}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700">Thời điểm:</label>
-                        <input
-                            type="text"
-                            name="year"
-                            value={formData.year}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
                         />
@@ -80,8 +69,8 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="active"
-                                    checked={formData.status === "active"}
+                                    value="Active"
+                                    checked={formData.status === "Active"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
@@ -91,8 +80,8 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="terminated"
-                                    checked={formData.status === "terminated"}
+                                    value="Terminated"
+                                    checked={formData.status === "Terminated"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
@@ -102,19 +91,19 @@ function EditStudent({ onClose, studentData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="onleave"
-                                    checked={formData.status === "onleave"}
+                                    value="On leave"
+                                    checked={formData.status === "On leave"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
-                                <label>Onleave</label>
+                                <label>On leave</label>
                             </div>
                             <div>
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="suspended"
-                                    checked={formData.status === "suspended"}
+                                    value="Suspended"
+                                    checked={formData.status === "Suspended"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
@@ -144,4 +133,4 @@ function EditStudent({ onClose, studentData }) {
     );
 }
 
-export default EditStudent;
+export default EditTeacher;
