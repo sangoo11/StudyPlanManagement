@@ -127,23 +127,24 @@ const admins = [
 ];
 
 const students = [
-  { accountID: 4, fullName: 'John Doe', major: 'Computer Science', credit: 0, status: 'active' },
-  { accountID: 5, fullName: 'Jane Smith', major: 'Mathematics', credit: 0, status: 'terminated' },
-  { accountID: 6, fullName: 'Mark Johnson', major: 'Physics', credit: 0, status: 'suspended' },
-  { accountID: 7, fullName: 'Lucy Brown', major: 'Engineering', credit: 0, status: 'active' },
-  { accountID: 8, fullName: 'Michael Davis', major: 'Economics', credit: 0, status: 'onleave' },
-  { accountID: 9, fullName: 'Emma Wilson', major: 'Psychology', credit: 0, status: 'active' },
-  { accountID: 10, fullName: 'Oliver Moore', major: 'Biology', credit: 0, status: 'active' },
-  { accountID: 11, fullName: 'Sophia Taylor', major: 'Chemistry', credit: 0, status: 'suspended' },
-  { accountID: 12, fullName: 'Liam Anderson', major: 'History', credit: 0, status: 'active' },
-  { accountID: 13, fullName: 'Isabella Thomas', major: 'Literature', credit: 0, status: 'terminated' },
+  { accountID: 2, fullName: 'John Doe', major: 'Computer Science', credit: 0, status: 'active' },
+  { accountID: 3, fullName: 'Jane Smith', major: 'Mathematics', credit: 0, status: 'terminated' },
+  { accountID: 4, fullName: 'Mark Johnson', major: 'Physics', credit: 0, status: 'suspended' },
+  { accountID: 5, fullName: 'Lucy Brown', major: 'Engineering', credit: 0, status: 'active' },
+  { accountID: 6, fullName: 'Michael Davis', major: 'Economics', credit: 0, status: 'onleave' },
+  { accountID: 7, fullName: 'Emma Wilson', major: 'Psychology', credit: 0, status: 'active' },
+  { accountID: 8, fullName: 'Oliver Moore', major: 'Biology', credit: 0, status: 'active' },
+  { accountID: 9, fullName: 'Sophia Taylor', major: 'Chemistry', credit: 0, status: 'suspended' },
+  { accountID: 10, fullName: 'Liam Anderson', major: 'History', credit: 0, status: 'active' },
+  { accountID: 11, fullName: 'Isabella Thomas', major: 'Literature', credit: 0, status: 'terminated' },
 ];
 
 const teachers = [
-  { accountID: 14, fullName: 'Dr. Alan Green', major: 'Mathematics', status: 'active' },
-  { accountID: 15, fullName: 'Prof. Sarah White', major: 'Computer Science', status: 'onleave' },
-  { accountID: 16, fullName: 'Dr. Henry Black', major: 'Physics', status: 'suspended' },
+  { accountID: 12, fullName: 'Dr. Alan Green', major: 'Mathematics', status: 'active' },
+  { accountID: 13, fullName: 'Prof. Sarah White', major: 'Computer Science', status: 'onleave' },
+  { accountID: 14, fullName: 'Dr. Henry Black', major: 'Physics', status: 'suspended' },
 ];
+
 
 const subjects = [
   { subjectCode: 'SE113', subjectName: 'Introduction to Software Engineering', type: 'core', credit: 3, description: 'Learn the basics of software engineering practices.' },

@@ -8,9 +8,9 @@ const AccountController = require('../controllers/account.controller');
 router.get('/check-role/:accountID', asyncHandler(AccountController.checkAccountRole));
 
 // Active account
-router.put("/active-account/:accountID", asyncHandler(AccountController.activeAccount));
+router.put("/activate-account/:accountID", asyncHandler(AccountController.activeAccount));
 
 // Deactive account
-router.put("/deactive-account/:accountID", asyncHandler(AccountController.deactiveAccount));
+router.put("/deactivate-account/:accountID", asyncHandler(AccountController.deactiveAccount));
 
 module.exports = router;
