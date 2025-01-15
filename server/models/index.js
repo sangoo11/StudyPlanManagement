@@ -107,10 +107,8 @@ Subject.belongsTo(Major, {
 
 // Create data
 const accounts = [
-  // 3 teacher accounts
-  { email: 'teacher1@example.com', password: 'password123', accountableType: 'teacher' },
-  { email: 'teacher2@example.com', password: 'password123', accountableType: 'teacher' },
-  { email: 'teacher3@example.com', password: 'password123', accountableType: 'teacher' },
+  // 1 admin account
+  { email: 'admin@example.com', password: 'password123', accountableType: 'admin' },
 
   // 10 student accounts
   { email: 'student1@example.com', password: 'password123', accountableType: 'student' },
@@ -124,8 +122,10 @@ const accounts = [
   { email: 'student9@example.com', password: 'password123', accountableType: 'student' },
   { email: 'student10@example.com', password: 'password123', accountableType: 'student' },
 
-  // 1 admin account
-  { email: 'admin@example.com', password: 'password123', accountableType: 'admin' },
+  // 3 teacher accounts
+  { email: 'teacher1@example.com', password: 'password123', accountableType: 'teacher' },
+  { email: 'teacher2@example.com', password: 'password123', accountableType: 'teacher' },
+  { email: 'teacher3@example.com', password: 'password123', accountableType: 'teacher' },
 ];
 
 const admins = [
@@ -443,7 +443,7 @@ const checkAndCreateData = async () => {
 
 // Sync all models with database
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(async () => {
     console.log("Database & tables created!");
     await checkAndCreateData();

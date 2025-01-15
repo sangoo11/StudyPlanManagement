@@ -48,10 +48,26 @@ class CourseController {
         }).send(res);
     }
 
+    getAllCoursesByTeacher = async (req, res, next) => {
+        new CREATED({
+            message: "Get All Courses Success",
+            metadata: await CourseService.getAllCoursesByTeacher(req.params.teacherID),
+            options: { limit: 10 }
+        }).send(res);
+    }
+
     getAllCoursesYear = async (req, res, next) => {
         new CREATED({
             message: "Get All Courses Success",
             metadata: await CourseService.getAllCourseYear(),
+            options: { limit: 10 }
+        }).send(res);
+    }
+
+    getStudentCourse = async (req, res, next) => {
+        new CREATED({
+            message: "Get All Student Course Success",
+            metadata: await CourseService.getStudentCourse(req.params.courseID),
             options: { limit: 10 }
         }).send(res);
     }

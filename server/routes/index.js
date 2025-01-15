@@ -15,5 +15,6 @@ router.use("/v1/api/learningOutcome", require("./learningOutcome.route"));
 router.use("/v1/api/account", require("./account.route"));
 router.use("/v1/api/enrollment", require("./enrollment.route"));
 router.use("/v1/api/subject", require("./subject.route"));
+router.use("/v1/api/major", require("./major.route"));
 
 module.exports = router;
