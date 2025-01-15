@@ -94,9 +94,10 @@ class CourseService {
 
         // TeacherID
         if (teacherID) {
+            if (currentCourse.active === false && !active) throw new Error('Course is not active');
             const currentTeacher = await Teacher.findByPk(teacherID);
             if (!currentTeacher) throw new Error('Teacher not found');
-        };
+        }
 
         // Year
         if (year) {
@@ -132,6 +133,16 @@ class CourseService {
 
     static getAllCourses = async () => {
         const courseList = await Course.findAll();
+        if (!courseList) throw new Error("Course list not found");
+        return courseList
+    }
+
+    static getAllCoursesByTeacher = async (teacherID) => {
+        const courseList = await Course.findAll({
+            where: {
+                teacherID: teacherID
+            }
+        });
         if (!courseList) throw new Error("Course list not found");
         return courseList
     }

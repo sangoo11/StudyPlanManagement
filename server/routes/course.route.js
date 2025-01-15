@@ -15,6 +15,7 @@ router.put('/edit-course/:courseID', asyncHandler(CourseController.editCourse));
 //Get course route
 router.get('/get-course/:courseId', asyncHandler(CourseController.getCourseById));
 router.get('/get-all-courses', asyncHandler(CourseController.getAllCourses));
+router.get('/get-all-courses/:teacherID', asyncHandler(CourseController.getAllCoursesByTeacher));
 
 //Get courses year
 router.get('/get-all-course-year', asyncHandler(CourseController.getAllCoursesYear));

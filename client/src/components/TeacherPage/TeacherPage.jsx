@@ -12,51 +12,6 @@ function TeacherPage(props) {
     const year = seacrhParams.get('year');
     const semester = seacrhParams.get('semester');
 
-
-    // State to track visibility for semesters
-    const [visibleSemesters, setVisibleSemesters] = React.useState({});
-
-    // Toggle visibility for a specific semester
-    const toggleSemesterVisibility = (semesterId) => {
-        setVisibleSemesters((prev) => ({
-            ...prev,
-            [semesterId]: !prev[semesterId],
-        }));
-    };
-
-
-    // Table data
-    const semesters = [
-        {
-            id: 'Năm học 2024-2025',
-            title: 'Học kỳ 1: ',
-            demand: 'Nội dung tiêu chuẩn 1 : Thông hiểu kiến thức và có thể áp dụng trên thực tế',
-            courses: [
-                {
-                    code: 'DSA',
-                    name: 'Cấu trúc dữ liệu và giải thuật',
-                    weight: '0.6',
-                },
-                {
-                    code: 'SE100',
-                    name: 'Nhập môn phần mềm',
-                    weight: '0.5',
-                },
-            ],
-        },
-        {
-            id: 'semester2',
-            title: 'Mã tiêu chuẩn 1: ',
-            demand: 'Thông hiểu kiến thức và có thể áp dụng trên thực tế',
-            courses: [
-                {
-                    code: 'Math101',
-                    name: 'Toán cao cấp',
-                    weight: '0.7',
-                },
-            ],
-        },
-    ];
     const [selectedSemester, setSelectedSemester] = React.useState('');
     const [selectedYear, setSelectedYear] = React.useState('');
     const [yearArray, setYearArray] = React.useState([]);
@@ -88,13 +43,17 @@ function TeacherPage(props) {
             }
         }
         getAllSubjectCode()
-    })
+    }, [])
 
     // Fetch all courses
     React.useEffect(() => {
         const getAllCourses = async () => {
+            const accountID = localStorage.getItem('accountID');
+            const accountableType = localStorage.getItem('accountableType');
+            if (accountableType !== 'teacher') return;
+
             try {
-                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
+                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses/:teacherID');
                 setCourseArray(response.data.metadata);
             } catch (error) {
                 console.error(error.response?.data?.message || 'Error fetching courses');
@@ -179,12 +138,13 @@ function TeacherPage(props) {
                             <button
                                 key={course.id}
                                 onClick={() => navigate(`/teacher/coursedetail/${course.id}`)}
-                                className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
+                                className=" bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
                             >
-                                <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                                <div className="flex flex-col p-4 border-b border-gray-200 items-start justify-center">
                                     <h2 className="text-xl font-semibold text-gray-800">
                                         {course.courseCode}
                                     </h2>
+                                    <p>Năm {course.year} : HK{course.semester}</p>
                                 </div>
                             </button>
                         ))

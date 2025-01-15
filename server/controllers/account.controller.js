@@ -34,6 +34,17 @@ class AccountController {
             },
         }).send(res);
     };
+
+    // Get userID by accountID
+    getUserIDByAccountID = async (req, res, next) => {
+        new CREATED({
+            message: "Get User ID Success",
+            metadata: await AccountService.getUserIDByAccountID(req.params.accountID),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 }
 
 module.exports = new AccountController();
