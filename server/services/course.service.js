@@ -4,6 +4,8 @@ const { ROLE } = require('./access.service');
 const axios = require('axios');
 const Teacher = require('../models/teacher.model');
 const Subject = require('../models/subject.model');
+const Enrollment = require('../models/enrollment.model');
+const Student = require('../models/student.model');
 
 class CourseService {
     static createCourse = async (subjectID, {
@@ -102,9 +104,10 @@ class CourseService {
         }
         // TeacherID
         if (teacherID) {
+            if (currentCourse.active === false && !active) throw new Error('Course is not active');
             const currentTeacher = await Teacher.findByPk(teacherID);
             if (!currentTeacher) throw new Error('Teacher not found');
-        };
+        }
 
         // Year
         if (year) {
@@ -145,6 +148,16 @@ class CourseService {
         return courseList
     }
 
+    static getAllCoursesByTeacher = async (teacherID) => {
+        const courseList = await Course.findAll({
+            where: {
+                teacherID: teacherID
+            }
+        });
+        if (!courseList) throw new Error("Course list not found");
+        return courseList
+    }
+
     static getAllCourseYear = async () => {
         const courseList = await Course.findAll({
             attributes: ['year'],
@@ -152,6 +165,34 @@ class CourseService {
         });
         if (!courseList) throw new Error("Course list not found");
         return courseList
+    }
+
+    static getStudentCourse = async (courseID) => {
+        if (!courseID) throw new Error('Missing course ID');
+        const course = await Course.findByPk(courseID);
+        if (!course) throw new Error('Course not found');
+
+        const enrollmentList = await Enrollment.findAll({
+            where: {
+                courseID: courseID
+            }
+        },
+            {
+                attributes: ['studentID']
+            }
+        );
+        if (!enrollmentList) throw new Error("This course does not have any student");
+
+        const studentListsID = enrollmentList.map(student => student.studentID);
+        const studentLists = await Promise.all(
+            studentListsID.map(async (studentID) => {
+                const student = await Student.findByPk(studentID);
+                if (!student) throw new Error('Student not found');
+                return student;
+            })
+        );
+
+        return studentLists;
     }
 }
 

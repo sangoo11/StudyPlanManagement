@@ -124,6 +124,39 @@ class AccountService {
             throw new Error(error);
         }
     }
+
+    static getUserIDByAccountID = async (accountID) => {
+        if (!accountID) throw new Error('Missing account ID');
+        if (parseInt(accountID) === 1) throw new Error('This account is not allowed to get user ID');
+        const account = await Account.findByPk(accountID);
+        if (!account) throw new Error('Account not found');
+
+        const accountRole = account.accountableType;
+
+        if (accountRole === 'teacher') {
+            const teacher = await Teacher.findOne({
+                where: {
+                    accountID: accountID,
+                },
+            });
+            if (!teacher) throw new Error('Teacher not found');
+            return {
+                teacherID: teacher.id,
+            };
+        }
+
+        if (accountRole === 'student') {
+            const student = await Student.findOne({
+                where: {
+                    accountID: accountID,
+                },
+            });
+            if (!student) throw new Error('Student not found');
+            return {
+                studentID: student.id,
+            };
+        }
+    }
 }
 
 module.exports = AccountService;

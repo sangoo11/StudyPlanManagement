@@ -31,21 +31,21 @@ import EditClassroom from './components/AdminPage/SubjectsManagePage/components/
 
 import AddStudent from './components/AdminPage/SubjectsManagePage/components/AddStudent';
 import DeleteStudent from './components/AdminPage/SubjectsManagePage/components/DeleteStudent';
-import EditStudent from './components/AdminPage/SubjectsManagePage/components/EditStudent'; 
+import EditStudent from './components/AdminPage/SubjectsManagePage/components/EditStudent';
 
 import AddStudentInManagePage from './components/AdminPage/StudentsManagePage/AddStudent';
 
 import AddTeacher from './components/AdminPage/TeachersManagePage/AddTeacher';
 import DeleteTeacher from './components/AdminPage/TeachersManagePage/DeleteTeacher';
-import EditTeacher from './components/AdminPage/TeachersManagePage/EditTeacher'; 
+import EditTeacher from './components/AdminPage/TeachersManagePage/EditTeacher';
 
 import AddSubject from './components/AdminPage/SubjectsManagePage/components/AddSubject';
 import DeleteSubject from './components/AdminPage/SubjectsManagePage/components/DeleteSubject';
-import EditSubject from './components/AdminPage/SubjectsManagePage/components/EditSubject'; 
+import EditSubject from './components/AdminPage/SubjectsManagePage/components/EditSubject';
 
 import AddCriteria from './components/AdminPage/OutputCriteriaManagePage/AddCriteria';
 import DeleteCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteCriteria';
-import EditCriteria from './components/AdminPage/OutputCriteriaManagePage/EditCriteria'; 
+import EditCriteria from './components/AdminPage/OutputCriteriaManagePage/EditCriteria';
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
@@ -88,7 +88,9 @@ function App() {
 
       <Route element={<TeacherPageLayout />}>
         <Route path='teacher' element={<TeacherPage />}> </Route>
-        <Route path='teacher/coursedetail' element={<CourseDetail />}></Route>
+        <Route path='teacher/coursedetail' element={<CourseDetail />}>
+          <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
+        </Route>
         <Route path='teacher/statistics' element={<TeacherStatistics />} />
       </Route>
       <Route path='teacher/coursedetail/editpoint' element={<EditPoint />}></Route>
@@ -97,7 +99,7 @@ function App() {
         <Route path='statistics' element={<StatisticsPage />} />
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
-        <Route path='subjects' element={<SubjectsManagePage/>} />
+        <Route path='subjects' element={<SubjectsManagePage />} />
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
         <Route path='detailclassroom' element={<DetailClassroom />} />
       </Route>
@@ -109,9 +111,9 @@ function App() {
 
       <Route path='admin/students/addstudent' element={<AddStudentInManagePage />} />
 
-      <Route path='admin/teachers/addteacher' element={<AddTeacher/>} />
-      <Route path='admin/teachers/editteacher' element={<EditTeacher/>} />
-      <Route path='admin/teachers/deleteteacher' element={<DeleteTeacher/>} />
+      <Route path='admin/teachers/addteacher' element={<AddTeacher />} />
+      <Route path='admin/teachers/editteacher' element={<EditTeacher />} />
+      <Route path='admin/teachers/deleteteacher' element={<DeleteTeacher />} />
 
       <Route path='admin/subjects/addstudent' element={<AddStudent />} />
       <Route path='admin/subjects/deletestudent' element={<DeleteStudent />} />

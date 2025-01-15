@@ -71,6 +71,7 @@ class EnrollmentService {
 
         const currentCourse = await Course.findByPk(courseID);
         if (!currentCourse) throw new Error('Course not found');
+        if (currentCourse.active === false) throw new Error('Course is not active');
 
         const subject = await Subject.findByPk(currentCourse.subjectID);
         const subjectCredit = subject.credit;
@@ -83,6 +84,7 @@ class EnrollmentService {
                 // student model
                 const currentStudent = await Student.findByPk(student.studentID);
                 if (!currentStudent) throw new Error(`Student with ID ${student.studentID} not found`);
+                if (currentStudent.status !== 'active') throw new Error(`Student with ID ${student.studentID} is not active`);
 
                 // get courseID of incomplete course
                 const studentIncompleteCourse = await Enrollment.findAll({
@@ -143,9 +145,11 @@ class EnrollmentService {
         const course = await Course.findByPk(courseID);
         if (!course) throw new Error('Course not found');
         if (course.teacherID) throw new Error('Course already has a teacher');
+        if (course.active === false) throw new Error('Course is not active');
 
         const teacher = await Teacher.findByPk(data.teacherID);
         if (!teacher) throw new Error('Teacher not found');
+        if (teacher.status !== 'active') throw new Error('Teacher is not active');
 
         course.update({
             teacherID: data.teacherID,

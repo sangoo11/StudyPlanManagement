@@ -12,7 +12,6 @@ function TeacherPage(props) {
     const year = seacrhParams.get('year');
     const semester = seacrhParams.get('semester');
 
-
     // State to track visibility for semesters
     const [visibleSemesters, setVisibleSemesters] = React.useState({});
 
@@ -23,6 +22,8 @@ function TeacherPage(props) {
             [semesterId]: !prev[semesterId],
         }));
     };
+
+
 
     const [selectedSemester, setSelectedSemester] = React.useState('');
     const [selectedYear, setSelectedYear] = React.useState('');
@@ -55,13 +56,24 @@ function TeacherPage(props) {
             }
         }
         getAllSubjectCode()
-    })
+    }, [])
 
     // Fetch all courses
     React.useEffect(() => {
         const getAllCourses = async () => {
+            const accountID = localStorage.getItem('accountID');
+            let teacherID;
+            if (!accountID) return;
             try {
-                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses');
+                const response = await axios.get(`http://localhost:8080/v1/api/account/get-user-id/${accountID}`);
+                teacherID = response.data.metadata.teacherID;
+                console.log(teacherID);
+            } catch (error) {
+                console.error(error.response?.data?.message || 'Error get teacherID');
+            }
+
+            try {
+                const response = await axios.get(`http://localhost:8080/v1/api/course/get-all-courses/${teacherID}`);
                 setCourseArray(response.data.metadata);
             } catch (error) {
                 console.error(error.response?.data?.message || 'Error fetching courses');
@@ -146,12 +158,13 @@ function TeacherPage(props) {
                             <button
                                 key={course.id}
                                 onClick={() => navigate(`/teacher/coursedetail/${course.id}`)}
-                                className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
+                                className=" bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
                             >
-                                <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                                <div className="flex flex-col p-4 border-b border-gray-200 items-start justify-center">
                                     <h2 className="text-xl font-semibold text-gray-800">
                                         {course.courseCode}
                                     </h2>
+                                    <p>Năm {course.year} : HK{course.semester}</p>
                                 </div>
                             </button>
                         ))
