@@ -25,7 +25,7 @@ class SubjectController {
     createSubject = async (req, res, next) => {
         new CREATED({
             message: "Create Subject Success",
-            metadata: await SubjectService.createSubject(req.body),
+            metadata: await SubjectService.createSubject(req.params.majorID, req.body),
         }).send(res);
     }
 

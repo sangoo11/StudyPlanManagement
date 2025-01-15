@@ -10,6 +10,7 @@ const Score = require('./score.model');
 const LearningOutcomeScore = require('./learningOutcomeScore.model');
 const Enrollment = require('./enrollment.model');
 const Modification = require('./modification.model');
+const Major = require('./major.model');
 
 // User - Account relationships
 Account.belongsTo(Student, {
@@ -99,6 +100,11 @@ Enrollment.hasMany(Score, {
 });
 Score.belongsTo(Enrollment, { foreignKey: 'enrollmentID' });
 
+// Subject - Major  
+Subject.belongsTo(Major, {
+  foreignKey: 'majorID',
+});
+
 // Create data
 const accounts = [
   // 3 teacher accounts
@@ -145,18 +151,165 @@ const teachers = [
   { accountID: 14, fullName: 'Dr. Henry Black', major: 'Physics', status: 'suspended' },
 ];
 
+const majors = [
+  {
+    majorName: "Công nghệ Thông tin",
+    majorCode: "IT",
+    description: "Bachelor of Information Technology"
+  },
+  {
+    majorName: "Hệ thống Thông tin",
+    majorCode: "IS",
+    description: "Bachelor of Information Systems"
+  },
+  {
+    majorName: "Hệ thống Thông tin",
+    majorCode: "IS",
+    description: "Advanced Program in Information Systems"
+  },
+  {
+    majorName: "Khoa học Máy tính (Chương trình liên kết với ĐH Birmingham City)",
+    majorCode: "CS",
+    description: "Bachelor of Computer Science (Joint Program with Birmingham City University)"
+  },
+  {
+    majorName: "Mạng máy tính và An toàn thông tin (Chương trình liên kết với ĐH Birmingham City)",
+    majorCode: "CNS",
+    description: "Bachelor of Computer Networks and Information Security (Joint Program with Birmingham City University)"
+  },
+  {
+    majorName: "Khoa học Máy tính",
+    majorCode: "CS",
+    description: "Bachelor of Computer Science"
+  },
+  {
+    majorName: "Trí tuệ Nhân tạo",
+    majorCode: "AI",
+    description: "Bachelor of Artificial Intelligence"
+  },
+  {
+    majorName: "Kỹ thuật Phần mềm",
+    majorCode: "SE",
+    description: "Bachelor of Software Engineering"
+  },
+  {
+    majorName: "Kỹ thuật Máy tính",
+    majorCode: "CE",
+    description: "Bachelor of Computer Engineering"
+  },
+  {
+    majorName: "Thiết kế Vi mạch",
+    majorCode: "VLSI",
+    description: "Bachelor of Microelectronics Design"
+  },
+  {
+    majorName: "Mạng máy tính và Truyền thông dữ liệu",
+    majorCode: "CNC",
+    description: "Bachelor of Computer Networks and Data Communications"
+  },
+  {
+    majorName: "An toàn Thông tin",
+    majorCode: "ISec",
+    description: "Bachelor of Information Security"
+  },
+  {
+    majorName: "Thương mại điện tử",
+    majorCode: "Ecom",
+    description: "Bachelor of E-commerce"
+  },
+  {
+    majorName: "Chương trình đào tạo song ngành ngành Thương mại điện tử",
+    majorCode: "Ecom",
+    description: "Dual Degree Program in E-commerce"
+  },
+  {
+    majorName: "Cử nhân khoa học ngành Khoa học Dữ liệu",
+    majorCode: "DS",
+    description: "Bachelor of Science in Data Science"
+  }
+];
 
 const subjects = [
-  { subjectCode: 'SE113', subjectName: 'Introduction to Software Engineering', type: 'core', credit: 3, description: 'Learn the basics of software engineering practices.' },
-  { subjectCode: 'SE214', subjectName: 'Data Structures and Algorithms', type: 'core', credit: 4, description: 'In-depth understanding of algorithms and data structures.' },
-  { subjectCode: 'SE300', subjectName: 'Software Design Patterns', type: 'major', credit: 3, description: 'Study of common design patterns in software development.' },
-  { subjectCode: 'SE400', subjectName: 'Advanced Programming', type: 'core', credit: 5, description: 'Advanced topics in programming and software architecture.' },
-  { subjectCode: 'CS101', subjectName: 'Introduction to Computer Science', type: 'core', credit: 3, description: 'Basic introduction to the field of computer science.' },
-  { subjectCode: 'CS205', subjectName: 'Database Systems', type: 'major', credit: 4, description: 'Understanding the fundamentals of database management systems.' },
-  { subjectCode: 'CS303', subjectName: 'Computer Networks', type: 'major', credit: 3, description: 'Study of computer networking principles and protocols.' },
-  { subjectCode: 'MATH101', subjectName: 'Discrete Mathematics', type: 'core', credit: 3, description: 'Foundational knowledge of mathematics for computer science.' },
-  { subjectCode: 'MATH204', subjectName: 'Linear Algebra', type: 'major', credit: 4, description: 'Study of linear equations and matrices in mathematical contexts.' },
-  { subjectCode: 'CS501', subjectName: 'Machine Learning', type: 'major', credit: 4, description: 'Introduction to machine learning concepts and techniques.' }
+  {
+    subjectCode: 'SE113',
+    subjectName: 'Introduction to Software Engineering',
+    type: 'core',
+    credit: 3,
+    description: 'Learn the basics of software engineering practices.',
+    majorID: 8
+  },
+  {
+    subjectCode: 'SE214',
+    subjectName: 'Data Structures and Algorithms',
+    type: 'core',
+    credit: 4,
+    description: 'In-depth understanding of algorithms and data structures.',
+    majorID: 8
+  },
+  {
+    subjectCode: 'SE300',
+    subjectName: 'Software Design Patterns',
+    type: 'major',
+    credit: 3,
+    description: 'Study of common design patterns in software development.',
+    majorID: 8
+  },
+  {
+    subjectCode: 'SE400',
+    subjectName: 'Advanced Programming',
+    type: 'core',
+    credit: 4,
+    description: 'Advanced topics in programming and software architecture.',
+    majorID: 8
+  },
+  {
+    subjectCode: 'CS101',
+    subjectName: 'Introduction to Computer Science',
+    type: 'core',
+    credit: 3,
+    description: 'Basic introduction to the field of computer science.',
+    majorID: 6
+  },
+  {
+    subjectCode: 'CS205',
+    subjectName: 'Database Systems',
+    type: 'major',
+    credit: 4,
+    description: 'Understanding the fundamentals of database management systems.',
+    majorID: 6
+  },
+  {
+    subjectCode: 'CS303',
+    subjectName: 'Computer Networks',
+    type: 'major',
+    credit: 3,
+    description: 'Study of computer networking principles and protocols.',
+    majorID: 6
+  },
+  {
+    subjectCode: 'MATH101',
+    subjectName: 'Discrete Mathematics',
+    type: 'core',
+    credit: 3,
+    description: 'Foundational knowledge of mathematics for computer science.',
+    majorID: 1
+  },
+  {
+    subjectCode: 'MATH204',
+    subjectName: 'Linear Algebra',
+    type: 'major',
+    credit: 4,
+    description: 'Study of linear equations and matrices in mathematical contexts.',
+    majorID: 2
+  },
+  {
+    subjectCode: 'CS501',
+    subjectName: 'Machine Learning',
+    type: 'major',
+    credit: 4,
+    description: 'Introduction to machine learning concepts and techniques.',
+    majorID: 6
+  }
 ];
 
 const courses = [
@@ -263,6 +416,9 @@ const createData = async () => {
   await Student.bulkCreate(students);
   await Teacher.bulkCreate(teachers);
   await Admin.bulkCreate(admins);
+
+  // Create Majors
+  await Major.bulkCreate(majors);
 
   // Create Subjects
   await Subject.bulkCreate(subjects);

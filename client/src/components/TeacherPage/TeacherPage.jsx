@@ -3,9 +3,10 @@ import ShowMore from '../../assets/images/showmore.png';
 import ShowLess from '../../assets/images/showless.png';
 import minusButton from '../../assets/images/minusButton.png';
 import axios from 'axios'
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 function TeacherPage(props) {
+    const navigate = useNavigate();
     const [seacrhParams, setSearchParams] = useSearchParams({ subjectCode: '', year: '', semester: '' });
     const subjectCode = seacrhParams.get('subjectCode');
     const year = seacrhParams.get('year');
@@ -109,7 +110,7 @@ function TeacherPage(props) {
                 (selectedSubject ? course.subjectID === selectedSubject : true) &&
                 (selectedYear ? course.year === selectedYear : true) &&
                 (selectedSemester ? course.semester === Number(selectedSemester) : true)
-                
+
             );
         });
         setFilteredCourses(filtered);
@@ -177,7 +178,7 @@ function TeacherPage(props) {
                         filteredCourses.map((course) => (
                             <button
                                 key={course.id}
-                                onClick={() => navigate(`/teacher/coursedetail/${course.courseCode}`)}
+                                onClick={() => navigate(`/teacher/coursedetail/${course.id}`)}
                                 className="flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
                             >
                                 <div className="flex justify-between items-center p-4 border-b border-gray-200">

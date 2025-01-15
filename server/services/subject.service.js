@@ -20,16 +20,21 @@ class SubjectService {
         return subjectCode
     }
 
-    static createSubject = async ({
+    static createSubject = async (majorID, {
         subjectCode,
         subjectName,
         type,
         credit,
         description,
     }) => {
-        if (!subjectCode || !subjectName || !type || !credit) {
+        if (!subjectCode || !subjectName || !type || !credit || !majorID) {
             throw new Error("Please provide all required fields");
         };
+
+        const majorExists = await Course.findByPk(majorID);
+        if (!majorExists) {
+            throw new Error("Major not found");
+        }
 
         // Validate subject code format
         const subjectCodeRegex = /^[A-Z]{2,4}\d{3}$/;
