@@ -12,6 +12,19 @@ function TeacherPage(props) {
     const year = seacrhParams.get('year');
     const semester = seacrhParams.get('semester');
 
+    // State to track visibility for semesters
+    const [visibleSemesters, setVisibleSemesters] = React.useState({});
+
+    // Toggle visibility for a specific semester
+    const toggleSemesterVisibility = (semesterId) => {
+        setVisibleSemesters((prev) => ({
+            ...prev,
+            [semesterId]: !prev[semesterId],
+        }));
+    };
+
+
+
     const [selectedSemester, setSelectedSemester] = React.useState('');
     const [selectedYear, setSelectedYear] = React.useState('');
     const [yearArray, setYearArray] = React.useState([]);

@@ -84,6 +84,7 @@ class CourseService {
     }
 
     static editCourse = async (courseID, {
+        courseCode,
         semester,
         year,
         teacherID,
@@ -94,6 +95,13 @@ class CourseService {
         const currentCourse = await Course.findByPk(courseID);
         if (!currentCourse) throw new Error('Course not found');
 
+        // Check if courseCode exists
+        if (courseCode) {
+            const existingCourse = await Course.findOne({ where: { courseCode } });
+            if (existingCourse && existingCourse.id !== courseID) {
+                throw new Error('Course code already exists');
+            }
+        }
         // TeacherID
         if (teacherID) {
             if (currentCourse.active === false && !active) throw new Error('Course is not active');
@@ -115,6 +123,7 @@ class CourseService {
         if (semester && (semester < 1 || semester > 2)) throw new Error('Invalid semester');
 
         await currentCourse.update({
+            courseCode: courseCode || currentCourse.courseCode,
             semester: semester || currentCourse.semester,
             year: year || currentCourse.year,
             teacherID: teacherID || currentCourse.teacherId,
