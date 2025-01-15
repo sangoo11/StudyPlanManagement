@@ -1,48 +1,137 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddSubject({onClose}) {
+function AddSubject({ onClose }) {
+    const [formData, setFormData] = useState({
+        subjectCode: "",
+        subjectName: "",
+        type: "core", // Default value
+        credit: "",
+        majorID: "",
+    });
+
+    const [error, setError] = useState("");
+
+    // Handle input change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const { subjectCode, subjectName, type, credit, majorID } = formData;
+
+        // Validate fields
+        if (!subjectCode || !subjectName || !type || !credit || !majorID) {
+            setError("Vui lòng điền đầy đủ thông tin.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `http://localhost:8080/v1/api/subject/create-new-subject/${majorID}`,
+                {
+                    subjectCode,
+                    subjectName,
+                    type,
+                    credit,
+                }
+            );
+
+            if (response.status === 201) {
+                alert("Môn học mới đã được thêm thành công!");
+                onClose(); // Close the modal
+            } else {
+                setError("Có lỗi xảy ra. Vui lòng thử lại.");
+            }
+        } catch (err) {
+            console.error("Error creating subject:", err);
+            setError("Không thể thêm môn học. Vui lòng kiểm tra kết nối.");
+        }
+    };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-            <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
-                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Thêm môn học mới</h2>
-                <form className="flex flex-col space-y-4">
+            <div className="flex flex-col w-[50vw] bg-gray-200 p-6 rounded">
+                <h2 className="text-3xl font-bold text-center mb-4">Thêm môn học mới</h2>
+
+                {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+                <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+                    {/* Subject Code */}
                     <div>
                         <label className="block text-gray-700">Mã môn học:</label>
                         <input
                             type="text"
-                            name="name"
-                            //value={formData.name}
-                            //onChange={handleChange}
+                            name="subjectCode"
+                            value={formData.subjectCode}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
+                            placeholder="Nhập mã môn học"
                         />
                     </div>
 
+                    {/* Subject Name */}
                     <div>
                         <label className="block text-gray-700">Tên môn học:</label>
                         <input
-                            type="number"
-                            name="semester"
-                            //value={formData.semester}
-                            //onChange={handleChange}
+                            type="text"
+                            name="subjectName"
+                            value={formData.subjectName}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
+                            placeholder="Nhập tên môn học"
                         />
                     </div>
 
+                    {/* Credit */}
                     <div>
                         <label className="block text-gray-700">Số tín chỉ:</label>
                         <input
-                            type="text"
-                            name="year"
-                            //value={formData.year}
-                            //onChange={handleChange}
+                            type="number"
+                            name="credit"
+                            value={formData.credit}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
+                            placeholder="Nhập số tín chỉ"
                         />
                     </div>
 
+                    {/* Type */}
+                    <div>
+                        <label className="block text-gray-700">Loại môn học:</label>
+                        <select
+                            name="type"
+                            value={formData.type}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded bg-white"
+                        >
+                            <option value="major">Chuyên ngành</option>
+                            <option value="core">Cơ sở ngành</option>
+                        </select>
+                    </div>
 
-                    <div className="flex space-x-4 justify-end">
+                    {/* Major ID */}
+                    <div>
+                        <label className="block text-gray-700">Mã chuyên ngành:</label>
+                        <input
+                            type="number"
+                            name="majorID"
+                            value={formData.majorID}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded"
+                            placeholder="Nhập mã chuyên ngành"
+                        />
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex justify-end space-x-4">
                         <button
                             type="button"
                             onClick={onClose}
@@ -56,7 +145,6 @@ function AddSubject({onClose}) {
                         >
                             Xác nhận
                         </button>
-                        
                     </div>
                 </form>
             </div>

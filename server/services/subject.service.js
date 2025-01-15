@@ -11,14 +11,23 @@ class SubjectService {
         return subjectList
     }
 
-    static getAllSubjectCode = async () => {
-        const subjectCode = await Subject.findAll({
-            attributes: ['subjectCode'],
-            group: ['subjectCode'],
-        });
-        if (!subjectCode) throw new Error("Subject code not found");
-        return subjectCode
+    static getSubjectById = async (subjectId) => {
+        const subject = await Subject.findByPk(subjectId);
+        if (!subject) throw new Error('Subject not found');
+
+        return subject
     }
+
+    static getAllSubjectCode = async () => {
+        const subjects = await Subject.findAll({
+            attributes: ['id', 'subjectCode'], // Include subjectID in the attributes
+            group: ['id', 'subjectCode'],     // Group by both subjectID and subjectCode
+        });
+        if (!subjects || subjects.length === 0) {
+            throw new Error("No subjects found");
+        }
+        return subjects;
+    };
 
     static createSubject = async (majorID, {
         subjectCode,
@@ -70,6 +79,7 @@ class SubjectService {
     }
 
     static editSubject = async (subjectID, {
+        subjectCode,
         subjectName,
         type,
         credit,
@@ -90,7 +100,16 @@ class SubjectService {
             throw new Error("Invalid subject type");
         };
 
+
+        const subjectCodeExists = await Subject.findOne({
+            where: { subjectCode }
+        });
+        if (subjectCodeExists) {
+            throw new Error("Subject code already exists");
+        }
+
         const updatedSubject = await subject.update({
+            subjectCode,
             subjectName,
             type,
             credit,

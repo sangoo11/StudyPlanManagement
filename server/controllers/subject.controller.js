@@ -12,6 +12,14 @@ class SubjectController {
         }).send(res);
     }
 
+    getSubjectById = async (req, res, next) => {
+        new CREATED({
+            message: "Get Subject Success",
+            metadata: await SubjectService.getSubjectById(req.params.subjectId),
+            options: { limit: 10 }
+        }).send(res);
+    }
+
     getAllSubjectCode = async (req, res, next) => {
         new CREATED({
             message: "Get All Subjects Code Success",

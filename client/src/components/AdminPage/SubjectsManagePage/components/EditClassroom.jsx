@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function EditClassroom({ course, onClose, onEditSuccess }) {
+function EditClassroom({ courseId, onClose}) {
+
+    const [course, setCourse] = useState(null);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/v1/api/course/get-course/${courseId}`);
+                setCourse(response.data.metadata || []);
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
     const [formData, setFormData] = useState({
-        name: course?.name || "",
-        semester: course?.semester || "",
-        year: course?.year || "",
-        active: course?.active || false,
-        teacherId: course?.teacherId || "",
+        courseCode: course.courseCode || "",
+        semester: course.semester || "",
+        year: course.year || "",
+        active: course.active || false,
+        teacherID: course.teacherID || "",
     });
 
     const handleChange = (e) => {
@@ -23,11 +39,11 @@ function EditClassroom({ course, onClose, onEditSuccess }) {
         try {
             console.log("Sending request for course ID:", course.id);
             const response = await axios.put(
-                `http://localhost:8080/v1/api/course/edit-course/${course.id}`,
+                `http://localhost:8080/v1/api/course/edit-course/${courseId}`,
                 formData
             );
             console.log("Course updated:", response.data);
-            onEditSuccess(response.data);
+            alert("Thay đổi thông tin thành công");
             onClose();
         } catch (error) {
             console.error("Error updating course:", error.response || error);
@@ -41,12 +57,12 @@ function EditClassroom({ course, onClose, onEditSuccess }) {
                 <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Chỉnh sửa lớp học</h2>
                 <form className="flex flex-col space-y-4">
                     <div>
-                        <label className="block text-gray-700">Năm học:</label>
+                        <label className="block text-gray-700">Mã lớp:</label>
                         <input
                             type="text"
-                            name="name"
-                            //value={formData.name}
-                            //onChange={handleChange}
+                            name="courseCode"
+                            value={formData.courseCode}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
                         />
                     </div>
@@ -56,19 +72,19 @@ function EditClassroom({ course, onClose, onEditSuccess }) {
                         <input
                             type="number"
                             name="semester"
-                            //value={formData.semester}
-                            //onChange={handleChange}
+                            value={formData.semester}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-gray-700">Mã lớp học:</label>
+                        <label className="block text-gray-700">Năm:</label>
                         <input
                             type="text"
                             name="year"
-                            //value={formData.year}
-                            //onChange={handleChange}
+                            value={formData.year}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
                         />
                     </div>
@@ -78,21 +94,36 @@ function EditClassroom({ course, onClose, onEditSuccess }) {
                         <input
                             type="text"
                             name="teacherId"
-                            //value={formData.teacherId}
-                            //onChange={handleChange}
+                            value={formData.teacherID}
+                            onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-gray-700">Tên giáo viên:</label>
-                        <input
-                            type="text"
-                            name="teacherId"
-                            //value={formData.teacherId}
-                            //onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                        />
+                        <label className="block text-gray-700">Active:</label>
+                        <div>
+                            <input
+                                type="radio"
+                                name="active"
+                                value="true"
+                                checked={formData.active === "true"}
+                                onChange={handleChange}
+                                className="mr-2"
+                            />
+                            <label>Active</label>
+                        </div>
+                        <div>
+                            <input
+                                type="radio"
+                                name="inactive"
+                                value="false"
+                                checked={formData.active === "false"}
+                                onChange={handleChange}
+                                className="mr-2"
+                            />
+                            <label>Inactive</label>
+                        </div>
                     </div>
 
                     <div className="flex space-x-4 justify-end">
