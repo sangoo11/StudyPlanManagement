@@ -49,11 +49,18 @@ function TeacherPage(props) {
     React.useEffect(() => {
         const getAllCourses = async () => {
             const accountID = localStorage.getItem('accountID');
-            const accountableType = localStorage.getItem('accountableType');
-            if (accountableType !== 'teacher') return;
+            let teacherID;
+            if (!accountID) return;
+            try {
+                const response = await axios.get(`http://localhost:8080/v1/api/account/get-user-id/${accountID}`);
+                teacherID = response.data.metadata.teacherID;
+                console.log(teacherID);
+            } catch (error) {
+                console.error(error.response?.data?.message || 'Error get teacherID');
+            }
 
             try {
-                const response = await axios.get('http://localhost:8080/v1/api/course/get-all-courses/:teacherID');
+                const response = await axios.get(`http://localhost:8080/v1/api/course/get-all-courses/${teacherID}`);
                 setCourseArray(response.data.metadata);
             } catch (error) {
                 console.error(error.response?.data?.message || 'Error fetching courses');

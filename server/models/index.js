@@ -443,7 +443,7 @@ const checkAndCreateData = async () => {
 
 // Sync all models with database
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(async () => {
     console.log("Database & tables created!");
     await checkAndCreateData();

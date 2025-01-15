@@ -63,6 +63,14 @@ class CourseController {
             options: { limit: 10 }
         }).send(res);
     }
+
+    getStudentCourse = async (req, res, next) => {
+        new CREATED({
+            message: "Get All Student Course Success",
+            metadata: await CourseService.getStudentCourse(req.params.courseID),
+            options: { limit: 10 }
+        }).send(res);
+    }
 }
 
 module.exports = new CourseController();
