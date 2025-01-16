@@ -9,11 +9,12 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const [inputValue, setInputValue] = useState({
-    fullname: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
+    fullname: "tathuythanh",
+    email: "tathuythanh15@gmail.com",
+    password: "tathuythanh",
+    confirmPassword: "tathuythanh",
+    accountableType: "",
+    major: "IT",
   });
 
   function handleChange(event) {
@@ -27,51 +28,42 @@ const SignUpPage = () => {
   // Validation function
   const validate = () => {
     if (!inputValue.fullname.trim() || inputValue.fullname.length < 2) {
-      newErrors.fullname = "* Full Name must be at least 2 characters.";
+      alert("* Full Name must be at least 2 characters.");
     } else if (!/^[A-Za-z\s]+$/.test(inputValue.fullname)) {
-      newErrors.fullname = "* Full Name can only contain letters and spaces.";
-    }
-
-    if (!inputValue.phone.trim() || !/^\d{10}$/.test(inputValue.phone)) {
-      newErrors.phone = "Phone must be a valid 10-digit number.";
+      alert("* Full Name must contain only alphabets.");
     }
 
     if (!inputValue.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValue.email)) {
-      newErrors.email = "Enter a valid email address.";
+      alert("* Invalid email address.");
     }
 
     if (!inputValue.password || inputValue.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters.";
+      alert("* Password must be at least 8 characters.");
     } else if (
       !/[A-Z]/.test(inputValue.password) ||
       !/[a-z]/.test(inputValue.password) ||
       !/\d/.test(inputValue.password) ||
       !/[!@#$%^&*]/.test(inputValue.password)
     ) {
-      newErrors.password =
-        "Password must contain uppercase, lowercase, a number, and a special character.";
+      alert("* Password must contain at least one uppercase letter, one lowercase letter, one digit and one special character.");
     }
 
     if (inputValue.confirmPassword !== inputValue.password) {
-      newErrors.confirmPassword = "Passwords do not match.";
+      alert("* Passwords do not match.");
     }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
   const handleSignUp = async (event) => {
     event.preventDefault();
-    const isValid = validate();
-    if (!isValid) return;
 
     try {
       const response = await axios.post('http://localhost:8080/v1/api/access/signup', {
         fullname: inputValue.fullname,
-        phone: inputValue.phone,
         email: inputValue.email,
-        password: inputValue.password
+        password: inputValue.password,
+        accountableType: inputValue.accountableType,
+        major: inputValue.major,
       });
 
       const decoded = jwtDecode(response.data.metadata.accessToken);
@@ -79,9 +71,17 @@ const SignUpPage = () => {
       localStorage.setItem('accountID', decoded.accountID);
       localStorage.setItem('accountableType', decoded.accountableType);
 
-      navigate('/');
+      if (decoded.accountableType === 'teacher') {
+        alert('Your account has been created successfully. Please active to continue.');
+        navigate('/signin');
+      }
+      if (decoded.accountableType === 'student') {
+        navigate('/student');
+      }
+
     } catch (error) {
-      console.error('Error during signup:', error.response.data.message);
+      const errorMessage = error.response.data.message;
+      console.error('Error during signup:', errorMessage);
     }
   };
 
@@ -92,14 +92,30 @@ const SignUpPage = () => {
         <img className="w-3/4" src={SignUpPicture}></img>
       </div>
       <div className="flex-1 m-auto flex flex-col items-center">
-        <form onSubmit={handleSignUp} className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-2 items-center text-center p-8 text-white rounded-md">
-          <h2 className="w-full text-4xl font-semibold mb-3">Sign in</h2>
+        <form onSubmit={handleSignUp} className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-4 items-center text-center p-8 text-white rounded-md">
+          <h2 className="w-full text-4xl font-semibold mb-3">Sign Up</h2>
           <input type="text"
             autoComplete="true"
             placeholder="Email"
             onChange={(event) => handleChange(event)}
             value={inputValue.email}
             name="email"
+            className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
+          />
+          <input type="text"
+            autoComplete="true"
+            placeholder="Fullname"
+            onChange={(event) => handleChange(event)}
+            value={inputValue.fullname}
+            name="fullname"
+            className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
+          />
+          <input type="text"
+            autoComplete="true"
+            placeholder="Major"
+            onChange={(event) => handleChange(event)}
+            value={inputValue.major}
+            name="major"
             className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
           />
           <input type="password"
@@ -110,10 +126,38 @@ const SignUpPage = () => {
             name="password"
             className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
           />
-          <button className="w-full underline">Forgot Password</button>
-          <p className="w-full">Or</p>
-          <button onClick={() => navigate('/signup')} className="w-full underline">Create an account</button>
-          <button onClick={handleSignUp} className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign In</button>
+          <input type="password"
+            autoComplete="true"
+            placeholder="Confirm Password"
+            onChange={(event) => handleChange(event)}
+            value={inputValue.confirmPassword}
+            name="confirmPassword"
+            className="rounded text-black bg-[#EBF4F6] w-[350px] h-[36px] indent-3 focus:outline-none focus:ring focus:ring-yellow-400"
+          />
+          <div className="flex gap-4">
+            <div className='space-x-2'>
+              <input type="radio"
+                value="teacher"
+                name="accountableType"
+                onChange={(event) => handleChange(event)}
+              />
+              <label htmlFor='teacher'>
+                Teacher
+              </label>
+            </div>
+            <div className='space-x-2'>
+              <input type="radio"
+                value="student"
+                name="accountableType"
+                onChange={(event) => handleChange(event)}
+              />
+              <label htmlFor='student'>
+                Student
+              </label>
+            </div>
+          </div>
+          <button onClick={handleSignUp} className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign Up</button>
+          <button onClick={() => navigate('/signin')} className="w-full underline">Already have account?</button>
         </form>
       </div>
     </div>

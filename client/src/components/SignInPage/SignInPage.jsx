@@ -50,9 +50,16 @@ const SignInScreen = () => {
             localStorage.setItem('accountID', decoded.accountID);
             localStorage.setItem('accountableType', decoded.accountableType);
 
-            navigate('/');
+            if (decoded.accountableType === 'teacher') {
+                console.log(decoded.accountableType);
+                navigate('/teacher');
+            } else if (decoded.accountableType === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/student');
+            }
         } catch (error) {
-            console.error('Error during signin:', error.response.data.message);
+            alert(error.response.data.message);
         }
     };
 
