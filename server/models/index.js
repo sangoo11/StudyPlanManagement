@@ -11,21 +11,22 @@ const LearningOutcomeScore = require('./learningOutcomeScore.model');
 const Enrollment = require('./enrollment.model');
 const Modification = require('./modification.model');
 const Major = require('./major.model');
+const SubjectLearningOutcome = require('./subjectLearningOutcome.model');
 
 // User - Account relationships
-Account.belongsTo(Student, {
+Student.belongsTo(Account, {
   foreignKey: "accountID",
   constraints: false,
   as: "Student",
 });
 
-Account.belongsTo(Teacher, {
+Teacher.belongsTo(Account, {
   foreignKey: "accountID",
   constraints: false,
   as: "Teacher",
 });
 
-Account.belongsTo(Admin, {
+Admin.belongsTo(Account, {
   foreignKey: "accountID",
   constraints: false,
   as: "Admin",
@@ -134,22 +135,23 @@ const admins = [
 
 const students = [
   { accountID: 2, fullName: 'John Doe', major: 'Computer Science', credit: 0, status: 'active' },
-  { accountID: 3, fullName: 'Jane Smith', major: 'Mathematics', credit: 0, status: 'terminated' },
-  { accountID: 4, fullName: 'Mark Johnson', major: 'Physics', credit: 0, status: 'suspended' },
+  { accountID: 3, fullName: 'Jane Smith', major: 'Mathematics', credit: 0, status: 'active' },
+  { accountID: 4, fullName: 'Mark Johnson', major: 'Physics', credit: 0, status: 'active' },
   { accountID: 5, fullName: 'Lucy Brown', major: 'Engineering', credit: 0, status: 'active' },
-  { accountID: 6, fullName: 'Michael Davis', major: 'Economics', credit: 0, status: 'onleave' },
+  { accountID: 6, fullName: 'Michael Davis', major: 'Economics', credit: 0, status: 'active' },
   { accountID: 7, fullName: 'Emma Wilson', major: 'Psychology', credit: 0, status: 'active' },
   { accountID: 8, fullName: 'Oliver Moore', major: 'Biology', credit: 0, status: 'active' },
-  { accountID: 9, fullName: 'Sophia Taylor', major: 'Chemistry', credit: 0, status: 'suspended' },
+  { accountID: 9, fullName: 'Sophia Taylor', major: 'Chemistry', credit: 0, status: 'active' },
   { accountID: 10, fullName: 'Liam Anderson', major: 'History', credit: 0, status: 'active' },
-  { accountID: 11, fullName: 'Isabella Thomas', major: 'Literature', credit: 0, status: 'terminated' },
+  { accountID: 11, fullName: 'Isabella Thomas', major: 'Literature', credit: 0, status: 'active' },
 ];
 
 const teachers = [
   { accountID: 12, fullName: 'Dr. Alan Green', major: 'Mathematics', status: 'active' },
-  { accountID: 13, fullName: 'Prof. Sarah White', major: 'Computer Science', status: 'onleave' },
-  { accountID: 14, fullName: 'Dr. Henry Black', major: 'Physics', status: 'suspended' },
+  { accountID: 13, fullName: 'Prof. Sarah White', major: 'Computer Science', status: 'active' },
+  { accountID: 14, fullName: 'Dr. Henry Black', major: 'Physics', status: 'active' },
 ];
+
 
 const majors = [
   {
@@ -402,13 +404,56 @@ const modifications = [
   },
   {
     key: 'core',
-    value: '0.5'
+    value: '2'
   },
   {
     key: 'major',
     value: '1'
   }
 ];
+
+const subjectLearningOutcomes = [
+  { subjectID: 1, learningOutcomeID: 2 }, // Introduction to Software Engineering
+  { subjectID: 1, learningOutcomeID: 4 },
+  { subjectID: 1, learningOutcomeID: 5 },
+
+  { subjectID: 2, learningOutcomeID: 2 }, // Data Structures and Algorithms
+  { subjectID: 2, learningOutcomeID: 3 },
+  { subjectID: 2, learningOutcomeID: 4 },
+
+  { subjectID: 3, learningOutcomeID: 2 }, // Software Design Patterns
+  { subjectID: 3, learningOutcomeID: 3 },
+  { subjectID: 3, learningOutcomeID: 4 },
+
+  { subjectID: 4, learningOutcomeID: 2 }, // Advanced Programming
+  { subjectID: 4, learningOutcomeID: 3 },
+  { subjectID: 4, learningOutcomeID: 4 },
+  { subjectID: 4, learningOutcomeID: 5 },
+
+  { subjectID: 5, learningOutcomeID: 1 }, // Introduction to Computer Science
+  { subjectID: 5, learningOutcomeID: 2 },
+  { subjectID: 5, learningOutcomeID: 4 },
+
+  { subjectID: 6, learningOutcomeID: 2 }, // Database Systems
+  { subjectID: 6, learningOutcomeID: 4 },
+  { subjectID: 6, learningOutcomeID: 5 },
+
+  { subjectID: 7, learningOutcomeID: 2 }, // Computer Networks
+  { subjectID: 7, learningOutcomeID: 4 },
+  { subjectID: 7, learningOutcomeID: 5 },
+
+  { subjectID: 8, learningOutcomeID: 1 }, // Discrete Mathematics
+  { subjectID: 8, learningOutcomeID: 4 },
+
+  { subjectID: 9, learningOutcomeID: 2 }, // Linear Algebra
+  { subjectID: 9, learningOutcomeID: 4 },
+  { subjectID: 9, learningOutcomeID: 5 },
+
+  { subjectID: 10, learningOutcomeID: 2 }, // Machine Learning
+  { subjectID: 10, learningOutcomeID: 3 },
+  { subjectID: 10, learningOutcomeID: 4 },
+];
+
 
 
 const createData = async () => {
@@ -428,7 +473,12 @@ const createData = async () => {
 
   // Create Learning Outcomes
   await LearningOutcome.bulkCreate(learningOutcomes);
+
+  // Create Modifications
   await Modification.bulkCreate(modifications);
+
+  // Create Learning Outcome - Subject relationships
+  await SubjectLearningOutcome.bulkCreate(subjectLearningOutcomes);
 }
 
 const checkAndCreateData = async () => {
@@ -443,7 +493,7 @@ const checkAndCreateData = async () => {
 
 // Sync all models with database
 sequelize
-  .sync({ alter: true })
+  .sync()
   .then(async () => {
     console.log("Database & tables created!");
     await checkAndCreateData();

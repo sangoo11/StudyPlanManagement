@@ -1,76 +1,205 @@
-// const Subject = require('../models/subject.model');
-// const SubjectScore = require('../models/score.model');
-// const LearningOutcome = require('../models/learningOutcome.model');
+const Subject = require('../models/subject.model');
+const SubjectScore = require('../models/score.model');
+const LearningOutcome = require('../models/learningOutcome.model');
+const SubjectLearningOutcome = require('../models/subjectLearningOutcome.model');
+const { where } = require('sequelize');
 
-// class LearningOutcomeService {
-//     static async getLearningOutcomeScoresByStudentId(studentId) {
-//         try {
-//             // Get all subject scores for the student
-//             const subjectScores = await SubjectScore.findAll({
-//                 where: { studentId },
-//                 include: [{
-//                     model: Subject,
-//                     attributes: ['id', 'name', 'multiplicationFactor'],
-//                     include: [{
-//                         model: LearningOutcomeScore,
-//                         include: [LearningOutcome]
-//                     }]
-//                 }]
-//             });
+class LearningOutcomeService {
+    static getAllLearningOutcome = async () => {
+        return await LearningOutcome.findAll();
+    }
 
-//             // Initialize outcome scores object
-//             const outcomeScores = {};
+    static getLearningOutcomeById = async (id) => {
+        if (!id) {
+            throw new Error('Missing required fields: id');
+        }
+        const learningOutcome = await LearningOutcome.findByPk(id);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
+        return learningOutcome;
+    }
 
-//             // Process each subject score
-//             for (const subjectScore of subjectScores) {
-//                 // Skip if not fully graded
-//                 if (!subjectScore.isFullyGraded()) continue;
+    static createLearningOutcome = async ({
+        learningOutcomeCode,
+        learningOutcomeName,
+        description,
+    }) => {
+        if (!learningOutcomeCode || !learningOutcomeName) {
+            throw new Error('Missing required fields');
+        }
+        const learningOutcome = await LearningOutcome.create({
+            learningOutcomeCode,
+            learningOutcomeName,
+            description,
+        });
+        if (!learningOutcome) {
+            throw new Error('Failed to create Learning Outcome');
+        }
 
-//                 // Get total score for the subject
-//                 const totalScore = subjectScore.getTotalScore();
+        return learningOutcome;
+    }
 
-//                 // Apply subject multiplication factor
-//                 const weightedScore = totalScore * subjectScore.Subject.multiplicationFactor;
+    static updateLearningOutcome = async (id, {
+        learningOutcomeName,
+        description,
+        active,
+    }) => {
+        if (!id) {
+            throw new Error('Missing required fields: id');
+        }
+        const learningOutcome = await LearningOutcome.findByPk(id);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
+        if (learningOutcome.active) {
+            throw new Error('Learning Outcome is already active');
+        }
+        if (active !== true) {
+            throw new Error('Learning Outcome is not correct format');
+        }
 
-//                 // Process each learning outcome for this subject
-//                 for (const outcomeScore of subjectScore.Subject.LearningOutcomeScores) {
-//                     const outcomeId = outcomeScore.LearningOutcome.id;
-//                     const contribution = outcomeScore.contributionPercentage / 100;
 
-//                     // Initialize outcome score if not exists
-//                     if (!outcomeScores[outcomeId]) {
-//                         outcomeScores[outcomeId] = {
-//                             code: outcomeScore.LearningOutcome.code,
-//                             name: outcomeScore.LearningOutcome.name,
-//                             totalScore: 0,
-//                             contributingSubjects: 0
-//                         };
-//                     }
+        await learningOutcome.update({
+            learningOutcomeName: learningOutcomeName || learningOutcome.learningOutcomeName,
+            description: description || learningOutcome.description,
+            active: active || learningOutcome.active,
+        });
 
-//                     // Add weighted score contribution
-//                     outcomeScores[outcomeId].totalScore += weightedScore * contribution;
-//                     outcomeScores[outcomeId].contributingSubjects++;
-//                 }
-//             }
+        return learningOutcome;
+    }
 
-//             // Calculate final averages and format results
-//             const results = Object.values(outcomeScores).map(outcome => ({
-//                 code: outcome.code,
-//                 name: outcome.name,
-//                 score: outcome.contributingSubjects > 0
-//                     ? (outcome.totalScore / outcome.contributingSubjects).toFixed(2)
-//                     : 0
-//             }));
+    static deleteLearningOutcome = async (id) => {
+        if (!id) {
+            throw new Error('Missing required fields: id');
+        }
+        const learningOutcome = await LearningOutcome.findByPk(id);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
 
-//             return {
-//                 studentId,
-//                 learningOutcomes: results.sort((a, b) => a.code - b.code)
-//             };
+        await learningOutcome.update({
+            active: false,
+        });
 
-//         } catch (error) {
-//             throw new Error(`Error calculating learning outcome scores: ${error.message}`);
-//         }
-//     }
-// }
+        return learningOutcome;
+    }
 
-// module.exports = { LearningOutcomeService };
+    static createSubjectLearningOutcome = async (LOID, { subjectID }) => {
+        if (!LOID || !subjectID) {
+            throw new Error('Missing required fields');
+        }
+        const learningOutcome = await LearningOutcome.findByPk(LOID);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
+        const subject = await Subject.findByPk(subjectID);
+        if (!subject) {
+            throw new Error('Subject not found');
+        }
+
+        const subjectLearningOutcome = await SubjectLearningOutcome.findOne({
+            where: {
+                learningOutcomeID: LOID,
+                subjectID: subjectID,
+            }
+        });
+
+        if (subjectLearningOutcome) {
+            throw new Error('Subject - Learning Outcome already linked');
+        } else {
+            const newSubjectLearningOutcome = await SubjectLearningOutcome.create({
+                learningOutcomeID: LOID,
+                subjectID: subjectID
+            });
+            if (!newSubjectLearningOutcome) {
+                throw new Error('Failed to create Subject - Learning Outcome');
+            }
+        }
+
+        return subjectID + ' linked with ' + LOID;
+    }
+
+    static deleteSubjectLearningOutcome = async (LOID, { subjectID }) => {
+        if (!LOID || !subjectID) {
+            throw new Error('Missing required fields');
+        }
+        const learningOutcome = await LearningOutcome.findByPk(LOID);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
+        if (!learningOutcome.active) {
+            throw new Error('Learning Outcome is not active');
+        }
+        const subject = await Subject.findByPk(subjectID);
+        if (!subject) {
+            throw new Error('Subject not found');
+        }
+
+        const subjectLearningOutcome = await SubjectLearningOutcome.findOne({
+            where: {
+                learningOutcomeID: LOID,
+                subjectID,
+            }
+        });
+
+        if (!subjectLearningOutcome) {
+            throw new Error('Subject - Learning Outcome not linked yet');
+        } else {
+            await SubjectLearningOutcome.destroy({
+                where: {
+                    learningOutcomeID: LOID,
+                    subjectID,
+                }
+            });
+        }
+
+        return subjectID + ' unlinked with ' + LOID;
+    }
+
+    static getAllSubjectByLOID = async (LOID) => {
+        if (!LOID) {
+            throw new Error('Missing required fields');
+        }
+        const learningOutcome = await LearningOutcome.findByPk(LOID);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
+
+        const subjectLearningOutcome = await SubjectLearningOutcome.findAll({
+            where: {
+                LearningOutcomeID: LOID,
+            }
+        });
+
+        if (!subjectLearningOutcome) {
+            throw new Error('No subject linked with this Learning Outcome');
+        }
+
+        return subjectLearningOutcome;
+    }
+
+    static getAllLearningOutcomeBySubjectID = async (subjectID) => {
+        if (!subjectID) {
+            throw new Error('Missing required fields');
+        }
+        const subject = await Subject.findByPk(subjectID);
+        if (!subject) {
+            throw new Error('Subject not found');
+        }
+
+        const subjectLearningOutcome = await SubjectLearningOutcome.findAll({
+            where: {
+                subjectID,
+            }
+        });
+
+        if (!subjectLearningOutcome) {
+            throw new Error('No Learning Outcome linked with this Subject');
+        }
+
+        return subjectLearningOutcome;
+    }
+}
+
+module.exports = LearningOutcomeService;
