@@ -14,6 +14,6 @@ router.post('/create-new-subject/:majorID', asyncHandler(SubjectController.creat
 router.put('/edit-subject/:subjectID', asyncHandler(SubjectController.editSubject));
 
 // Delete a subject
-router.delete('/delete-subject/:subjectID', asyncHandler(SubjectController.deleteSubject));
+router.put('/delete-subject/:subjectID', asyncHandler(SubjectController.deleteSubject));
 
 module.exports = router;

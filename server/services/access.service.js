@@ -91,9 +91,13 @@ class AccessService {
         const foundAccount = await Account.findOne({ where: { email } });
         if (!foundAccount) throw new Error('Invalid email or password');
 
-        const checkPassword = await bcrypt.compare(password, foundAccount.password);
-        if (!checkPassword) throw new Error('Invalid email or password');
-
+        if (password.length === 11) { //Default password
+            const checkPassword = password === foundAccount.password ? true : false;
+            if (!checkPassword) throw new Error('Invalid email or password');
+        } else {
+            const checkHashPassword = await bcrypt.compare(password, foundAccount.password);
+            if (!checkHashPassword) throw new Error('Invalid email or password');
+        }
         const checkStatus = foundAccount.active;
         if (!checkStatus) throw new AuthFailureError('Account is not active');
 
