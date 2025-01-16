@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 function AccountPage() {
     const accountID = localStorage.getItem('accountID'); // Retrieve account ID from localStorage
-    //const history = useHistory(); // For navigation to other pages
     
     const navigate = useNavigate(); // Use the navigate hook to navigate to other pages
 
@@ -34,8 +33,8 @@ function AccountPage() {
     };
 
     return (
-        <div className='min-h-screen bg-green-50 p-6'>
-            <div className='max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-lg mt-[20vh]'>
+        <div className='flex w-full min-h-screen bg-green-50 p-6'>
+            <div className='flex flex-col h-[60vh] w-[50vw] mx-auto bg-white p-6 rounded-lg shadow-lg mt-[10vh]'>
                 <h1 className='text-2xl font-semibold text-center text-gray-700 mb-6'>Thông tin cá nhân</h1>
                 <div className='space-y-4'>
                     <div className='flex justify-between'>

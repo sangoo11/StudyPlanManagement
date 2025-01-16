@@ -1,7 +1,4 @@
 import React from 'react';
-import ShowMore from '../../assets/images/showmore.png';
-import ShowLess from '../../assets/images/showless.png';
-import minusButton from '../../assets/images/minusButton.png';
 import axios from 'axios'
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
@@ -91,7 +88,7 @@ function TeacherPage(props) {
     }, [selectedSemester, selectedYear, selectedSubject, courseArray]);
 
     return (
-        <div className='min-h-screen bg-gray-50 p-6'>
+        <div className='flex flex-col h-[150vh] mb-[4vh] min-h-screen bg-gray-50 p-6'>
             <div className="flex items-center justify-center mt-[8vh]">
                 <h1 className="text-3xl font-bold text-[#1DA599] mb-6 text-center">
                     Quản lý kết quả học tập
