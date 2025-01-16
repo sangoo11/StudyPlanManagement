@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Chart from '../../../assets/images/statistics.jpg'; 
+import Chart from '../../../assets/images/statistics.jpg';
 
 function StatisticsPage() {
   // State to manage active criteria

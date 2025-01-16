@@ -11,6 +11,8 @@ const LearningOutcome = require('../models/learningOutcome.model');
 const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
 const Modification = require('../models/modification.model');
 const SubjectLearningOutcome = require('../models/subjectLearningOutcome.model');
+const axios = require('axios');
+const { QueryTypes } = require('sequelize');
 
 class ScoreService {
     static gradeScore = async (studentID, {
@@ -169,10 +171,6 @@ class ScoreService {
                         throw new Error('Learning outcome score factor not found');
                     }
 
-                    const subjectType = subject.type;
-                    const subjectFactor = learningOutcomeScoreFactor.find(f => f.key === subjectType);
-                    const subjectFactorValue = parseFloat(subjectFactor.value);
-
                     const learningOutcomeIDs = learningOutcomeObject.map(learningOutcome => learningOutcome.learningOutcomeID);
 
                     for (let i = 0; i < learningOutcomeIDs.length; i++) {
@@ -202,32 +200,40 @@ class ScoreService {
                             }
                         } else {
                             // Update existing learning outcome score
-                            const allSubjectLists = await SubjectLearningOutcome.findAll({
+                            // lay danh sach enrollemnt completed cua student (enrollment)
+                            const result = await sequelize.query(
+                                `SELECT enrollment.finalGrade as score, learningoutcomescore.learningoutcomeID, course.id as courseID, subject.type as subjectType, modification.value as factor
+                                 FROM enrollment
+                                 INNER JOIN course ON enrollment.courseID = course.id
+                                 INNER JOIN subject ON course.subjectID = subject.id
+                                 INNER JOIN subjectlearningoutcome ON subject.id = subjectlearningoutcome.subjectID
+                                 INNER JOIN learningoutcome ON subjectlearningoutcome.learningoutcomeID = learningoutcome.id
+                                 INNER JOIN learningoutcomescore ON learningoutcome.id = learningoutcomescore.learningoutcomeID
+                                 INNER JOIN modification ON modification.key = subject.type
+                                 WHERE enrollment.studentID = ${studentID} AND learningoutcome.id = ${learningOutcome.id} AND enrollment.completed = true          
+                                 ;`,
+                                { type: QueryTypes.SELECT } // This will return an array of results
+                            );
+                            console.log(result);
+                            if (result.length === 0) {
+                                throw new Error('No result found');
+                            }
+                            const factorSum = result.reduce((acc, s) => acc + parseFloat(s.factor), 0);
+                            const averageScore = result.reduce((acc, s) => {
+                                console.log(s.score, s.factor);
+                                return acc + s.score * parseFloat(s.factor);
+                            }, 0) / factorSum;
+                            console.log(averageScore);
+                            console.log(factorSum);
+
+                            await LearningOutcomeScore.update({
+                                score: averageScore,
+                            }, {
                                 where: {
                                     learningOutcomeID: learningOutcome.id,
-                                }
-                            });
-
-                            const allSubjectIDs = allSubjectLists.map(subject => subject.subjectID);
-
-                            const allCourseIDs = await Course.findAll({
-                                where: {
-                                    subjectID: {
-                                        [Op.in]: allSubjectIDs
-                                    }
-                                }
-                            });
-
-                            const allFinalScores = await Enrollment.findAll({
-                                where: {
                                     studentID,
-                                    completed: true,
-                                    courseID: {
-                                        [Op.in]: allCourseIDs.map(course => course.id)
-                                    }
                                 }
                             });
-                            console.log(JSON.stringify(allFinalScores));
                         }
                     }
 

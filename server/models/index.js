@@ -404,11 +404,11 @@ const modifications = [
   },
   {
     key: 'core',
-    value: '2'
+    value: '1'
   },
   {
     key: 'major',
-    value: '1'
+    value: '2'
   }
 ];
 

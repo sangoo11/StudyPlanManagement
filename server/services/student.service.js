@@ -4,6 +4,7 @@ const Enrollment = require('../models/enrollment.model');
 const { sql, Op } = require('@sequelize/core');
 const Student = require('../models/student.model');
 const sequelize = require('../configs/sequelize');
+const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
 
 class StudentService {
     // static getCreditLearn = async (studentID) => {
@@ -118,6 +119,24 @@ class StudentService {
             throw new Error("Delete unsucessfully", error.message);
         }
     }
-}
 
+    static getStudentLearningOutcomeScore = async (studentID) => {
+        if (!studentID) throw new Error('Missing student ID');
+
+        const student = await Student.findOne({
+            where: {
+                id: studentID,
+            }
+        });
+        if (!student) throw new Error('Student not found');
+
+        const learningOutcomeScore = await LearningOutcomeScore.findAll({
+            where: {
+                studentID: studentID,
+            }
+        });
+        if (!learningOutcomeScore) throw new Error('Learning Outcome Score not found');
+        return learningOutcomeScore;
+    }
+}
 module.exports = StudentService;
