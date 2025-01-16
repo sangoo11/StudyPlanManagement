@@ -3,6 +3,7 @@ const Course = require('../models/course.model');
 const { ROLE } = require('./access.service');
 const Teacher = require('../models/teacher.model');
 const Subject = require('../models/subject.model');
+const sequelize = require('../configs/sequelize');
 
 class SubjectService {
     static getAllSubject = async () => {
@@ -119,6 +120,17 @@ class SubjectService {
             active: false
         });
         return subject
+    }
+
+    static getAllSubjectFactor = async () => {
+        const result = await sequelize.query(
+            `SELECT subject.id, subject.subjectName, subject.subjectCode, subject.type, modification.value as factor
+            FROM subject
+            INNER JOIN modification ON subject.type = modification.key`,
+            { type: sequelize.QueryTypes.SELECT }
+        );
+        if (!result) throw new Error("No subject factors found");
+        return result
     }
 }
 

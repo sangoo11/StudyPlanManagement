@@ -39,13 +39,13 @@ class LearningOutcomeService {
             throw new Error('Failed to create Learning Outcome');
         }
 
-        const allStudent = await Student.findAll();
-        const scores = allStudent.map(student => ({
-            score: 0,
-            studentID: student.id,
-            learningOutcomeID: learningOutcome.id
-        }));
-        await LearningOutcomeScore.bulkCreate(scores);
+        // const allStudent = await Student.findAll();
+        // const scores = allStudent.map(student => ({
+        //     score: 0,
+        //     studentID: student.id,
+        //     learningOutcomeID: learningOutcome.id
+        // }));
+        // await LearningOutcomeScore.bulkCreate(scores);
 
         return learningOutcome;
     }
