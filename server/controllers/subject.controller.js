@@ -50,6 +50,16 @@ class SubjectController {
             metadata: await SubjectService.deleteSubject(req.params.subjectID),
         }).send(res);
     }
+
+    getAllSubjectFactor = async (req, res, next) => {
+        new CREATED({
+            message: "Get All Subject Factors Success",
+            metadata: await SubjectService.getAllSubjectFactor(),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    }
 }
 
 module.exports = new SubjectController();
