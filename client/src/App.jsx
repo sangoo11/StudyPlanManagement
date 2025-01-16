@@ -88,12 +88,10 @@ function App() {
 
       <Route element={<TeacherPageLayout />}>
         <Route path='teacher' element={<TeacherPage />}> </Route>
-        <Route path='teacher/coursedetail' element={<CourseDetail />}>
-          <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
-        </Route>
+        <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
         <Route path='teacher/statistics' element={<TeacherStatistics />} />
+        <Route path='teacher/editpoint/:studentID' element={<EditPoint />} />
       </Route>
-      <Route path='teacher/coursedetail/editpoint' element={<EditPoint />}></Route>
 
       <Route path='admin' element={<AdminPageLayout />}>
         <Route path='statistics' element={<StatisticsPage />} />

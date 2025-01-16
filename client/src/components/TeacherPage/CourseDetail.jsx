@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import addButton from '../../assets/images/addButton.png';
@@ -11,6 +11,8 @@ function CourseDetail() {
     const { courseID } = useParams();
 
     const [courseData, setCourseData] = React.useState({});
+
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         const getCourseById = async () => {
@@ -95,7 +97,6 @@ function CourseDetail() {
                                 <div className="flex flex-col items-start">
                                     <p className="text-sm font-medium text-gray-700">Mã số sinh viên: {student.id}</p>
                                     <p className="text-sm text-gray-700">Họ tên: {student.fullName}</p>
-                                    <p className="text-sm text-gray-700">Số điện thoại: {student.phoneNumber}</p>
                                     <p className="text-sm text-gray-700">Tình trạng: {student.status}</p>
                                 </div>
                             </div>
@@ -105,21 +106,21 @@ function CourseDetail() {
                                 <div className="flex items-center h-full rounded-md">
                                     <button
                                         className="w-20 h-8 text-black bg-transparent"
-                                        onClick={() => editStudent(student.id)}
+                                        onClick={() => navigate(`/teacher/editpoint/${student.id}`)}
                                     >
-                                        Chỉnh sửa
+                                        Thêm điểm
                                     </button>
                                 </div>
 
                                 {/* Delete button */}
-                                <div className="rounded-full">
+                                {/* <div className="rounded-full">
                                     <button
                                         className="w-8 h-full text-white rounded-full"
                                         onClick={() => deleteStudent(student.id)}
                                     >
                                         <img src={minusButton} alt="Delete Student" />
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -128,35 +129,14 @@ function CourseDetail() {
 
             </div>
 
-            <div className='flex h-[4vh] w-full items-center justify-end mt-[4vh]'>
+            {/* <div className='flex h-[4vh] w-full items-center justify-end mt-[4vh]'>
                 <button
                     className="w-8 h-full text-white rounded-full hover:border-4 hover:border-yellow-400 mr-[5vw]"
                     onClick={() => setAddStudentVisible(true)}
                 >
                     <img src={addButton} alt="Add Student" />
                 </button>
-            </div>
-
-            {/* AddClassroom Modal */}
-            {/* {isAddStudentVisible && (
-                <AddStudent onClose={() => setAddStudentVisible(false)} />
-            )}
-            {isEditStudentVisible && (
-                <EditStudent student={studentToEdit} 
-                onClose={() => setEditStudentVisible(false)}/>
-                //onEditSuccess={handleEditSuccess} />
-            )}
-            {isDeleteStudentVisible && (
-                <DeleteStudent student={studentToDelete} 
-                onClose={() => setDeleteStudentVisible(false)}/>
-                //onEditSuccess={handleEditSuccess} />
-            )}
-            {isEditClassroomVisible && (
-                <EditClassroom 
-                //student={studentToEdit} 
-                onClose={() => setEditClassroomVisible(false)}/>
-                //onEditSuccess={handleEditSuccess} />
-            )} */}
+            </div> */}
         </div>
 
 

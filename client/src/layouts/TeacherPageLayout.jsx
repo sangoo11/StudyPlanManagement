@@ -7,7 +7,7 @@ function TeacherPageLayout(props) {
 
     const appName = 'EduOrganizer';
     const appMail = 'eduorganizer@gmail.com';
-    const studentName = 'Student Name';
+    const teacherName = 'Teacher Name';
     const title1 = 'Home Page';
     const title2 = 'Statistics';
 
@@ -23,7 +23,7 @@ function TeacherPageLayout(props) {
 
 
     return (
-        <div> 
+        <div>
             {/* Header */}
             <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-12">
@@ -34,15 +34,15 @@ function TeacherPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/teacher" end>{title1}</NavLink>
                     <NavLink style={navLinkStyles} to="/teacher/statistics">{title2}</NavLink>
 
-                    <button className='fixed right-10 space-x-2'>
+                    <button className='fixed right-10 space-x-8'>
                         <div className='fixed w-6 h-6 items-center justify-center'>
-                            <img src={UserLogo}/>
+                            <img src={UserLogo} />
                         </div>
-                        <h1 className="text-[#1DA599] pl-10">{studentName}</h1>
+                        <h1 className="text-[#1DA599]">{teacherName}</h1>
                     </button>
                 </div>
             </div>
-            
+
             {/* Content */}
             <Outlet />
 

@@ -64,8 +64,6 @@ class EnrollmentService {
     }
 
     static enrollStudentInCourse = async (data, courseID) => {
-        const transaction = await sequelize.transaction();
-
         // check input data
         if (!data || data.length === 0 || !courseID) throw new Error('Student ID and Course ID are required');
 
@@ -85,6 +83,16 @@ class EnrollmentService {
                 const currentStudent = await Student.findByPk(student.studentID);
                 if (!currentStudent) throw new Error(`Student with ID ${student.studentID} not found`);
                 if (currentStudent.status !== 'active') throw new Error(`Student with ID ${student.studentID} is not active`);
+
+                // check if student enrolled in this course
+                const existingEnrollment = await Enrollment.findOne({
+                    where: {
+                        studentID: student.studentID,
+                        courseID: courseID,
+                    },
+                });
+                if (existingEnrollment) throw new Error(`Student with ID ${student.studentID} already enrolled in this course`);
+
 
                 // get courseID of incomplete course
                 const studentIncompleteCourse = await Enrollment.findAll({
@@ -107,27 +115,18 @@ class EnrollmentService {
                     studentID: student.studentID,
                     courseID: courseID,
                     enrolledDate: new Date(),
-                }, {
-                    transaction: transaction,
                 });
 
                 await currentStudent.update({
                     credit: currentStudent.credit + subjectCredit,
-                }, {
-                    transaction: transaction,
                 });
 
                 await currentCourse.update({
                     studentCount: currentCourse.studentCount + 1,
-                }, {
-                    transaction: transaction,
                 });
-
                 studentListsID.push(student.studentID);
             }
-            await transaction.commit();
         } catch (error) {
-            await transaction.rollback();
             throw new Error(error.message);
         }
         return {
@@ -139,25 +138,25 @@ class EnrollmentService {
         }
     }
 
-    static enrollTeacherInCourse = async (data, courseID) => {
-        if (!data || !courseID) throw new Error('Teacher ID and Course ID are required');
+    static enrollTeacherInCourse = async ({ teacherID }, courseID) => {
+        if (!teacherID || !courseID) throw new Error('Teacher ID and Course ID are required');
 
         const course = await Course.findByPk(courseID);
         if (!course) throw new Error('Course not found');
         if (course.teacherID) throw new Error('Course already has a teacher');
         if (course.active === false) throw new Error('Course is not active');
 
-        const teacher = await Teacher.findByPk(data.teacherID);
+        const teacher = await Teacher.findByPk(teacherID);
         if (!teacher) throw new Error('Teacher not found');
         if (teacher.status !== 'active') throw new Error('Teacher is not active');
 
         course.update({
-            teacherID: data.teacherID,
+            teacherID: teacherID,
         });
 
         return {
             courseID: parseInt(courseID),
-            teacherID: data.teacherID,
+            teacherID: teacherID,
         }
     }
 }
