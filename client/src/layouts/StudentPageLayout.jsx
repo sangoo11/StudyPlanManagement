@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router';
 import UserLogo from '../assets/images/userlogo.png';
+import {  useNavigate } from 'react-router';
+import axios from "axios";
 
 function StudentPageLayout(props) {
 
     const appName = 'EduOrganizer';
     const appMail = 'eduorganizer@gmail.com';
-    const studentName = 'Student Name';
+    const student = 'Student';
     const title1 = 'Home Page';
     const title2 = 'Learning Results';
     const title3 = 'Learning Outcomes';
+    const accountID = localStorage.getItem('accountID');
+    const [studentID, setStudentID] = useState(null);
+
+    const navigate = useNavigate();
 
     const navLinkStyles = ({ isActive }) => {
         return {
@@ -21,7 +27,22 @@ function StudentPageLayout(props) {
             paddingBottom: isActive ? "5px" : "0",
         };
     };
-
+    
+    const getStudentId = async () => {
+        if (!accountID) return;
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
+            );
+            console.log("API Response:", response.data);
+            setStudentID(response.data.metadata.teacherID); // Make sure this is correct
+        } catch (error) {
+            console.error(error.response?.data?.message || "Error fetching teacherID");
+        }
+    };
+    useEffect(() => {
+        getStudentId();
+    }, []);
 
     return (
         <div> 
@@ -36,11 +57,11 @@ function StudentPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/student/results">{title2}</NavLink>
                     <NavLink style={navLinkStyles} to="/student/outcome">{title3}</NavLink>
 
-                    <button className='fixed right-10 space-x-2'>
+                    <button className='fixed right-10 space-x-2' onClick={() => navigate(`/student/accountstudent/${studentID}`)}>
                         <div className='fixed w-6 h-6 items-center justify-center'>
                             <img src={UserLogo}/>
                         </div>
-                        <h1 className="text-[#1DA599] pl-10">{studentName}</h1>
+                        <h1 className="text-[#1DA599] pl-10">{student}</h1>
                     </button>
                 </div>
             </div>
