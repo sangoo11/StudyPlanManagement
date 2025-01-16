@@ -47,7 +47,7 @@ function TeacherPageLayout(props) {
             <Outlet />
 
             {/* Footer */}
-            <div className='flex-reverse bottom-0 right-0 left-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
+            <div className='fixed flex-reverse bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
                 <div className='grid grid-cols-[2fr_1fr_1fr_1fr_1fr] h-full min-h-[10vh] text-white'>
                     <div className='w-4/6'>
                         <h3 className='text-xl font-semibold mb-2'>{appName}</h3>

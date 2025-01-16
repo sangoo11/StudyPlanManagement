@@ -3,6 +3,8 @@ const SubjectScore = require('../models/score.model');
 const LearningOutcome = require('../models/learningOutcome.model');
 const SubjectLearningOutcome = require('../models/subjectLearningOutcome.model');
 const { where } = require('sequelize');
+const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
+const Student = require('../models/student.model');
 
 class LearningOutcomeService {
     static getAllLearningOutcome = async () => {
@@ -36,6 +38,14 @@ class LearningOutcomeService {
         if (!learningOutcome) {
             throw new Error('Failed to create Learning Outcome');
         }
+
+        const allStudent = await Student.findAll();
+        const scores = allStudent.map(student => ({
+            score: 0,
+            studentID: student.id,
+            learningOutcomeID: learningOutcome.id
+        }));
+        await LearningOutcomeScore.bulkCreate(scores);
 
         return learningOutcome;
     }

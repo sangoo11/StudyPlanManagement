@@ -16,4 +16,10 @@ router.put("/deactivate-account/:accountID", asyncHandler(AccountController.deac
 // Get user ID by account ID
 router.get("/get-user-id/:accountID", asyncHandler(AccountController.getUserIDByAccountID));
 
+// Get userData by account ID
+router.get("/get-user-data/:accountID", asyncHandler(AccountController.getUserDataByAccountID));
+
+// Edit userData by account ID
+router.put("/edit-user-data/:accountID", asyncHandler(AccountController.editUserDataByAccountID));
+
 module.exports = router;

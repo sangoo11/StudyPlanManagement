@@ -10,6 +10,7 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
   learningOutcomeCode: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
     validate: {
       is: {
         args: /^LO\d{1,2}$/,

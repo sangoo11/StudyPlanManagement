@@ -45,5 +45,16 @@ class StudentController {
             }
         }).send(res)
     }
+
+    //handle get student learning outcome score
+    getStudentLearningOutcomeScore = async (req, res, next) => {
+        new CREATED({
+            message: "GET Student Learning Outcome Score OK",
+            metadata: await StudentService.getStudentLearningOutcomeScore(req.params.studentID),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
 }
 module.exports = new StudentController();

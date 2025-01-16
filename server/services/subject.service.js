@@ -79,7 +79,6 @@ class SubjectService {
     }
 
     static editSubject = async (subjectID, {
-        subjectCode,
         subjectName,
         type,
         credit,
@@ -100,16 +99,7 @@ class SubjectService {
             throw new Error("Invalid subject type");
         };
 
-
-        const subjectCodeExists = await Subject.findOne({
-            where: { subjectCode }
-        });
-        if (subjectCodeExists) {
-            throw new Error("Subject code already exists");
-        }
-
         const updatedSubject = await subject.update({
-            subjectCode,
             subjectName,
             type,
             credit,

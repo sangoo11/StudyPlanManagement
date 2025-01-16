@@ -137,6 +137,77 @@ class AccountService {
             };
         }
     }
+
+    static getUserDataByAccountID = async (accountID) => {
+        if (!accountID) throw new Error('Missing account ID');
+        if (parseInt(accountID) === 1) throw new Error('This account is not allowed to get user data');
+        const account = await Account.findByPk(accountID);
+        if (!account) throw new Error('Account not found');
+
+        const accountRole = account.accountableType;
+
+        if (accountRole === 'teacher') {
+            const teacher = await Teacher.findOne({
+                where: {
+                    accountID,
+                },
+            });
+            if (!teacher) throw new Error('Teacher not found');
+            return teacher;
+        } else if (accountRole === 'student') {
+            const student = await Student.findOne({
+                where: {
+                    accountID,
+                },
+            });
+            if (!student) throw new Error('Student not found');
+            return student;
+        } else {
+            throw new Error('This account is not allowed to get user data');
+        }
+
+    }
+
+    static editUserDataByAccountID = async (accountID, {
+        fullName,
+        major,
+    }) => {
+        if (!accountID) throw new Error('Missing account ID');
+        if (parseInt(accountID) === 1) throw new Error('This account is not allowed to edit user data');
+        const account = await Account.findByPk(accountID);
+        if (!account) throw new Error('Account not found');
+
+        const accountRole = account.accountableType;
+        if (accountRole === 'teacher') {
+            const teacher = await Teacher.findOne({
+                where: {
+                    accountID: accountID,
+                },
+            });
+            if (!teacher) throw new Error('Teacher not found');
+            const updateTeacher = await teacher.update({
+                fullName,
+                major,
+            });
+            if (!updateTeacher) throw new Error('Update teacher failed');
+            return updateTeacher;
+        } else if (accountRole === 'student') {
+            const student = await Student.findOne({
+                where: {
+                    accountID: accountID,
+                },
+            });
+            if (!student) throw new Error('Student not found');
+            const updateStudent = await student.update({
+                fullName,
+                major,
+            });
+            if (!updateStudent) throw new Error('Update student failed');
+            return updateStudent;
+        } else {
+            throw new Error('This account is not allowed to edit user data');
+        }
+    }
 }
 
 module.exports = AccountService;

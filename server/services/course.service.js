@@ -84,7 +84,6 @@ class CourseService {
     }
 
     static editCourse = async (courseID, {
-        courseCode,
         semester,
         year,
         teacherID,
@@ -116,7 +115,6 @@ class CourseService {
         if (semester && (semester < 1 || semester > 2)) throw new Error('Invalid semester');
 
         await currentCourse.update({
-            courseCode: courseCode || currentCourse.courseCode,
             semester: semester || currentCourse.semester,
             year: year || currentCourse.year,
             teacherID: teacherID || currentCourse.teacherId,
