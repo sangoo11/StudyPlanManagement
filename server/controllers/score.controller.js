@@ -12,5 +12,16 @@ class ScoreController {
             }
         }).send(res)
     }
+
+    //handle get student by ID
+    getStudentScoreByID = async (req, res, next) => {
+        new CREATED({
+            message: "GET Student Score By ID OK",
+            metadata: await ScoreService.getStudentScoreByID(req.params.studentID, req.body),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
 }
 module.exports = new ScoreController();

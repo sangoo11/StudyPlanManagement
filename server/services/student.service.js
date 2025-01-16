@@ -5,6 +5,7 @@ const { sql, Op } = require('@sequelize/core');
 const Student = require('../models/student.model');
 const sequelize = require('../configs/sequelize');
 const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
+const LearningOutcome = require('../models/learningOutcome.model');
 
 class StudentService {
     // static getCreditLearn = async (studentID) => {
@@ -133,7 +134,11 @@ class StudentService {
         const learningOutcomeScore = await LearningOutcomeScore.findAll({
             where: {
                 studentID: studentID,
-            }
+            },
+            include: {
+                model: LearningOutcome,
+                attributes: ['learningOutcomeCode'],
+            },
         });
         if (!learningOutcomeScore) throw new Error('Learning Outcome Score not found');
         return learningOutcomeScore;
