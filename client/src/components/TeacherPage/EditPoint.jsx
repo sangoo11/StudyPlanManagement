@@ -71,73 +71,73 @@ function EditCriteria({ onClose }) {
                             <span className="text-gray-500">👤</span>
                         </div>
                     </div>
-                    
+
                 </div>
-                
+
 
                 <div className="h-auto mb-[4vh] mt-[4vh]">
-                        <table className="min-w-full bg-white border border-gray-300">
-                            <thead>
-                                <tr>
-                                    <th className="py-2 px-4 border-b">Quá trình</th>
-                                    <th className="py-2 px-4 border-b">Giữa kì</th>
-                                    <th className="py-2 px-4 border-b">Cuối kì</th>
-                                </tr>
-                            </thead>
-                            <tbody className="items-center">
-                                <tr>
-                                    <td className="py-2 px-4 border-b">
-                                        <input
-                                            type="text"
-                                            name="quaTrinh"
-                                            //value={row.maMon}
-                                            //onChange={(e) => handleRowChange(index, e)}
-                                            className="border border-gray-300 rounded w-full"
-                                            placeholder="Quá trình"
-                                        />
-                                    </td>
-                                    <td className="py-2 px-4 border-b">
-                                        <input
-                                            type="text"
-                                            name="giuaKi"
-                                            //value={row.tenMon}
-                                            //onChange={(e) => handleRowChange(index, e)}
-                                            className="border border-gray-300 rounded w-full"
-                                            placeholder="Giữa kì"
-                                        />
-                                    </td>
-                                    <td className="py-2 px-4 border-b">
-                                        <input
-                                            type="text"
-                                            name="cuoiKi"
-                                            //value={row.heSo}
-                                            //onChange={(e) => handleRowChange(index, e)}
-                                            className="border border-gray-300 rounded w-full"
-                                            placeholder="Cuối kì"
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table className="min-w-full bg-white border border-gray-300">
+                        <thead>
+                            <tr>
+                                <th className="py-2 px-4 border-b">Quá trình</th>
+                                <th className="py-2 px-4 border-b">Giữa kì</th>
+                                <th className="py-2 px-4 border-b">Cuối kì</th>
+                            </tr>
+                        </thead>
+                        <tbody className="items-center">
+                            <tr>
+                                <td className="py-2 px-4 border-b">
+                                    <input
+                                        type="text"
+                                        name="quaTrinh"
+                                        //value={row.maMon}
+                                        //onChange={(e) => handleRowChange(index, e)}
+                                        className="border border-gray-300 rounded w-full"
+                                        placeholder="Quá trình"
+                                    />
+                                </td>
+                                <td className="py-2 px-4 border-b">
+                                    <input
+                                        type="text"
+                                        name="giuaKi"
+                                        //value={row.tenMon}
+                                        //onChange={(e) => handleRowChange(index, e)}
+                                        className="border border-gray-300 rounded w-full"
+                                        placeholder="Giữa kì"
+                                    />
+                                </td>
+                                <td className="py-2 px-4 border-b">
+                                    <input
+                                        type="text"
+                                        name="cuoiKi"
+                                        //value={row.heSo}
+                                        //onChange={(e) => handleRowChange(index, e)}
+                                        className="border border-gray-300 rounded w-full"
+                                        placeholder="Cuối kì"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
 
-                    <div className="flex space-x-4 justify-end">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-6 py-2 bg-white text-[#1DA599] font-bold rounded hover:bg-[#1DA599] hover:text-white border-2 border-[#1DA599]"
-                        >
-                            Hủy
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-6 py-2 bg-[#1DA599] text-white font-bold rounded hover:bg-green-400"
-                        >
-                            Xác nhận
-                        </button>
-                        
-                    </div>
+                <div className="flex space-x-4 justify-end">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-6 py-2 bg-white text-[#1DA599] font-bold rounded hover:bg-[#1DA599] hover:text-white border-2 border-[#1DA599]"
+                    >
+                        Hủy
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-6 py-2 bg-[#1DA599] text-white font-bold rounded hover:bg-green-400"
+                    >
+                        Xác nhận
+                    </button>
+
+                </div>
 
             </div>
         </div>

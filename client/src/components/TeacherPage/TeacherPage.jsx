@@ -7,10 +7,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 
 function TeacherPage(props) {
     const navigate = useNavigate();
-    const [seacrhParams, setSearchParams] = useSearchParams({ subjectCode: '', year: '', semester: '' });
-    const subjectCode = seacrhParams.get('subjectCode');
-    const year = seacrhParams.get('year');
-    const semester = seacrhParams.get('semester');
 
     // State to track visibility for semesters
     const [visibleSemesters, setVisibleSemesters] = React.useState({});
@@ -144,8 +140,8 @@ function TeacherPage(props) {
                         onChange={(e) => setSelectedSemester(Number(e.target.value))}
                     >
                         <option value="">Chọn học kỳ</option>
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
+                        <option value={1}>HK1</option>
+                        <option value={2}>HK2</option>
                     </select>
                 </div>
             </div>

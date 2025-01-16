@@ -9,12 +9,12 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const [inputValue, setInputValue] = useState({
-    fullname: "tathuythanh",
-    email: "tathuythanh15@gmail.com",
-    password: "tathuythanh",
-    confirmPassword: "tathuythanh",
+    fullname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     accountableType: "",
-    major: "IT",
+    major: "",
   });
 
   function handleChange(event) {
@@ -88,9 +88,6 @@ const SignUpPage = () => {
 
   return (
     <div className="flex mt-[12vh]">
-      <div className="flex-1">
-        <img className="w-3/4" src={SignUpPicture}></img>
-      </div>
       <div className="flex-1 m-auto flex flex-col items-center">
         <form onSubmit={handleSignUp} className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-4 items-center text-center p-8 text-white rounded-md">
           <h2 className="w-full text-4xl font-semibold mb-3">Sign Up</h2>
@@ -159,6 +156,9 @@ const SignUpPage = () => {
           <button onClick={handleSignUp} className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign Up</button>
           <button onClick={() => navigate('/signin')} className="w-full underline">Already have account?</button>
         </form>
+      </div>
+      <div className="flex-1">
+        <img className="w-3/4" src={SignUpPicture}></img>
       </div>
     </div>
   );
