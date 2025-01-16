@@ -156,10 +156,11 @@ function TeacherPage(props) {
                                 className=" bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden hover:bg-green-200"
                             >
                                 <div className="flex flex-col p-4 border-b border-gray-200 items-start justify-center">
-                                    <h2 className="text-xl font-semibold text-gray-800">
+                                    <h2 className="text-xl font-bold text-[#1DA599]">
                                         {course.courseCode}
                                     </h2>
-                                    <p>Năm {course.year} : HK{course.semester}</p>
+                                    <p><strong>Năm : </strong> {course.year}</p>
+                                    <p><strong>Học kỳ : </strong> {course.semester}</p>
                                 </div>
                             </button>
                         ))

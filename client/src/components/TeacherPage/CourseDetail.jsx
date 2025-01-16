@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import addButton from '../../assets/images/addButton.png';
 import minusButton from '../../assets/images/minusButton.png';
 import ReturnIcon from '../../assets/images/returnIcon.png';
 import SearchIcon from '../../assets/images/searchIcon.png';
-
+import EditClassroom from '../AdminPage/SubjectsManagePage/components/EditClassroom';
 
 function CourseDetail() {
     const { courseID } = useParams();
@@ -13,6 +13,20 @@ function CourseDetail() {
     const [courseData, setCourseData] = React.useState({});
 
     const navigate = useNavigate();
+
+    const [modals, setModals] = useState({
+        editClassroom: { visible: false, courseId: null },
+        addStudent: { visible: false, courseId: null },
+        editStudent: { visible: false, studentId: null },
+        deleteStudent: { visible: false, studentId: null },
+    });
+
+    const toggleClassesVisibility = useCallback((courseId) => {
+        setModals((prev) => ({
+            ...prev,
+            [courseId]: !prev[courseId],
+        }));
+    }, []);
 
     React.useEffect(() => {
         const getCourseById = async () => {
@@ -41,33 +55,50 @@ function CourseDetail() {
     return (
         <div className="min-h-screen bg-gray-50 p-6 mt-[6vh]">
             <div className='flex flex-col'>
-                <div className='flex w-full text-3xl font-bold text-[#1DA599] mb-6 space-x-[35vw]'>
-                    <button className='flex left-0 ml-[4vw] pt-[1vh]'>
+                <div className='flex w-full text-3xl font-bold text-[#1DA599] mb-6 space-x-[30vw]'>
+                    <button className='flex left-0 ml-[4vw] pt-[1vh]' onClick={() => navigate(-1)}>
                         <img src={ReturnIcon} alt="Quay lại" className='flex w-4 h-4' />
                     </button>
-                    <h1>Chi tiết lớp học {courseID}</h1>
+                    <h1>Chi tiết lớp học {courseData.courseCode}</h1>
                 </div>
 
                 <div className="flex flex-col mb-2 mt-[2vh]">
-                    {/* Major Dropdown */}
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium">Năm học:</label>
                         <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                            <h2>{courseData.year}</h2>
+                            <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded'>
+                                <p className='ml-2'> {courseData.year} </p>
+                            </div>
                         </div>
                     </div>
-                    {/* Major Dropdown */}
+
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Học kì:</label>
                         <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                            <h2>{courseData.semester}</h2>
+                        <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded ml-1'>
+                                <p className='ml-2'> {courseData.semester} </p>
+                            </div>
                         </div>
                     </div>
-                    {/* Major Dropdown */}
+
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Mã lớp:</label>
                         <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                            <h2>{courseData.courseCode}</h2>
+                            <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded'>
+                                <p className='ml-2'> {courseData.courseCode} </p>
+                            </div>
+                        </div>
+                        <div className='flex ml-[2vw]'>
+                            <button 
+                                onClick={() => 
+                                    setModals((prev) => ({
+                                        ...prev,
+                                        editClassroom: { visible: true, courseId: courseData?.id },
+                                    }))
+                                }
+                            >
+                                <h1 className='text-0.5xl text-[#1DA599] font-bold hover:text-yellow-400'>Chỉnh sửa thông tin lớp học</h1>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -137,6 +168,13 @@ function CourseDetail() {
                     <img src={addButton} alt="Add Student" />
                 </button>
             </div> */}
+
+                {courseData && modals.editClassroom.visible && (
+                    <EditClassroom
+                        courseId={courseData.id}
+                        onClose={() => setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))}
+                    />
+                )}
         </div>
 
 
