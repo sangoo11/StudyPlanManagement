@@ -245,6 +245,52 @@ class ScoreService {
         }
 
     }
+
+    static getStudentScoreByID = async (studentID, { courseID }) => {
+        if (!studentID) {
+            throw new Error('Missing student ID');
+        }
+        const student = await Student.findByPk(studentID);
+        if (!student) {
+            throw new Error('Student not found');
+        }
+
+        if (!courseID) {
+            throw new Error('Missing course ID');
+        }
+        const course = await Course.findByPk(courseID);
+        if (!course) {
+            throw new Error('Course not found');
+        }
+
+        const enrollment = await Enrollment.findOne({
+            where: {
+                studentID,
+                courseID,
+            }
+        });
+        if (!enrollment) {
+            throw new Error('Enrollment not found');
+        }
+
+        const scores = await Score.findAll({
+            where: {
+                enrollmentID: enrollment.id,
+            },
+            attributes: ['scoreType', 'score'],
+        });
+        console.log(JSON.stringify(scores));
+
+
+        return {
+            courseID: courseID,
+            teacherID: course.teacherID,
+            scores: scores.map(s => ({
+                scoreType: s.scoreType,
+                score: s.score,
+            }))
+        };
+    }
 }
 
 module.exports = ScoreService;

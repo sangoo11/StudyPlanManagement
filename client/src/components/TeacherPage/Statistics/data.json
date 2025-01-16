@@ -1,0 +1,47 @@
+[
+    {
+        "id": 13,
+        "score": "3.75",
+        "studentID": 1,
+        "learningOutcomeID": 2,
+        "LearningOutcome": {
+            "learningOutcomeCode": "LO2"
+        }
+    },
+    {
+        "id": 14,
+        "score": "0.00",
+        "studentID": 1,
+        "learningOutcomeID": 3,
+        "LearningOutcome": {
+            "learningOutcomeCode": "LO3"
+        }
+    },
+    {
+        "id": 15,
+        "score": "3.75",
+        "studentID": 1,
+        "learningOutcomeID": 4,
+        "LearningOutcome": {
+            "learningOutcomeCode": "LO4"
+        }
+    },
+    {
+        "id": 16,
+        "score": "5.00",
+        "studentID": 1,
+        "learningOutcomeID": 5,
+        "LearningOutcome": {
+            "learningOutcomeCode": "LO5"
+        }
+    },
+    {
+        "id": 17,
+        "score": "10.00",
+        "studentID": 1,
+        "learningOutcomeID": 1,
+        "LearningOutcome": {
+            "learningOutcomeCode": "LO1"
+        }
+    }
+]
