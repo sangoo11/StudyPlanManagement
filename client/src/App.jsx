@@ -11,6 +11,7 @@ import ContactPage from './components/Home/ContactPage';
 import HomePageLayout from './layouts/HomePageLayout'
 import SignUpInLayout from './layouts/SignUpInLayout';
 import AdminPage from './components/AdminPage/AdminPage'
+import AccountPage from './components/AccountPage'
 
 // Layout
 import AdminPageLayout from './layouts/AdminPageLayout';
@@ -46,6 +47,8 @@ import EditSubject from './components/AdminPage/SubjectsManagePage/components/Ed
 import AddCriteria from './components/AdminPage/OutputCriteriaManagePage/AddCriteria';
 import DeleteCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteCriteria';
 import EditCriteria from './components/AdminPage/OutputCriteriaManagePage/EditCriteria';
+import AddSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/AddSubjectInCriteria'
+import DeleteSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteSubjectInCriteria'
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
@@ -84,6 +87,7 @@ function App() {
         <Route path='student' element={<StudentPage />}></Route>
         <Route path='student/results' element={<LearningResults />} />
         <Route path='student/outcome' element={<StudentLearningOutcome />} />
+        <Route path='student/accountstudent' element={<AccountPage />} />
       </Route>
 
       <Route element={<TeacherPageLayout />}>
@@ -91,6 +95,7 @@ function App() {
         <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
         <Route path='teacher/statistics' element={<TeacherStatistics />} />
         <Route path='teacher/editpoint/:studentID' element={<EditPoint />} />
+        <Route path='teacher/accountteacher' element={<AccountPage />} />
       </Route>
 
       <Route path='admin' element={<AdminPageLayout />}>
@@ -100,6 +105,7 @@ function App() {
         <Route path='subjects' element={<SubjectsManagePage />} />
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
         <Route path='detailclassroom/:courseID' element={<DetailClassroom />} />
+        <Route path='accountadmin' element={<AccountPage />} />
       </Route>
 
       {/* Admin modals */}
@@ -124,6 +130,8 @@ function App() {
       <Route path='admin/outputcriteria/addcriteria' element={<AddSubject />} />
       <Route path='admin/outputcriteria/deletecriteria' element={<DeleteCriteria />} />
       <Route path='admin/outputcriteria/editcriteria' element={<EditCriteria />} />
+      <Route path='admin/outputcriteria/addsubject' element={<AddSubjectInCriteria />} />
+      <Route path='admin/outputcriteria/deletesubject' element={<DeleteSubjectInCriteria />} />
       {/* Catch-all route for undefined paths */}
       <Route path='*' element={<ErrorPage />} />
     </Routes>

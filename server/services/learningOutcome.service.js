@@ -52,12 +52,7 @@ class LearningOutcomeService {
         if (!learningOutcome) {
             throw new Error('Learning Outcome not found');
         }
-        if (learningOutcome.active) {
-            throw new Error('Learning Outcome is already active');
-        }
-        if (active !== true) {
-            throw new Error('Learning Outcome is not correct format');
-        }
+
 
 
         await learningOutcome.update({
