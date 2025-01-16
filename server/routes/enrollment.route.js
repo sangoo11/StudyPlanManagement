@@ -12,6 +12,5 @@ router.post('/enroll-student/:courseID', asyncHandler(EnrollmentController.enrol
 router.post('/enroll-teacher/:courseID', asyncHandler(EnrollmentController.enrollTeacherInCourse))
 
 router.delete('/delete-student-enrollment', asyncHandler(EnrollmentController.deleteStudentFromCourse));
-router.delete('/delete-teacher-enrollment', asyncHandler(EnrollmentController.deleteTeacherFromCourse));
 
 module.exports = router;
