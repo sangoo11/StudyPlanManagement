@@ -16,8 +16,6 @@ class AccountService {
     }
 
     static activeAccount = async (accountID) => {
-        const transaction = await sequelize.transaction();
-
         const account = await Account.findByPk(accountID);
         if (!account) throw new Error('Account not found');
         const accountActive = account.active;
@@ -34,9 +32,7 @@ class AccountService {
                 if (!teacher) throw new Error('Teacher not found');
                 teacher.update({
                     status: 'active',
-                },
-                    { transaction }
-                );
+                });
             }
             if (accountRole === 'student') {
                 const student = await Student.findOne({
@@ -47,31 +43,23 @@ class AccountService {
                 if (!student) throw new Error('Student not found');
                 student.update({
                     status: 'active',
-                },
-                    { transaction }
-                );
+                });
             }
 
             await account.update({
                 active: true,
-            },
-                { transaction }
-            );
-            transaction.commit();
+            });
             return {
                 accountID: account.id,
                 active: true,
                 status: 'active',
             };
         } catch (error) {
-            await transaction.rollback();
             throw error;
         }
     }
 
     static deactiveAccount = async (accountID, userStatus) => {
-        const transaction = await sequelize.transaction();
-
         const account = await Account.findByPk(accountID);
         if (!account) throw new Error('Account not found');
         const accountActive = account.active;
@@ -90,9 +78,7 @@ class AccountService {
                 if (!teacher) throw new Error('Teacher not found');
                 teacher.update({
                     status: userStatus.userStatus,
-                },
-                    { transaction }
-                );
+                });
             }
             if (accountRole === 'student') {
                 const student = await Student.findOne({
@@ -103,24 +89,18 @@ class AccountService {
                 if (!student) throw new Error('Student not found');
                 student.update({
                     status: userStatus.userStatus,
-                },
-                    { transaction }
-                );
+                });
             }
 
             await account.update({
                 active: false,
-            },
-                { transaction }
-            );
-            transaction.commit();
+            });
             return {
                 accountID: account.id,
                 active: false,
                 status: userStatus,
             };
         } catch (error) {
-            await transaction.rollback();
             throw new Error(error);
         }
     }
