@@ -101,7 +101,7 @@ function App() {
         <Route path='teachers' element={<TeachersManagePage />} />
         <Route path='subjects' element={<SubjectsManagePage />} />
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
-        <Route path='detailclassroom' element={<DetailClassroom />} />
+        <Route path='detailclassroom/:courseID' element={<DetailClassroom />} />
       </Route>
 
       {/* Admin modals */}

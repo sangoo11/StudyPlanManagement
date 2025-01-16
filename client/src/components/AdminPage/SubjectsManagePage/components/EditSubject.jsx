@@ -97,14 +97,7 @@ function EditSubject({ onClose, subjectID }) {
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-gray-700">Mã môn:</label>
-                        <input
-                            type="text"
-                            name="subjectCode"
-                            value={formData.subjectCode}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                            disabled={!subject} // Disable until subject is loaded
-                        />
+                        <div className="w-full px-4 py-2 border rounded bg-white"> {formData.subjectCode} </div>
                     </div>
 
                     <div>

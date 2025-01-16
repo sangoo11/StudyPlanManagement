@@ -59,10 +59,10 @@ function TeacherManagement() {
                 {filteredTeachers.map((teacher) => {
                     // Determine the status color
                     const statusColors = {
-                        Active: "bg-green-500 text-white",
-                        Terminated: "bg-red-500 text-white",
-                        "On leave": "bg-yellow-500 text-white",
-                        Suspended: "bg-orange-500 text-white",
+                        active: "bg-green-500 text-white",
+                        terminated: "bg-red-500 text-white",
+                        onleave: "bg-yellow-500 text-white",
+                        suspended: "bg-orange-500 text-white",
                     };
                     const statusClass = statusColors[teacher.status] || "bg-gray-300 text-black";
                 
