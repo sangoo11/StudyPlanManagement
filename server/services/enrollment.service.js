@@ -159,5 +159,46 @@ class EnrollmentService {
             teacherID: teacherID,
         }
     }
+
+    static deleteStudentFromCourse = async (courseID, { studentID }) => {
+        if (!studentID || !courseID) throw new Error('Student ID and Course ID are required');
+
+        const course = await Course.findByPk(courseID);
+        if (!course) throw new Error('Course not found');
+        if (course.active === false) throw new Error('Course is not active');
+
+        const student = await Student.findByPk(studentID);
+        if (!student) throw new Error('Student not found');
+        if (student.status !== 'active') throw new Error('Student is not active');
+
+        const enrollment = await Enrollment.findOne({
+            where: {
+                studentID: studentID,
+                courseID: courseID,
+            },
+        });
+        if (!enrollment) throw new Error('Student not enrolled in this course');
+
+        const subject = await Subject.findByPk(course.subjectID);
+        const subjectCredit = subject.credit;
+
+        await enrollment.destroy();
+
+        await student.update({
+            credit: student.credit - subjectCredit,
+        });
+
+        await course.update({
+            studentCount: course.studentCount - 1,
+        });
+
+        return {
+            studentID: studentID,
+            courseID: courseID,
+            credit: subjectCredit,
+            studentCount: course.studentCount,
+        }
+    }
+
 }
 module.exports = EnrollmentService;

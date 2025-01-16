@@ -42,14 +42,7 @@ class EnrollmentController {
     deleteStudentFromCourse = async (req, res, next) => {
         new CREATED({
             message: "Delete Student Success",
-            metadata: await EnrollmentService.deleteStudentFromCourse(req.params.studentID, req.params.courseID),
-        }).send(res);
-    }
-
-    deleteTeacherFromCourse = async (req, res, next) => {
-        new CREATED({
-            message: "Delete Teacher Success",
-            metadata: await EnrollmentService.deleteTeacherFromCourse(req.params.teacherID, req.params.courseID),
+            metadata: await EnrollmentService.deleteStudentFromCourse(req.params.courseID, req.body),
         }).send(res);
     }
 }
