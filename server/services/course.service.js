@@ -95,13 +95,6 @@ class CourseService {
         const currentCourse = await Course.findByPk(courseID);
         if (!currentCourse) throw new Error('Course not found');
 
-        // Check if courseCode exists
-        if (courseCode) {
-            const existingCourse = await Course.findOne({ where: { courseCode } });
-            if (existingCourse && existingCourse.id !== courseID) {
-                throw new Error('Course code already exists');
-            }
-        }
         // TeacherID
         if (teacherID) {
             if (currentCourse.active === false && !active) throw new Error('Course is not active');

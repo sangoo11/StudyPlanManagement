@@ -19,12 +19,24 @@ function EditClassroom({ courseId, onClose}) {
     }, []);
 
     const [formData, setFormData] = useState({
-        courseCode: course.courseCode || "",
-        semester: course.semester || "",
-        year: course.year || "",
-        active: course.active || false,
-        teacherID: course.teacherID || "",
+        courseCode: "",
+        semester: "",
+        year: "",
+        active: false,
+        teacherID: "",
     });
+
+    useEffect(() => {
+        if (course) {
+            setFormData({
+                courseCode: course.courseCode || "",
+                semester: course.semester || "",
+                year: course.year || "",
+                active: course.active || false,
+                teacherID: course.teacherID || "",
+            });
+        }
+    }, [course]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -37,7 +49,6 @@ function EditClassroom({ courseId, onClose}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log("Sending request for course ID:", course.id);
             const response = await axios.put(
                 `http://localhost:8080/v1/api/course/edit-course/${courseId}`,
                 formData
@@ -45,6 +56,7 @@ function EditClassroom({ courseId, onClose}) {
             console.log("Course updated:", response.data);
             alert("Thay đổi thông tin thành công");
             onClose();
+            window.location.reload();
         } catch (error) {
             console.error("Error updating course:", error.response || error);
         }
@@ -53,18 +65,12 @@ function EditClassroom({ courseId, onClose}) {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-            <div className="flex flex-col w-[50vw] h-[80vh] bg-gray-200 p-6 rounded">
+            <div className="flex flex-col w-[50vw] h-[65vh] bg-gray-200 p-6 rounded">
                 <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Chỉnh sửa lớp học</h2>
-                <form className="flex flex-col space-y-4">
+                <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-gray-700">Mã lớp:</label>
-                        <input
-                            type="text"
-                            name="courseCode"
-                            value={formData.courseCode}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                        />
+                        <div className="w-full px-4 py-2 border rounded bg-white"> {formData.courseCode}</div>
                     </div>
 
                     <div>
@@ -93,37 +99,11 @@ function EditClassroom({ courseId, onClose}) {
                         <label className="block text-gray-700">Mã giáo viên:</label>
                         <input
                             type="text"
-                            name="teacherId"
+                            name="teacherID"
                             value={formData.teacherID}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
                         />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700">Active:</label>
-                        <div>
-                            <input
-                                type="radio"
-                                name="active"
-                                value="true"
-                                checked={formData.active === "true"}
-                                onChange={handleChange}
-                                className="mr-2"
-                            />
-                            <label>Active</label>
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                name="inactive"
-                                value="false"
-                                checked={formData.active === "false"}
-                                onChange={handleChange}
-                                className="mr-2"
-                            />
-                            <label>Inactive</label>
-                        </div>
                     </div>
 
                     <div className="flex space-x-4 justify-end">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import addButton from "../../../assets/images/addButton.png";
 import minusButton from "../../../assets/images/minusButton.png";
 import ShowMore from "../../../assets/images/showmore.png";
@@ -10,8 +11,10 @@ import EditClassroom from "./components/EditClassroom";
 import AddSubject from "./components/AddSubject";
 import DeleteSubject from "./components/DeleteSubject";
 import EditSubject from "./components/EditSubject";
+import DetailClassroom from "./components/DetailClassroom";
 
 function SubjectManagement() {
+    const navigate = useNavigate();
     const [subjects, setSubjects] = useState([]);
     const [mappedCourses, setMappedCourses] = useState([]);
     const [selectedMajor, setSelectedMajor] = useState("Công nghệ phần mềm");
@@ -24,6 +27,7 @@ function SubjectManagement() {
         addClassroom: { visible: false, subjectId: null },
         editClassroom: { visible: false, courseId: null },
         deleteClassroom: { visible: false, courseId: null },
+        detailClassroom: { visible: false, courseId: null },
     });
 
     // Toggle visibility of classes
@@ -96,7 +100,7 @@ function SubjectManagement() {
                     <div key={subject.id} className="bg-white shadow-lg rounded-lg border border-gray-300">
                         {/* Subject Header */}
                         <div className="p-4 bg-[#f9f9f9] border-b border-gray-200 flex justify-between items-center">
-                            <h2 className="text-lg font-semibold text-gray-800">
+                            <h2 className={`font-bold ${subject.active ? 'text-green-500' : 'text-red-500'}`}>
                                 {subject.subjectCode} - {subject.subjectName}
                             </h2>
                             <div className="flex">
@@ -138,9 +142,10 @@ function SubjectManagement() {
                         {visibleClasses[subject.id] && (
                             <div className="p-4">
                                 {subject.courses.map((course) => (
-                                    <div
+                                    <button
                                         key={course.id}
-                                        className="flex justify-between items-center p-2 border-b hover:bg-green-300"
+                                        className="flex justify-between items-center p-2 border-b hover:bg-green-300 w-full"
+                                        onClick={() => navigate(`/admin/detailclassroom/${course.id}`)}
                                     >
                                         <span>Lớp: {course.courseCode}</span>
                                         <span className={`font-bold ${course.active ? 'text-green-500' : 'text-red-500'}`}>
@@ -158,7 +163,7 @@ function SubjectManagement() {
                                         >
                                             <img src={minusButton} alt="Delete" />
                                         </button>
-                                    </div>
+                                    </button>
                                 ))}
                                 <button
                                     className="px-4 py-2 text-white bg-[#1DA599] rounded-md mt-4"
