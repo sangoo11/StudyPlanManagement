@@ -185,6 +185,26 @@ class CourseService {
 
         return studentLists;
     }
+
+    static getAllCoursesByStudent = async (studentID) => {
+        const enrollmentList = await Enrollment.findAll({
+            where: {
+                studentID: studentID
+            }
+        });
+        if (!enrollmentList) throw new Error("Student does not have any course");
+
+        const courseListsID = enrollmentList.map(course => course.courseID);
+        const courseLists = await Promise.all(
+            courseListsID.map(async (courseID) => {
+                const course = await Course.findByPk(courseID);
+                if (!course) throw new Error('Course not found');
+                return course;
+            })
+        );
+
+        return courseLists;
+    }
 }
 
 module.exports = CourseService;
