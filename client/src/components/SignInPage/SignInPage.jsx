@@ -69,7 +69,7 @@ const SignInScreen = () => {
                 <img className="w-3/4" src={SignInPicture}></img>
             </div>
             <div className="flex-1 m-auto flex flex-col items-center">
-                <form onSubmit={handleSignIn} className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-2 items-center text-center p-8 text-white rounded-md">
+                <div className="w-fit max-w-[600px] bg-[#1DA599] flex flex-col gap-2 items-center text-center p-8 text-white rounded-md">
                     <h2 className="w-full text-4xl font-semibold mb-3">Sign in</h2>
                     <input type="text"
                         autoComplete="true"
@@ -91,7 +91,7 @@ const SignInScreen = () => {
                     <p className="w-full">Or</p>
                     <button onClick={() => navigate('/signup')} className="w-full underline">Create an account</button>
                     <button onClick={handleSignIn} className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign In</button>
-                </form>
+                </div>
             </div>
         </div>
     );

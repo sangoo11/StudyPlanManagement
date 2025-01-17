@@ -1,77 +1,111 @@
-import React from 'react';
-import BarChart from './BarChart';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Dataset from './data.json'
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from "chart.js";
+import { Bar } from 'react-chartjs-2';
+
+// Register the necessary Chart.js components
+ChartJS.register(
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Title,
+    Tooltip,
+    Legend
+);
 
 function Statistics() {
-    const [barChartData, setBarChartData] = React.useState({
-        labels: Dataset.map((data) => data.LearningOutcome.learningOutcomeCode),
-        datasets: [{
-            label: 'Learning Outcome Score',
-            data: Dataset.map((data) => parseFloat(data.score)),
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)'
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)'
-            ],
-            borderWidth: 1
-        }]
-    });
+    const [barData, setBarData] = useState(null);
+    const [studentID, setStudentID] = useState(1);
+    const [studentList, setStudentList] = useState({})
 
 
-    const [studentID, setStudentID] = React.useState(1);
-    const [studentList, setStudentList] = React.useState();
-    React.useEffect(() => {
+    useEffect(() => {
         const getStudentList = async () => {
-            const response = await axios.get('http://localhost:8080/v1/api/student/get-all-student');
-            setStudentList(response.data.metadata);
+            try {
+                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
+                setStudentList(data.metadata)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
-        getStudentList();
-        console.log(Dataset, Dataset.map((data) => data.LearningOutcome.learningOutcomeCode));
-    }, []);
+        getStudentList()
+    })
 
-    // React.useEffect(() => {
-    //     const getBarChartData = async () => {
-    //         const response = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentID}`);
-    //         setBarChartData();
-    //     }
-    //     getBarChartData();
-    // }, [studentID]);
+    useEffect(() => {
+        const getBarChart = async () => {
+            try {
+                // Fetch data from API
+                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentID}`);
+                // Process and set the chart data
+                setBarData({
+                    labels: data.metadata.map((item) => item.LearningOutcome.learningOutcomeCode),
+                    datasets: [{
+                        label: 'Learning Outcome Score',
+                        data: data.metadata.map((item) => item.score),  // assuming 'score' is the field holding the score value
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 1
+                    }]
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-    const handleInputChange = (e) => {
-        setStudentID(e.target.value);
-    };
+        // Fetch chart data when the component is mounted
+        getBarChart();
+    }, [studentID]);
+
+    // Render the Bar chart if barData is available
+    if (!barData) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className='mt-[8vh] grid grid-cols-2 grid-rows-2 gap-4'>
+        <div className='mt-[8vh] grid grid-cols-2 col-span-4'>
             <div>
                 <select
-                    className="px-4 py-2 border rounded-md bg-white ml-[1vw]"
+                    className="px-4 py-2 border rounded-md bg-white ml-[2.6vw]"
                     value={studentID}
-                    onChange={handleInputChange}>
-                    <option value=''>Select Student</option>
+                    onChange={(e) => setStudentID(e.target.value)}
+                >
+                    <option value="">Chọn học sinh</option>
                     {studentList && studentList.map((student, index) => (
-                        <option key={index} value={student.id}>{student.id}: {student.fullName}</option>
+                        <option key={index} value={student.id}>
+                            {student.id}. {student.fullName}
+                        </option>
                     ))}
                 </select>
-                <BarChart barChartData={barChartData} />
+                <Bar
+                    data={barData}
+                    options={{
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Learning Outcome Score'
+                            }
+                        }
+                    }}
+                />
             </div>
-            <div>Chart2</div>
-            <div>Chart3</div>
-            <div>Chart4</div>
+            <div>Chart 2</div>
         </div>
     );
 }
