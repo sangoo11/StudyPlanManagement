@@ -6,14 +6,19 @@ import minusButton from '../../../../assets/images/minusButton.png';
 import ReturnIcon from '../../../../assets/images/returnIcon.png';
 import SearchIcon from '../../../../assets/images/searchIcon.png';
 import EditClassroom from './EditClassroom';
+import AddStudent from './AddStudent';
 
 function DetailClassroom() {
     const { courseID } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [courseDetails, setCourseDetails] = useState(null);
+    const [students, setStudents] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [modals, setModals] = useState({
         editClassroom: { visible: false, courseId: null },
+        addStudent: { visible: false, courseId: null},
     });
 
     const toggleClassesVisibility = useCallback((courseId) => {
@@ -31,12 +36,14 @@ function DetailClassroom() {
                 const courseData = response.data.metadata;
                 setCourseDetails(courseData);
 
-                // Fetch teacher details if teacherID is available
                 if (courseData.teacherID) {
                     fetchTeachers(courseData.teacherID);
                 }
-            } catch (error) {
-                console.error('Error fetching course details:', error);
+
+                fetchStudents(courseID);
+            } catch (err) {
+                console.error('Error fetching course details:', err);
+                setError('Failed to fetch course details.');
             }
         };
 
@@ -44,19 +51,28 @@ function DetailClassroom() {
             try {
                 const response = await axios.get(`http://localhost:8080/v1/api/teacher/get-teacher/${teacherID}`);
                 setTeachers(response.data.metadata);
-            } catch (error) {
-                console.error('Error fetching teacher details:', error);
+            } catch (err) {
+                console.error('Error fetching teacher details:', err);
+            }
+        };
+
+        const fetchStudents = async (courseId) => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:8080/v1/api/course/get-student-course/${courseId}`);
+                setStudents(response.data.metadata || []);
+            } catch (err) {
+                console.error('Error fetching students:', err);
+                setError('Failed to fetch students for the course.');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchCourseDetails();
-
-        // Cleanup if component unmounts before data is fetched
-        return () => {
-            setCourseDetails(null);
-            setTeachers([]);
-        };
     }, [courseID]);
+
+    
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 mt-[6vh]">
@@ -127,44 +143,63 @@ function DetailClassroom() {
                         </button>
                     </div>
                 </div>
-
-                <div className="flex justify-between items-center w-full h-full px-4 py-4 bg-white rounded-md">
-                    <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
-                            <span className="text-gray-500">👤</span>
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <p className="text-sm font-medium text-gray-700">Mã số sinh viên: 112004</p>
-                            <p className="text-sm text-gray-700">Họ tên: Đóm Chúa</p>
-                            <p className="text-sm text-gray-700">Số điện thoại: 0123456789</p>
-                            <p className="text-sm text-gray-700">Tình trạng: Hoạt động</p>
-                        </div>
-                    </div>
-                    {/* Edit button */}
-                    <div className="flex w-auto h-full items-center justify-end mr-[4vw] rounded-md border-[3px] border-[#1DA599] hover:border-4 hover:border-yellow-400 ml-[60vw]">
-                        <button
-                            className="w-20 h-8 text-black bg-transparent"
-                            //onClick={() => setEditStudentVisible(true)}
-                        >
-                            Chỉnh sửa 
-                        </button>
-                    </div>
-
-                    {/* Delete button */}
-                    <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
-                        <button
-                            className="w-8 h-full text-white rounded-full hover:border-4 hover:border-yellow-400"
-                            //onClick={() => setDeleteStudentVisible(true)}
-                        >
-                            <img src={minusButton} alt="Delete Student" />
-                        </button>
-                    </div>
+                
+                {/* Students Section */}
+                <div className="mt-4">
+                    <h2 className="text-xl font-bold mb-2">Danh sách sinh viên:</h2>
+                    {loading ? (
+                        <p>Loading students...</p>
+                    ) : error ? (
+                        <p className="text-red-500">{error}</p>
+                    ) : students.length === 0 ? (
+                        <p>Không có sinh viên nào trong lớp này.</p>
+                    ) : (
+                        <ul className="space-y-2">
+                            {students.map((student) => (
+                                <li
+                                    key={student.id}
+                                    className="p-4 bg-gray-100 border rounded flex justify-between items-center"
+                                >
+                                    <div>
+                                        <p><strong>Mã số:</strong> {student.id}</p>
+                                        <p><strong>Họ tên:</strong> {student.fullName}</p>
+                                        <p><strong>Ngành:</strong> {student.major}</p>
+                                        <p><strong>Trạng thái:</strong> {student.status}</p>
+                                    </div>
+                                    <div className="flex w-auto h-full items-center justify-end mr-[4vw] rounded-md border-[3px] border-[#1DA599] hover:border-4 hover:border-yellow-400 ml-[60vw]">
+                                        <button
+                                            className="w-20 h-8 text-black bg-transparent"
+                                            //onClick={() => setEditStudentVisible(true)}
+                                        >
+                                            Chỉnh sửa 
+                                        </button>
+                                    </div>
+                                            
+                                    {/* Delete button */}
+                                    <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
+                                        <button
+                                            className="w-8 h-full text-white rounded-full hover:border-4 hover:border-yellow-400"
+                                            //onClick={() => setDeleteStudentVisible(true)}
+                                        >
+                                            <img src={minusButton} alt="Delete Student" />
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
+
 
                 <div className='flex h-[4vh] w-full items-center justify-end mt-[4vh]'>
                     <button
                         className="w-8 h-full text-white rounded-full hover:border-4 hover:border-yellow-400 mr-[5vw]"
-                        //onClick={() => setAddStudentVisible(true)}
+                        onClick={() => 
+                            setModals((prev) => ({
+                                ...prev,
+                                addStudent: { visible: true, courseId: courseDetails?.id },
+                            }))
+                        }
                     >
                         <img src={addButton} alt="Add Student" />
                     </button>
@@ -175,6 +210,13 @@ function DetailClassroom() {
                     <EditClassroom
                         courseId={courseDetails.id}
                         onClose={() => setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))}
+                    />
+                )}
+
+                {courseDetails && modals.addStudent.visible && (
+                    <AddStudent
+                        courseId={courseDetails.id}
+                        onClose={() => setModals(prev => ({ ...prev, addStudent: { visible: false, courseId: null } }))}
                     />
                 )}
             </div>

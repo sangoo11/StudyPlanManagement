@@ -61,6 +61,23 @@ function AddClassroom({ onClose, subjectID }) {
                     teacherId: parseInt(teacherId, 10),
                 }
             );
+            const coursesResponse = await axios.get("http://localhost:8080/v1/api/course/get-all-courses");
+            const courses = coursesResponse.data.metadata;
+
+            // Find the course with the given courseCode
+            const course = courses.find((c) => c.courseCode === courseCode);
+
+            if (!course) {
+                setError("Không tìm thấy mã lớp học.");
+                return;
+            }
+
+            // Enroll the teacher to the course
+            const enrollResponse = await axios.post(
+                `http://localhost:8080/v1/api/enrollment/enroll-teacher/${course.id}`,
+                { teacherID: parseInt(teacherId, 10) }
+            );
+
             alert("Tạo lớp thành công!");
             console.log("Response:", response.data);
             onClose(); // Close the modal after successful submission
