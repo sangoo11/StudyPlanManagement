@@ -19,6 +19,7 @@ function StudentAccount() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+
     const fetchStudentData = async () => {
         if (!accountID) {
             setError("Account ID is missing.");
@@ -30,7 +31,8 @@ function StudentAccount() {
             const userResponse = await axios.get(
                 `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
             );
-            const studentID = userResponse.data.metadata.teacherID;
+            const studentID = userResponse.data.metadata.studentID;
+            console.log(studentID);
             setStudentID(studentID);
 
             const studentResponse = await axios.get(
@@ -48,6 +50,8 @@ function StudentAccount() {
     useEffect(() => {
         fetchStudentData();
     }, []);
+
+    console.log(accountID, studentID);
 
     const handleLogOut = useCallback(() => {
         localStorage.removeItem("accountID"); // Clear the stored account ID
