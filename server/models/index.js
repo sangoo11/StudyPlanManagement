@@ -12,6 +12,8 @@ const Enrollment = require('./enrollment.model');
 const Modification = require('./modification.model');
 const Major = require('./major.model');
 const SubjectLearningOutcome = require('./subjectLearningOutcome.model');
+const AwardStudent = require('./awardStudent.model');
+const Award = require('./award.model');
 
 // User - Account relationships
 Student.belongsTo(Account, {
@@ -104,6 +106,21 @@ Score.belongsTo(Enrollment, { foreignKey: 'enrollmentID' });
 // Subject - Major  
 Subject.belongsTo(Major, {
   foreignKey: 'majorID',
+});
+
+Award.belongsToMany(Student, {
+  through: 'AwardStudent',
+  foreignKey: 'awardID',
+});
+Student.belongsToMany(Award, {
+  through: 'AwardStudent',
+  foreignKey: 'studentID',
+});
+AwardStudent.belongsTo(Award, {
+  foreignKey: 'awardID'
+});
+AwardStudent.belongsTo(Student, {
+  foreignKey: 'studentID'
 });
 
 // Create data
@@ -233,110 +250,80 @@ const majors = [
 
 const subjects = [
   {
-    subjectCode: 'SE113',
-    subjectName: 'Introduction to Software Engineering',
-    type: 'core',
-    credit: 3,
-    description: 'Learn the basics of software engineering practices.',
-    majorID: 8
-  },
-  {
-    subjectCode: 'SE214',
-    subjectName: 'Data Structures and Algorithms',
+    subjectCode: 'IT008',
+    subjectName: 'Lập trình trực quan',
     type: 'core',
     credit: 4,
-    description: 'In-depth understanding of algorithms and data structures.',
-    majorID: 8
+    description: 'Môn học hướng dẫn lập trình trên Windows, bao gồm tạo ứng dụng, xử lý thông điệp, giao diện điều khiển, quản lý bộ nhớ, thư viện động và lập trình đa nhiệm.',
+    majorID: 6,
+    subjectSyllabusUrl: 'https://drive.google.com/file/d/1gVo0lKuMpd5GKcfKBp7hs7cPA9LM_CAY/view?usp=sharing'
   },
   {
-    subjectCode: 'SE300',
-    subjectName: 'Software Design Patterns',
-    type: 'major',
-    credit: 3,
-    description: 'Study of common design patterns in software development.',
-    majorID: 8
-  },
-  {
-    subjectCode: 'SE400',
-    subjectName: 'Advanced Programming',
+    subjectCode: 'IT002',
+    subjectName: 'Nhập môn lập trình',
     type: 'core',
     credit: 4,
-    description: 'Advanced topics in programming and software architecture.',
-    majorID: 8
+    description: 'Môn học dạy lập trình hướng đối tượng, thừa kế, đa hình, interface và giao tiếp giữa các đối tượng',
+    majorID: 6,
+    subjectSyllabusUrl: 'https://drive.google.com/file/d/1EtWZXW0ZolUtGYPeQyTHsRPFcnPIcvTz/view?usp=sharing'
   },
   {
-    subjectCode: 'CS101',
-    subjectName: 'Introduction to Computer Science',
+    subjectCode: 'SE100',
+    subjectName: 'Phương pháp phát triển phần mềm hướng đối tượng',
     type: 'core',
-    credit: 3,
-    description: 'Basic introduction to the field of computer science.',
-    majorID: 6
-  },
-  {
-    subjectCode: 'CS205',
-    subjectName: 'Database Systems',
-    type: 'major',
     credit: 4,
-    description: 'Understanding the fundamentals of database management systems.',
-    majorID: 6
-  },
-  {
-    subjectCode: 'CS303',
-    subjectName: 'Computer Networks',
-    type: 'major',
-    credit: 3,
-    description: 'Study of computer networking principles and protocols.',
-    majorID: 6
-  },
-  {
-    subjectCode: 'MATH101',
-    subjectName: 'Discrete Mathematics',
-    type: 'core',
-    credit: 3,
-    description: 'Foundational knowledge of mathematics for computer science.',
-    majorID: 1
-  },
-  {
-    subjectCode: 'MATH204',
-    subjectName: 'Linear Algebra',
-    type: 'major',
-    credit: 4,
-    description: 'Study of linear equations and matrices in mathematical contexts.',
-    majorID: 2
-  },
-  {
-    subjectCode: 'CS501',
-    subjectName: 'Machine Learning',
-    type: 'major',
-    credit: 4,
-    description: 'Introduction to machine learning concepts and techniques.',
-    majorID: 6
+    description: 'Môn học dạy phát triển phần mềm hướng đối tượng, tập trung vào phân tích, thiết kế hệ thống và nâng cao kỹ năng làm việc nhóm.',
+    majorID: 6,
+    subjectSyllabusUrl: 'https://drive.google.com/file/d/1PurEyGaz2T1MMFgCRxvq-0A2GhEbroCn/view?usp=sharing'
   }
+
 ];
 
 const courses = [
-  { courseCode: 'SE113.P01', semester: 1, year: '2024-2025', subjectID: 1, teacherID: null }, // No teacher assigned
-  { courseCode: 'SE113.P02', semester: 1, year: '2024-2025', subjectID: 1, teacherID: null },
-
-  { courseCode: 'SE214.P01', semester: 1, year: '2024-2025', subjectID: 2, teacherID: null }, // No teacher assigned
-  { courseCode: 'SE214.P02', semester: 1, year: '2024-2025', subjectID: 2, teacherID: null },
-
-  { courseCode: 'SE300.P01', semester: 2, year: '2024-2025', subjectID: 3, teacherID: null }, // No teacher assigned
-
-  { courseCode: 'SE400.P01', semester: 2, year: '2024-2025', subjectID: 4, teacherID: null },
-
-  { courseCode: 'CS101.P01', semester: 1, year: '2024-2025', subjectID: 5, teacherID: null },
-
-  { courseCode: 'CS205.P01', semester: 1, year: '2024-2025', subjectID: 6, teacherID: null },
-
-  { courseCode: 'CS303.P01', semester: 2, year: '2024-2025', subjectID: 7, teacherID: null },
-
-  { courseCode: 'MATH101.P01', semester: 1, year: '2024-2025', subjectID: 8, teacherID: null },
-
-  { courseCode: 'MATH204.P01', semester: 2, year: '2024-2025', subjectID: 9, teacherID: null },
-
-  { courseCode: 'CS501.P01', semester: 1, year: '2024-2025', subjectID: 10, teacherID: null }
+  {
+    courseCode: "IT008.P01",
+    semester: 1,
+    year: "2024-2025",
+    subjectID: 1,
+    teacherID: null
+  },
+  {
+    courseCode: "IT008.P02",
+    semester: 2,
+    year: "2024-2025",
+    subjectID: 1,
+    teacherID: null
+  },
+  {
+    courseCode: "IT002.P01",
+    semester: 1,
+    year: "2024-2025",
+    subjectID: 2,
+    teacherID: null
+  },
+  {
+    courseCode: "IT002.P02",
+    semester: 2,
+    year: "2024-2025",
+    subjectID: 2,
+    teacherID: null
+  },
+  {
+    courseCode: "SE100.P01",
+    semester: 1,
+    year: "2024-2025",
+    subjectID: 3,
+    teacherID: null
+  },
+  {
+    courseCode: "SE100.P02",
+    semester: 2,
+    year: "2024-2025",
+    subjectID: 3,
+    teacherID: null
+  }
 ];
+
 
 const learningOutcomes = [
   {
@@ -413,47 +400,47 @@ const modifications = [
 ];
 
 const subjectLearningOutcomes = [
-  { subjectID: 1, learningOutcomeID: 2 }, // Introduction to Software Engineering
-  { subjectID: 1, learningOutcomeID: 4 },
-  { subjectID: 1, learningOutcomeID: 5 },
+  { subjectID: 1, learningOutcomeID: 2, level: 'NT4' }, // IT008
+  { subjectID: 1, learningOutcomeID: 3, level: 'KN4' },
+  { subjectID: 1, learningOutcomeID: 5, level: 'KN4' },
+  { subjectID: 1, learningOutcomeID: 6, level: 'KN4' },
 
-  { subjectID: 2, learningOutcomeID: 2 }, // Data Structures and Algorithms
-  { subjectID: 2, learningOutcomeID: 3 },
-  { subjectID: 2, learningOutcomeID: 4 },
+  { subjectID: 2, learningOutcomeID: 2, level: 'NT3' }, // IT002
+  { subjectID: 2, learningOutcomeID: 3, level: 'KN4' },
+  { subjectID: 2, learningOutcomeID: 6, level: 'KN4' },
 
-  { subjectID: 3, learningOutcomeID: 2 }, // Software Design Patterns
-  { subjectID: 3, learningOutcomeID: 3 },
-  { subjectID: 3, learningOutcomeID: 4 },
-
-  { subjectID: 4, learningOutcomeID: 2 }, // Advanced Programming
-  { subjectID: 4, learningOutcomeID: 3 },
-  { subjectID: 4, learningOutcomeID: 4 },
-  { subjectID: 4, learningOutcomeID: 5 },
-
-  { subjectID: 5, learningOutcomeID: 1 }, // Introduction to Computer Science
-  { subjectID: 5, learningOutcomeID: 2 },
-  { subjectID: 5, learningOutcomeID: 4 },
-
-  { subjectID: 6, learningOutcomeID: 2 }, // Database Systems
-  { subjectID: 6, learningOutcomeID: 4 },
-  { subjectID: 6, learningOutcomeID: 5 },
-
-  { subjectID: 7, learningOutcomeID: 2 }, // Computer Networks
-  { subjectID: 7, learningOutcomeID: 4 },
-  { subjectID: 7, learningOutcomeID: 5 },
-
-  { subjectID: 8, learningOutcomeID: 1 }, // Discrete Mathematics
-  { subjectID: 8, learningOutcomeID: 4 },
-
-  { subjectID: 9, learningOutcomeID: 2 }, // Linear Algebra
-  { subjectID: 9, learningOutcomeID: 4 },
-  { subjectID: 9, learningOutcomeID: 5 },
-
-  { subjectID: 10, learningOutcomeID: 2 }, // Machine Learning
-  { subjectID: 10, learningOutcomeID: 3 },
-  { subjectID: 10, learningOutcomeID: 4 },
+  { subjectID: 3, learningOutcomeID: 2, level: 'NT3' }, // SE100
+  { subjectID: 3, learningOutcomeID: 3, level: 'KN4' },
+  { subjectID: 3, learningOutcomeID: 4, level: 'KN4' },
+  { subjectID: 3, learningOutcomeID: 5, level: 'KN4' },
 ];
 
+const awards = [
+  {
+    awardName: 'Top Performer of the Semester',
+    awardType: 'university', // Can be university-wide recognition
+    description: 'Awarded to the student with the highest GPA in the semester.',
+    criteria: 'Highest GPA in the semester across all subjects.'
+  },
+  {
+    awardName: 'Best Project Award',
+    awardType: 'university', // This can be an award given by the university
+    description: 'Awarded to the student with the most innovative and impactful project.',
+    criteria: 'Innovative project with real-world applications.'
+  },
+  {
+    awardName: 'Leadership Excellence Award',
+    awardType: 'city', // City-wide recognition or university-based recognition
+    description: 'Awarded to the student who has shown exceptional leadership skills.',
+    criteria: 'Student who has taken leadership roles in extracurricular activities.'
+  },
+  {
+    awardName: 'Community Service Award',
+    awardType: 'country', // Could be country-wide recognition or broader impact
+    description: 'Awarded to the student with the most impactful community service.',
+    criteria: 'Student who has volunteered extensively and made a positive impact in the community.'
+  }
+]
 
 
 const createData = async () => {
@@ -479,6 +466,9 @@ const createData = async () => {
 
   // Create Learning Outcome - Subject relationships
   await SubjectLearningOutcome.bulkCreate(subjectLearningOutcomes);
+
+  // Create Awards
+  await Award.bulkCreate(awards);
 }
 
 const checkAndCreateData = async () => {

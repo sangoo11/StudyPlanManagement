@@ -16,7 +16,6 @@ const Course = sequelize.define('Course', {
       is: {
         args: /^[A-Z]{2,4}\d{3}\.[A-Z]\d{2}$/,
         msg: 'Invalid course code format.'
-
       },
       // Custom validation to check if the subject code exists
       async isSubjectExist(value) {
