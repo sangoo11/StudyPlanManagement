@@ -7,7 +7,7 @@ function AddSubjectInCriteria({ onClose, id }) {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [subjects, setSubjects] = useState([]); // To store the subjects from the API
-
+  const [level, setLevel] = useState('');
   console.log(id);
   // Fetch the subjects when the component mounts
   useEffect(() => {
@@ -37,11 +37,10 @@ function AddSubjectInCriteria({ onClose, id }) {
     try {
       const response = await axios.post(
         `http://localhost:8080/v1/api/learning-outcome/create-subject-learning-outcome/${id}`,
-        { subjectID }
+        { subjectID, level }
       );
       if (response.status === 201) {
         setSuccess(true);
-        // Optionally, you can call onClose() here to close the modal after success
       }
     } catch (err) {
       // Make sure error is a string, not an object
@@ -78,6 +77,18 @@ function AddSubjectInCriteria({ onClose, id }) {
                   </option>
                 ))}
             </select>
+
+            {/* Level Input */}
+            <label className="text-gray-700 text-lg font-medium mb-2 block">
+              Mã mức độ:
+            </label>
+            <input
+              type="text"
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
           </div>
 
           {/* Submit Button */}

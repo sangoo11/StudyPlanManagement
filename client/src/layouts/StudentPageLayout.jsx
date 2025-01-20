@@ -37,7 +37,7 @@ function StudentPageLayout(props) {
             console.log("API Response:", response.data);
             setStudentID(response.data.metadata.teacherID); // Make sure this is correct
         } catch (error) {
-            console.error(error.response?.data?.message || "Error fetching teacherID");
+            console.error(error.response?.data?.message || "Error fetching studentID");
         }
     };
     useEffect(() => {

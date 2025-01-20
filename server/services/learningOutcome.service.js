@@ -121,7 +121,6 @@ class LearningOutcomeService {
                 throw new Error('Failed to create Subject - Learning Outcome');
             }
         }
-
         return {
             learningOutcomeID: LOID,
             subjectID: subjectID,
