@@ -134,7 +134,7 @@ class AwardService {
                 awardID: awardID,
             },
         });
-        if (!existingAward) throw new Error(`Student with ID ${studentID} does not have this award`);
+        if (!existingAward) throw new Error(`Student with ID ${studentID} does not have this award. Please check again`);
 
         await existingAward.destroy();
         return "Delete Award for Student Success";
