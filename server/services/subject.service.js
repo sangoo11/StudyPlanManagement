@@ -4,6 +4,10 @@ const { ROLE } = require('./access.service');
 const Teacher = require('../models/teacher.model');
 const Subject = require('../models/subject.model');
 const sequelize = require('../configs/sequelize');
+const Student = require('../models/student.model');
+const Enrollment = require('../models/enrollment.model');
+const LearningOutcome = require('../models/learningOutcome.model');
+const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
 
 class SubjectService {
     static getAllSubject = async () => {
@@ -131,6 +135,40 @@ class SubjectService {
         );
         if (!result) throw new Error("No subject factors found");
         return result
+    }
+
+    static getSubjectInLOByStudentID = async (studentID) => {
+        // Check if student exists
+        if (!studentID) throw new Error("Please provide student ID");
+        const student = await Student.findByPk(studentID);
+        if (!student) throw new Error("Student not found");
+
+        const allLearningOutcomes = await LearningOutcome.findAll({
+            attributes: ['id']
+        });
+        let subjectList = [];
+        // console.log(JSON.stringify(allLearningOutcomes));
+        for (let i = 0; i < allLearningOutcomes.length; i++) {
+            const learningOutcome = allLearningOutcomes[i];
+            console.log(learningOutcome.id);
+            const result = await sequelize.query(
+                `SELECT subject.id, subject.subjectName, enrollment.finalGrade as score, subjectlearningoutcome.level as level, enrollment.status as status, learningoutcome.id as loID
+                FROM enrollment
+                INNER JOIN course ON enrollment.courseID = course.id
+                INNER JOIN subject ON course.subjectID = subject.id
+                INNER JOIN subjectlearningoutcome ON subject.id = subjectlearningoutcome.subjectID
+                INNER JOIN learningoutcome ON subjectlearningoutcome.learningoutcomeID = learningoutcome.id
+                WHERE learningOutcome.id = ${learningOutcome.id} AND enrollment.studentID = ${studentID}`,
+                { type: sequelize.QueryTypes.SELECT }
+            );
+            if (result.length > 0) {
+                subjectList.push({
+                    learningOutcomeId: learningOutcome.id,
+                    subjects: result
+                });
+            }
+        }
+        return subjectList;
     }
 }
 

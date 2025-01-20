@@ -60,6 +60,16 @@ class SubjectController {
             },
         }).send(res);
     }
+
+    getSubjectInLOByStudentID = async (req, res, next) => {
+        new CREATED({
+            message: "Get Subject In LO By Student ID Success",
+            metadata: await SubjectService.getSubjectInLOByStudentID(req.params.studentID),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    }
 }
 
 module.exports = new SubjectController();
