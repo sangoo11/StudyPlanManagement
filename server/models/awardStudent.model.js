@@ -16,7 +16,7 @@ const AwardStudent = sequelize.define("AwardStudent", {
         defaultValue: new Date()
     },
 }, {
-    timestamps: true,
+    timestamps: false,
 });
 
 module.exports = AwardStudent;

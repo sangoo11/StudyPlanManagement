@@ -31,8 +31,8 @@ function authToken(req, res, next) {
     })
 }
 
-app.listen(PORT, (req, res) => {
-    console.log(`Auth server is running on port ${PORT}`)
-})
+// app.listen(PORT, (req, res) => {
+//     console.log(`Auth server is running on port ${PORT}`)
+// })
 
 module.exports = { authUser, authRole, authToken }

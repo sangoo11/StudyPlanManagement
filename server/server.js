@@ -5,7 +5,7 @@ const http = require("http");
 require("./models/index")
 const sequelize = require("./configs/sequelize");
 
-const firebase = require("./configs/firebase");
+// const firebase = require("./configs/firebase");
 
 const app = require("./app"); // Import app setup
 

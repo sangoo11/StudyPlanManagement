@@ -150,7 +150,6 @@ class SubjectService {
         // console.log(JSON.stringify(allLearningOutcomes));
         for (let i = 0; i < allLearningOutcomes.length; i++) {
             const learningOutcome = allLearningOutcomes[i];
-            console.log(learningOutcome.id);
             const result = await sequelize.query(
                 `SELECT subject.id, subject.subjectName, enrollment.finalGrade as score, subjectlearningoutcome.level as level, enrollment.status as status, learningoutcome.id as loID
                 FROM enrollment

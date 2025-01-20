@@ -56,13 +56,12 @@ class AccessService {
             })
             if (!newStudent) throw new Error('Cannot create student');
             newUserID = newStudent.id;
-            // const allLearningOutcomes = await LearningOutcome.findAll();
-            // const scores = allLearningOutcomes.map(outcome => ({
-            //     score: 0,
-            //     studentID: newStudent.id,
-            //     learningOutcomeID: outcome.id
-            // }));
-            // await LearningOutcomeScore.bulkCreate(scores);
+            const allLearningOutcomes = await LearningOutcome.findAll();
+            const scores = allLearningOutcomes.map(outcome => ({
+                studentID: newStudent.id,
+                learningOutcomeID: outcome.id
+            }));
+            await LearningOutcomeScore.bulkCreate(scores);
         }
         if (accountableType === 'teacher') {
             const newTeacher = await Teacher.create({
