@@ -89,8 +89,8 @@ class LearningOutcomeService {
         return learningOutcome;
     }
 
-    static createSubjectLearningOutcome = async (LOID, { subjectID }) => {
-        if (!LOID || !subjectID) {
+    static createSubjectLearningOutcome = async (LOID, { subjectID, level }) => {
+        if (!LOID || !subjectID || !level) {
             throw new Error('Missing required fields');
         }
         const learningOutcome = await LearningOutcome.findByPk(LOID);
@@ -114,14 +114,15 @@ class LearningOutcomeService {
         } else {
             const newSubjectLearningOutcome = await SubjectLearningOutcome.create({
                 learningOutcomeID: LOID,
-                subjectID: subjectID
+                subjectID: subjectID,
+                level: level,
             });
             if (!newSubjectLearningOutcome) {
                 throw new Error('Failed to create Subject - Learning Outcome');
             }
         }
 
-        return subjectID + ' linked with ' + LOID;
+        return subjectID + LOID + level;
     }
 
     static deleteSubjectLearningOutcome = async (LOID, { subjectID }) => {
@@ -161,6 +162,36 @@ class LearningOutcomeService {
         return subjectID + ' unlinked with ' + LOID;
     }
 
+    static updateSubjectLearningOutcome = async (LOID, { subjectID, level }) => {
+        const learningOutcome = await LearningOutcome.findByPk(LOID);
+        if (!learningOutcome) {
+            throw new Error('Learning Outcome not found');
+        }
+        if (!learningOutcome.active) {
+            throw new Error('Learning Outcome is not active');
+        }
+        const subject = await Subject.findByPk(subjectID);
+        if (!subject) {
+            throw new Error('Subject not found');
+        }
+
+        const subjectLearningOutcome = await SubjectLearningOutcome.findOne({
+            where: {
+                learningOutcomeID: LOID,
+                subjectID,
+            }
+        });
+
+        if (!subjectLearningOutcome) {
+            throw new Error('Subject - Learning Outcome not linked yet');
+        } else {
+            const updated = await subjectLearningOutcome.update({
+                level: level,
+            });
+            return updated;
+        }
+    }
+
     static getAllSubjectByLOID = async (LOID) => {
         if (!LOID) {
             throw new Error('Missing required fields');
@@ -182,6 +213,8 @@ class LearningOutcomeService {
 
         return subjectLearningOutcome;
     }
+
+
 
     static getAllLearningOutcomeBySubjectID = async (subjectID) => {
         if (!subjectID) {

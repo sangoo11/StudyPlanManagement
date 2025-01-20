@@ -26,6 +26,16 @@ const Award = sequelize.define("Award", {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    year: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: new Date().getFullYear(),
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+    }
 }, {
     timestamps: false,
 });

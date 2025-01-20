@@ -13,6 +13,7 @@ router.put('/delete-learning-outcome/:id', asyncHandler(LearningOutcomeControlle
 
 router.post('/create-subject-learning-outcome/:LOID', asyncHandler(LearningOutcomeController.createSubjectLearningOutcome));
 router.delete('/delete-subject-learning-outcome/:LOID', asyncHandler(LearningOutcomeController.deleteSubjectLearningOutcome));
+router.put('/edit-subject-learning-outcome/:LOID', asyncHandler(LearningOutcomeController.updateSubjectLearningOutcome));
 
 router.get('/get-all-subject/:LOID', asyncHandler(LearningOutcomeController.getAllSubjectByLOID));
 router.get('/get-all-learning-outcome/:subjectID', asyncHandler(LearningOutcomeController.getAllLearningOutcomeBySubjectID));

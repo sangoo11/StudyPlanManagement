@@ -79,6 +79,17 @@ class LearningOutcomeController {
         }).send(res)
     }
 
+    //handle update subject learning outcome
+    updateSubjectLearningOutcome = async (req, res, next) => {
+        new CREATED({
+            message: "Update subject - learning outcome successfully",
+            metadata: await LearningOutcomeService.updateSubjectLearningOutcome(req.params.LOID, req.body),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
+
     //handle get all subject by learning outcome id
     getAllSubjectByLOID = async (req, res, next) => {
         new CREATED({
