@@ -45,7 +45,7 @@ function TeacherPageLayout(props) {
     }, []);
 
     return (
-        <div>
+        <div className="relative">
             {/* Header */}
             <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-12">
@@ -71,8 +71,8 @@ function TeacherPageLayout(props) {
             {/* Content */}
             <Outlet />
 
-            {/* Footer */}
-            <div className='fixed flex-reverse bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
+            {/* Footer
+            <div className='absolute flex-reverse bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
                 <div className='grid grid-cols-[2fr_1fr_1fr_1fr_1fr] h-full min-h-[10vh] text-white'>
                     <div className='w-4/6'>
                         <h3 className='text-xl font-semibold mb-2'>{appName}</h3>
@@ -107,7 +107,7 @@ function TeacherPageLayout(props) {
                         <p className='text-xs font-thin'>{appMail}</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

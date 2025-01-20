@@ -78,7 +78,7 @@ function Statistics() {
     }
 
     return (
-        <div className='mt-[8vh] grid grid-cols-2 col-span-4'>
+        <div className=' ml-[4vw] mt-[8vh] grid grid-cols-2 col-span-4'>
             <div>
                 <select
                     className="px-4 py-2 border rounded-md bg-white ml-[2.6vw]"
@@ -105,7 +105,7 @@ function Statistics() {
                     }}
                 />
             </div>
-            <div>Chart 2</div>
+            <div className='font-bold text-4xl items-center'>Thống kê</div>
         </div>
     );
 }
