@@ -101,7 +101,7 @@ function App() {
       </Route>
 
       <Route path='admin' element={<AdminPageLayout />}>
-        <Route path='statistics' element={<StatisticsPage />} />
+        <Route path='statistics' element={<Statistics />} />
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
         <Route path='subjects' element={<SubjectsManagePage />} />
