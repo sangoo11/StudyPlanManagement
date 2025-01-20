@@ -122,7 +122,11 @@ class LearningOutcomeService {
             }
         }
 
-        return subjectID + LOID + level;
+        return {
+            learningOutcomeID: LOID,
+            subjectID: subjectID,
+            level: level,
+        }
     }
 
     static deleteSubjectLearningOutcome = async (LOID, { subjectID }) => {
