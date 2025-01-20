@@ -14,6 +14,15 @@ const Enrollment = sequelize.define('Enrollment', {
             min: 0,
             max: 10,
         },
+        set(value) {
+            this.setDataValue('finalGrade', value);  // Set the finalGrade value
+            if (value !== null) {
+                // Automatically set status based on finalGrade value
+                this.status = value >= 5 ? 'pass' : 'fail';
+            } else {
+                this.status = 'enrolled'; // If no finalGrade, set default status
+            }
+        },
     },
     status: {
         type: DataTypes.ENUM('enrolled', 'pass', 'fail'),

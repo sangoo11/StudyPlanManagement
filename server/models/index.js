@@ -376,6 +376,35 @@ const learningOutcomes = [
   }
 ];
 
+const learningOutcomeScores = [
+  { studentID: 1, learningOutcomeID: 1, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 2, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 3, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 4, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 5, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 6, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 7, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 8, score: 0, highestLevel: null },
+
+  { studentID: 2, learningOutcomeID: 1, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 2, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 3, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 4, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 5, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 6, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 7, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 8, score: 0, highestLevel: null },
+
+  { studentID: 3, learningOutcomeID: 1, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 2, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 3, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 4, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 5, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 6, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 7, score: 0, highestLevel: null },
+  { studentID: 3, learningOutcomeID: 8, score: 0, highestLevel: null }
+];
+
 const modifications = [
   {
     key: 'progress',
@@ -460,6 +489,9 @@ const createData = async () => {
 
   // Create Learning Outcomes
   await LearningOutcome.bulkCreate(learningOutcomes);
+
+  // Create Learning Outcome Scores
+  await LearningOutcomeScore.bulkCreate(learningOutcomeScores);
 
   // Create Modifications
   await Modification.bulkCreate(modifications);

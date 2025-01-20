@@ -9,7 +9,7 @@ const LearningOutcomeScore = sequelize.define('LearningOutcomeScore', {
     },
     score: {
         type: DataTypes.DECIMAL(4, 2),
-        allowNull: false,
+        allowNull: true,
         validate: {
             min: 0,
             max: 10
@@ -17,7 +17,7 @@ const LearningOutcomeScore = sequelize.define('LearningOutcomeScore', {
     },
     highestLevel: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
             is: /^[A-z]{2}[0-9]{1}$/
         }

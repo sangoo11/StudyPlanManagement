@@ -74,7 +74,7 @@ class ScoreService {
             where: {
                 studentID,
                 courseID,
-                // completed: false,
+                // status: 'enrolled',
             }
         });
         if (!enrollment) {
@@ -148,95 +148,148 @@ class ScoreService {
                 });
 
                 // Calculate learning outcome score
-                const learningOutcomeObject = await SubjectLearningOutcome.findAll({
-                    where: {
-                        subjectID: subject.id,
-                    },
-                    attributes: ['learningOutcomeID'],
-                }
-                );
-                if (learningOutcomeObject.length === 0) {
-                    console.log('No learning outcome found');
-                } else {
-                    const learningOutcomeScoreFactor = await Modification.findAll({
-                        where: {
-                            key: {
-                                [Op.in]: ['major', 'core']
-                            }
+                // const learningOutcomeObject = await SubjectLearningOutcome.findAll({
+                //     where: {
+                //         subjectID: subject.id,
+                //     },
+                //     attributes: ['learningOutcomeID'],
+                // }
+                // );
+                // if (learningOutcomeObject.length === 0) {
+                //     console.log('No learning outcome found');
+                // } else {
+                //     const learningOutcomeScoreFactor = await Modification.findAll({
+                //         where: {
+                //             key: {
+                //                 [Op.in]: ['major', 'core']
+                //             }
 
-                        }
+                //         }
+                //     });
+
+                //     if (learningOutcomeScoreFactor.length !== 2) {
+                //         throw new Error('Learning outcome score factor not found');
+                //     }
+
+                //     const learningOutcomeIDs = learningOutcomeObject.map(learningOutcome => learningOutcome.learningOutcomeID);
+
+                //     for (let i = 0; i < learningOutcomeIDs.length; i++) {
+                //         const learningOutcome = await LearningOutcome.findByPk(learningOutcomeIDs[i]);
+                //         if (!learningOutcome) {
+                //             throw new Error('Learning outcome not found');
+                //         }
+                //         // Output: LearningOutcome object
+
+                //         const learningOutcomeScores = await LearningOutcomeScore.findOne({
+                //             where: {
+                //                 learningOutcomeID: learningOutcome.id,
+                //                 studentID,
+                //             }
+                //         });
+                //         // Output: LearningOutcomeScore object
+
+                //         if (!learningOutcomeScores) {
+                //             // Create new learning outcome score
+                //             const newLearningOutcomeScore = await LearningOutcomeScore.create({
+                //                 learningOutcomeID: learningOutcome.id,
+                //                 studentID,
+                //                 score: finalScore,
+                //             });
+                //             if (!newLearningOutcomeScore) {
+                //                 throw new Error('Error creating learning outcome score');
+                //             }
+                //         } else {
+                //             // Update existing learning outcome score
+                //             // lay danh sach enrollemnt completed cua student (enrollment)
+                //             const result = await sequelize.query(
+                //                 `SELECT enrollment.finalGrade as score, learningoutcomescore.learningoutcomeID, course.id as courseID, subject.type as subjectType, modification.value as factor
+                //                  FROM enrollment
+                //                  INNER JOIN course ON enrollment.courseID = course.id
+                //                  INNER JOIN subject ON course.subjectID = subject.id
+                //                  INNER JOIN subjectlearningoutcome ON subject.id = subjectlearningoutcome.subjectID
+                //                  INNER JOIN learningoutcome ON subjectlearningoutcome.learningoutcomeID = learningoutcome.id
+                //                  INNER JOIN learningoutcomescore ON learningoutcome.id = learningoutcomescore.learningoutcomeID
+                //                  INNER JOIN modification ON modification.key = subject.type
+                //                  WHERE enrollment.studentID = ${studentID} AND learningoutcome.id = ${learningOutcome.id} AND enrollment.completed = true          
+                //                  ;`,
+                //                 { type: QueryTypes.SELECT } // This will return an array of results
+                //             );
+                //             console.log(result);
+                //             if (result.length === 0) {
+                //                 throw new Error('No result found');
+                //             }
+                //             const factorSum = result.reduce((acc, s) => acc + parseFloat(s.factor), 0);
+                //             const averageScore = result.reduce((acc, s) => {
+                //                 console.log(s.score, s.factor);
+                //                 return acc + s.score * parseFloat(s.factor);
+                //             }, 0) / factorSum;
+                //             console.log(averageScore);
+                //             console.log(factorSum);
+
+                //             await LearningOutcomeScore.update({
+                //                 score: averageScore,
+                //             }, {
+                //                 where: {
+                //                     learningOutcomeID: learningOutcome.id,
+                //                     studentID,
+                //                 }
+                //             });
+                //         }
+                //     }
+
+                // }
+
+                if (enrollment.status === 'pass') {
+                    const allSubjectLearningOutcomes = await SubjectLearningOutcome.findAll({
+                        where: {
+                            subjectID: subject.id,
+                        },
+                        attributes: ['learningOutcomeID'],
                     });
 
-                    if (learningOutcomeScoreFactor.length !== 2) {
-                        throw new Error('Learning outcome score factor not found');
+                    if (allSubjectLearningOutcomes.length === 0) {
+                        console.log('No learning outcome found');
                     }
-
-                    const learningOutcomeIDs = learningOutcomeObject.map(learningOutcome => learningOutcome.learningOutcomeID);
-
-                    for (let i = 0; i < learningOutcomeIDs.length; i++) {
-                        const learningOutcome = await LearningOutcome.findByPk(learningOutcomeIDs[i]);
-                        if (!learningOutcome) {
-                            throw new Error('Learning outcome not found');
-                        }
-                        // Output: LearningOutcome object
+                    for (let i = 0; i < allSubjectLearningOutcomes.length; i++) {
+                        const learningOutcome = allSubjectLearningOutcomes[i];
 
                         const learningOutcomeScores = await LearningOutcomeScore.findOne({
                             where: {
-                                learningOutcomeID: learningOutcome.id,
+                                learningOutcomeID: learningOutcome.learningOutcomeID,
                                 studentID,
                             }
                         });
-                        // Output: LearningOutcomeScore object
+                        console.log(JSON.stringify(learningOutcomeScores));
 
-                        if (!learningOutcomeScores) {
-                            // Create new learning outcome score
-                            const newLearningOutcomeScore = await LearningOutcomeScore.create({
-                                learningOutcomeID: learningOutcome.id,
-                                studentID,
-                                score: finalScore,
-                            });
-                            if (!newLearningOutcomeScore) {
-                                throw new Error('Error creating learning outcome score');
-                            }
-                        } else {
-                            // Update existing learning outcome score
-                            // lay danh sach enrollemnt completed cua student (enrollment)
-                            const result = await sequelize.query(
-                                `SELECT enrollment.finalGrade as score, learningoutcomescore.learningoutcomeID, course.id as courseID, subject.type as subjectType, modification.value as factor
-                                 FROM enrollment
-                                 INNER JOIN course ON enrollment.courseID = course.id
-                                 INNER JOIN subject ON course.subjectID = subject.id
-                                 INNER JOIN subjectlearningoutcome ON subject.id = subjectlearningoutcome.subjectID
-                                 INNER JOIN learningoutcome ON subjectlearningoutcome.learningoutcomeID = learningoutcome.id
-                                 INNER JOIN learningoutcomescore ON learningoutcome.id = learningoutcomescore.learningoutcomeID
-                                 INNER JOIN modification ON modification.key = subject.type
-                                 WHERE enrollment.studentID = ${studentID} AND learningoutcome.id = ${learningOutcome.id} AND enrollment.completed = true          
-                                 ;`,
-                                { type: QueryTypes.SELECT } // This will return an array of results
-                            );
-                            console.log(result);
-                            if (result.length === 0) {
-                                throw new Error('No result found');
-                            }
-                            const factorSum = result.reduce((acc, s) => acc + parseFloat(s.factor), 0);
-                            const averageScore = result.reduce((acc, s) => {
-                                console.log(s.score, s.factor);
-                                return acc + s.score * parseFloat(s.factor);
-                            }, 0) / factorSum;
-                            console.log(averageScore);
-                            console.log(factorSum);
+                        const curentLevel = await SubjectLearningOutcome.findOne({
+                            where: {
+                                subjectID: subject.id,
+                                learningOutcomeID: learningOutcome.learningOutcomeID,
+                            },
+                            attributes: ['level'],
+                        });
 
+                        if (!learningOutcomeScores.highestLevel) {
                             await LearningOutcomeScore.update({
-                                score: averageScore,
+                                highestLevel: curentLevel.level,
                             }, {
                                 where: {
-                                    learningOutcomeID: learningOutcome.id,
+                                    learningOutcomeID: learningOutcome.learningOutcomeID,
+                                    studentID,
+                                }
+                            });
+                        } else {
+                            const highestLevel = ScoreService.compareLevel(curentLevel.level, learningOutcomeScores.highestLevel);
+                            await LearningOutcomeScore.update({
+                                highestLevel,
+                            }, {
+                                where: {
+                                    learningOutcomeID: learningOutcome.learningOutcomeID,
                                     studentID,
                                 }
                             });
                         }
                     }
-
                 }
             }
         } catch (error) {
@@ -290,6 +343,15 @@ class ScoreService {
                 score: s.score,
             }))
         };
+    }
+
+    // Helper function
+    static compareLevel = (currentLevel, highestLevel) => {
+        const currentLevelNumber = parseInt(currentLevel.match(/\d+/)[0]);
+        const highestLevelNumber = parseInt(highestLevel.match(/\d+/)[0]);
+        const highestNumber = Math.max(currentLevelNumber, highestLevelNumber);
+        const prefix = currentLevel.match(/[A-Z]+/)[0];  // Extract "NT" from currentLevel
+        return `${prefix}${highestNumber}`;
     }
 }
 
