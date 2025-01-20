@@ -151,7 +151,7 @@ class SubjectService {
         for (let i = 0; i < allLearningOutcomes.length; i++) {
             const learningOutcome = allLearningOutcomes[i];
             const result = await sequelize.query(
-                `SELECT subject.id, subject.subjectName, enrollment.finalGrade as score, subjectlearningoutcome.level as level, enrollment.status as status, learningoutcome.id as loID
+                `SELECT subject.id, subject.subjectName, subject.subjectCode, enrollment.finalGrade as score, subjectlearningoutcome.level as level, enrollment.status as status, learningoutcome.id as loID
                 FROM enrollment
                 INNER JOIN course ON enrollment.courseID = course.id
                 INNER JOIN subject ON course.subjectID = subject.id
@@ -160,11 +160,38 @@ class SubjectService {
                 WHERE learningOutcome.id = ${learningOutcome.id} AND enrollment.studentID = ${studentID}`,
                 { type: sequelize.QueryTypes.SELECT }
             );
+
             if (result.length > 0) {
-                subjectList.push({
-                    learningOutcomeId: learningOutcome.id,
-                    subjects: result
-                });
+                subjectList.push(result);
+            } else {
+                if (learningOutcome.id === 1 || learningOutcome.id === 2) {
+                    subjectList.push({
+                        id: null,
+                        subjectName: null,
+                        score: null,
+                        level: "NT1",
+                        status: null,
+                        loID: learningOutcome.id,
+                    })
+                } else if (learningOutcome.id === 8) {
+                    subjectList.push({
+                        id: null,
+                        subjectName: null,
+                        score: null,
+                        level: "KN1",
+                        status: null,
+                        loID: learningOutcome.id,
+                    })
+                } else {
+                    subjectList.push({
+                        id: null,
+                        subjectName: null,
+                        score: null,
+                        level: "KN1",
+                        status: null,
+                        loID: learningOutcome.id,
+                    })
+                }
             }
         }
         return subjectList;

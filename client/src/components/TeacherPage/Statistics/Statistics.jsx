@@ -36,6 +36,8 @@ function Statistics() {
         return parseInt(str.match(/\d+/g) || [], 10); // returns an array of numbers or an empty array if none found
     }
 
+    const subjects = [1, 2, 3, 4, 5, 6, 7];
+
     useEffect(() => {
         const getBarChart = async () => {
             try {
@@ -77,7 +79,6 @@ function Statistics() {
         const getBarOption = async () => {
             try {
                 const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-subject-by-LO/${studentID}`);
-                console.log(JSON.stringify(data.metadata))
                 setBarOption({
                     responsive: true,
                     scales: {
@@ -94,6 +95,23 @@ function Statistics() {
                             display: true,
                             text: 'Learning Outcome Score'
                         },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const dataIndex = context.dataIndex;
+
+                                    const loData = data.metadata[dataIndex];
+
+                                    if (!Array.isArray(loData)) {
+                                        return 'No subjects: ' + loData.level;
+                                    }
+
+                                    return loData.map(subject =>
+                                        `${subject.subjectCode}: ${subject.level}`
+                                    );
+                                }
+                            }
+                        }
                     }
                 });
             } catch (error) {
@@ -111,27 +129,31 @@ function Statistics() {
     }
 
     return (
-        <div className=' ml-[4vw] mt-[8vh] grid grid-cols-2 col-span-4'>
-            <div>
-                <select
-                    className="px-4 py-2 border rounded-md bg-white ml-[2.6vw]"
-                    value={studentID}
-                    onChange={(e) => setStudentID(e.target.value)}
-                >
-                    <option value="">Chọn học sinh</option>
-                    {studentList && studentList.map((student, index) => (
-                        <option key={index} value={student.id}>
-                            {student.id}. {student.fullName}
-                        </option>
-                    ))}
-                </select>
-                <Bar
-                    data={barData}
-                    options={barOption}
-                />
+        <>
+            <div className='ml-[4vw] mt-[8vh] font-bold text-4xl text-center'>Thống kê</div>
+            <div className='ml-[4vw] mt-[8vh] grid grid-cols-2 col-span-4'>
+
+                <div>
+                    <select
+                        className="px-4 py-2 border rounded-md bg-white ml-[2.6vw]"
+                        value={studentID}
+                        onChange={(e) => setStudentID(e.target.value)}
+                    >
+                        <option value="">Chọn học sinh</option>
+                        {studentList && studentList.map((student, index) => (
+                            <option key={index} value={student.id}>
+                                {student.id}. {student.fullName}
+                            </option>
+                        ))}
+                    </select>
+                    <Bar
+                        data={barData}
+                        options={barOption}
+                    />
+                </div>
+                {/* <div className='font-bold text-4xl items-center'>Thống kê</div> */}
             </div>
-            <div className='font-bold text-4xl items-center'>Thống kê</div>
-        </div>
+        </>
     );
 }
 
