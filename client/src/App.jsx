@@ -49,6 +49,7 @@ import DeleteCriteria from './components/AdminPage/OutputCriteriaManagePage/Dele
 import EditCriteria from './components/AdminPage/OutputCriteriaManagePage/EditCriteria';
 import AddSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/AddSubjectInCriteria'
 import DeleteSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteSubjectInCriteria'
+import EditSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/EditSubjectInCriteria'
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
@@ -134,6 +135,7 @@ function App() {
       <Route path='admin/outputcriteria/editcriteria' element={<EditCriteria />} />
       <Route path='admin/outputcriteria/addsubject' element={<AddSubjectInCriteria />} />
       <Route path='admin/outputcriteria/deletesubject' element={<DeleteSubjectInCriteria />} />
+      <Route path='admin/outputcriteria/editsubject' element={<EditSubjectInCriteria />} />
       {/* Catch-all route for undefined paths */}
       <Route path='*' element={<ErrorPage />} />
     </Routes>

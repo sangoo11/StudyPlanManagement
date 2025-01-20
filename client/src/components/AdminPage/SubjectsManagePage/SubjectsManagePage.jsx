@@ -19,6 +19,7 @@ function SubjectManagement() {
     const [mappedCourses, setMappedCourses] = useState([]);
     const [selectedMajor, setSelectedMajor] = useState("Công nghệ phần mềm");
     const [visibleClasses, setVisibleClasses] = useState({});
+    const [learningOutcomes, setLearningOutcomes] = useState([]);
 
     const [modals, setModals] = useState({
         addSubject: false,
@@ -62,9 +63,32 @@ function SubjectManagement() {
                 console.error("Error fetching data:", error);
             }
         };
-
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchLearningOutcomes = async () => {
+            const visibleSubjectIDs = Object.keys(visibleClasses).filter(
+                (key) => visibleClasses[key]
+            );
+    
+            if (visibleSubjectIDs.length > 0) {
+                try {
+                    const res = await axios.get(
+                        `http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome/${visibleSubjectIDs[0]}`
+                    );
+                    setLearningOutcomes(res.data.metadata || []);
+                } catch (error) {
+                    console.error("Error fetching learning outcomes:", error);
+                }
+            } else {
+                setLearningOutcomes([]); // Clear outcomes when no subject is visible
+            }
+        };
+    
+        fetchLearningOutcomes();
+    }, [visibleClasses]);
+    
 
     return (
         <div className="h-auto mt-[8vh] bg-gray-50 p-6">
@@ -99,48 +123,72 @@ function SubjectManagement() {
                 {mappedCourses.map((subject) => (
                     <div key={subject.id} className="bg-white shadow-lg rounded-lg border border-gray-300">
                         {/* Subject Header */}
-                        <div className="p-4 bg-[#f9f9f9] border-b border-gray-200 flex justify-between items-center">
-                            <h2 className={`font-bold ${subject.active ? 'text-green-500' : 'text-red-500'}`}>
-                                {subject.subjectCode} - {subject.subjectName}
-                            </h2>
-                            <div className="flex">
-                                <button
-                                    className="px-4 py-2 text-white bg-[#1DA599] rounded-md mr-2"
-                                    onClick={() =>
-                                        setModals((prev) => ({
-                                            ...prev,
-                                            editSubject: { visible: true, subjectId: subject.id },
-                                        }))
-                                    }
-                                >
-                                    Chỉnh sửa môn học
-                                </button>
-                                <button
-                                    className="px-4 py-2 text-white bg-red-500 rounded-md mr-2"
-                                    onClick={() =>
-                                        setModals((prev) => ({
-                                            ...prev,
-                                            deleteSubject: { visible: true, subjectId: subject.id },
-                                        }))
-                                    }
-                                >
-                                    Xóa môn học
-                                </button>
-                                <button
-                                    className="w-8 h-8 rounded-full hover:bg-gray-200"
-                                    onClick={() => toggleClassesVisibility(subject.id)}
-                                >
-                                    <img
-                                        src={visibleClasses[subject.id] ? ShowLess : ShowMore}
-                                        alt={visibleClasses[subject.id] ? "Show Less" : "Show More"}
-                                    />
-                                </button>
+                        <div className="p-4 bg-[#f9f9f9] border-b border-gray-200 flex-col justify-between items-center">
+                            <div className="flex justify-between items-center">
+                                <h2 className={`font-bold ${subject.active ? 'text-green-500' : 'text-red-500'}`}>
+                                    {subject.subjectCode} - {subject.subjectName}
+                                </h2>
+                                <div className="flex">
+                                    <button
+                                        className="px-4 py-2 text-white bg-[#1DA599] rounded-md mr-2"
+                                        onClick={() =>
+                                            setModals((prev) => ({
+                                                ...prev,
+                                                editSubject: { visible: true, subjectId: subject.id },
+                                            }))
+                                        }
+                                    >
+                                        Chỉnh sửa môn học
+                                    </button>
+                                    <button
+                                        className="px-4 py-2 text-white bg-red-500 rounded-md mr-2"
+                                        onClick={() =>
+                                            setModals((prev) => ({
+                                                ...prev,
+                                                deleteSubject: { visible: true, subjectId: subject.id },
+                                            }))
+                                        }
+                                    >
+                                        Xóa môn học
+                                    </button>
+                                    <button
+                                        className="w-8 h-8 rounded-full hover:bg-gray-200"
+                                        onClick={() => toggleClassesVisibility(subject.id)}
+                                    >
+                                        <img
+                                            src={visibleClasses[subject.id] ? ShowLess : ShowMore}
+                                            alt={visibleClasses[subject.id] ? "Show Less" : "Show More"}
+                                        />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                            
 
+                            
+                        </div>
                         {/* Classes Table */}
                         {visibleClasses[subject.id] && (
                             <div className="p-4">
+                                {/* Learning Outcomes Table */}
+                                <div className="flex mt-8 justify-center mb-[4vw]">
+                                    <table className="w-[40vw] border-collapse border border-gray-300 items-center">
+                                        <thead>
+                                            <tr className="bg-gray-200">
+                                                <th className="border border-gray-300 px-4 py-2">Mã chuẩn đầu ra</th>
+                                                <th className="border border-gray-300 px-4 py-2">Mức độ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {learningOutcomes.map((outcome) => (
+                                                <tr key={outcome.learningOutcomeID}>
+                                                    <td className="border border-gray-300 px-4 py-2">{outcome.learningOutcomeID}</td>
+                                                    <td className="border border-gray-300 px-4 py-2">{outcome.level}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
                                 {subject.courses.map((course) => (
                                     <button
                                         key={course.id}

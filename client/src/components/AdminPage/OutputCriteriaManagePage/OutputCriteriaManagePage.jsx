@@ -9,6 +9,7 @@ import DeleteCriteria from "./DeleteCriteria";
 import EditCriteria from "./EditCriteria";
 import AddSubject from "./AddSubjectInCriteria";
 import DeleteSubject from "./DeleteSubjectInCriteria";
+import EditSubject from "./EditSubjectInCriteria";
 
 function OutputCriteriaManagePage() {
   // State for visibility of semesters
@@ -17,6 +18,7 @@ function OutputCriteriaManagePage() {
   const [learningOutcomes, setLearningOutcomes] = useState([]);
   // State for subjects by learning outcome
   const [subjects, setSubjects] = useState({});
+  
   // States for modals
   const [isAddCriteriaVisible, setAddCriteriaVisible] = useState(false);
   const [isDeleteCriteriaVisible, setDeleteCriteriaVisible] = useState(false);
@@ -25,6 +27,7 @@ function OutputCriteriaManagePage() {
   const [selectedLearningOutcomeCode, setSelectedLearningOutcomeCode] = useState("");
   const [isAddSubjectVisible, setAddSubjectVisible] = useState(false);
   const [isDeleteSubjectVisible, setDeleteSubjectVisible] = useState(false);
+  const [isEditSubjectVisible, setEditSubjectVisible] = useState(false);
   
   useEffect(() => {
     const fetchLearningOutcomes = async () => {
@@ -51,11 +54,16 @@ function OutputCriteriaManagePage() {
       const subjectData = response.data.metadata;
 
       // Fetch subject details
-      const subjectDetailsPromises = subjectData.map((item) =>
-        axios.get(`http://localhost:8080/v1/api/subject/get-subject/${item.subjectID}`)
-      );
-      const subjectDetailsResponses = await Promise.all(subjectDetailsPromises);
-      const subjectDetails = subjectDetailsResponses.map((res) => res.data.metadata);
+      const subjectDetailsPromises = subjectData.map(async (item) => {
+        const subjectResponse = await axios.get(
+          `http://localhost:8080/v1/api/subject/get-subject/${item.subjectID}`
+        );
+        return {
+          ...subjectResponse.data.metadata,
+          level: item.level, // Include the level from subjectData
+        };
+      });
+      const subjectDetails = await Promise.all(subjectDetailsPromises);
 
       setSubjects((prev) => ({
         ...prev,
@@ -156,6 +164,18 @@ function OutputCriteriaManagePage() {
                     >
                       Thêm môn học
                     </button>
+                    
+                    <button
+                      onClick={() => {
+                        setSelectedLearningOutcomeId(outcome.id);
+                        setEditSubjectVisible(true);
+                      }}
+                      className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
+                      aria-label="Edit Subject"
+                    >
+                      Chỉnh sửa môn học
+                    </button>
+
                     <button
                       onClick={() => {
                         setSelectedLearningOutcomeId(outcome.id);
@@ -175,7 +195,7 @@ function OutputCriteriaManagePage() {
                       <tr className="bg-gray-100">
                         <th className="border border-gray-300 p-2">Mã môn học</th>
                         <th className="border border-gray-300 p-2">Tên môn học</th>
-                        <th className="border border-gray-300 p-2">Hệ số</th>
+                        <th className="border border-gray-300 p-2">Mức độ</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -183,7 +203,7 @@ function OutputCriteriaManagePage() {
                         <tr key={subject.id} className="text-center">
                           <td className="border border-gray-300 p-2">{subject.id}</td>
                           <td className="border border-gray-300 p-2">{subject.subjectName}</td>
-                          <td className="border border-gray-300 p-2">1.0</td> {/* Placeholder for Factor */}
+                          <td className="border border-gray-300 p-2">{subject.level || "N/A"}</td> {/* Placeholder for Factor */}
                         </tr>
                       ))}
                     </tbody>
@@ -246,6 +266,12 @@ function OutputCriteriaManagePage() {
         <AddSubject
             onClose={() => setAddSubjectVisible(false)} 
             id={selectedLearningOutcomeId}
+        />
+      )}
+      {isEditSubjectVisible && (
+        <EditSubject
+            onClose={() => setEditSubjectVisible(false)} 
+            lOID={selectedLearningOutcomeId}
         />
       )}
       

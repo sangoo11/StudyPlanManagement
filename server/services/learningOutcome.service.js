@@ -121,8 +121,11 @@ class LearningOutcomeService {
                 throw new Error('Failed to create Subject - Learning Outcome');
             }
         }
-
-        return subjectID + LOID + level;
+        return {
+            learningOutcomeID: LOID,
+            subjectID: subjectID,
+            level: level,
+        }
     }
 
     static deleteSubjectLearningOutcome = async (LOID, { subjectID }) => {

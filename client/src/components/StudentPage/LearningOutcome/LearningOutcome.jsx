@@ -37,11 +37,16 @@ function LearningOutcome() {
       const subjectData = response.data.metadata;
 
       // Fetch subject details
-      const subjectDetailsPromises = subjectData.map((item) =>
-        axios.get(`http://localhost:8080/v1/api/subject/get-subject/${item.subjectID}`)
-      );
-      const subjectDetailsResponses = await Promise.all(subjectDetailsPromises);
-      const subjectDetails = subjectDetailsResponses.map((res) => res.data.metadata);
+      const subjectDetailsPromises = subjectData.map(async (item) => {
+        const subjectResponse = await axios.get(
+          `http://localhost:8080/v1/api/subject/get-subject/${item.subjectID}`
+        );
+        return {
+          ...subjectResponse.data.metadata,
+          level: item.level, // Include the level from subjectData
+        };
+      });
+      const subjectDetails = await Promise.all(subjectDetailsPromises);
 
       setSubjects((prev) => ({
         ...prev,
@@ -91,7 +96,6 @@ function LearningOutcome() {
               </h2>
               <div className="flex items-center space-x-2">
 
-
                 {/* Toggle Button */}
                 <button
                   className="flex justify-center items-center w-8 h-8 rounded-full hover:bg-gray-200 transition"
@@ -126,7 +130,7 @@ function LearningOutcome() {
                       <tr className="bg-gray-100">
                         <th className="border border-gray-300 p-2">Mã môn học</th>
                         <th className="border border-gray-300 p-2">Tên môn học</th>
-                        <th className="border border-gray-300 p-2">Hệ số</th>
+                        <th className="border border-gray-300 p-2">Mức độ</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -134,18 +138,18 @@ function LearningOutcome() {
                         <tr key={subject.id} className="text-center">
                           <td className="border border-gray-300 p-2">{subject.id}</td>
                           <td className="border border-gray-300 p-2">{subject.subjectName}</td>
-                          <td className="border border-gray-300 p-2">1.0</td> {/* Placeholder for Factor */}
+                          <td className="border border-gray-300 p-2">{subject.level || "N/A"}</td> 
                         </tr>
                       ))}
                     </tbody>
                   </table>  
-                )}
-                
+                )}                
               </div>
             )}
           </div>
         ))}
-      </main>     
+      </main>
+      
     </div>
   );
 }

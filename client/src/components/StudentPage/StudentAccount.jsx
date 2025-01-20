@@ -51,7 +51,6 @@ function StudentAccount() {
         fetchStudentData();
     }, []);
 
-    console.log(accountID, studentID);
 
     const handleLogOut = useCallback(() => {
         localStorage.removeItem("accountID"); // Clear the stored account ID

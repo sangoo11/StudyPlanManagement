@@ -25,14 +25,13 @@ function AddSubject({ onClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { subjectCode, subjectName, type, credit, majorID } = formData;
+        const { subjectCode, subjectName, type, credit, majorID} = formData;
 
         // Validate fields
-        if (!subjectCode || !subjectName || !type || !credit || !majorID) {
+        if (!subjectCode || !subjectName || !type || !credit) {
             setError("Vui lòng điền đầy đủ thông tin.");
             return;
         }
-
         try {
             const response = await axios.post(
                 `http://localhost:8080/v1/api/subject/create-new-subject/${majorID}`,
