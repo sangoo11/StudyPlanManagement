@@ -81,7 +81,6 @@ class ScoreService {
             throw new Error('Enrollment not found or student has completed the course');
         }
 
-
         // Update to Score Model
         try {
             for (let i = 0; i < score.length; i++) {
@@ -291,6 +290,7 @@ class ScoreService {
                         }
                     }
                 }
+                return "Grade student's score successfully";
             }
         } catch (error) {
             console.log(error);

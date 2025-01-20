@@ -18,6 +18,7 @@ function Statistics() {
     const [studentID, setStudentID] = useState(1);
     const [studentList, setStudentList] = useState({})
 
+    const [barOption, setBarOption] = useState(null);
 
     useEffect(() => {
         const getStudentList = async () => {
@@ -29,7 +30,11 @@ function Statistics() {
             }
         }
         getStudentList()
-    })
+    }, [])
+
+    const extractNumbers = (str) => {
+        return parseInt(str.match(/\d+/g) || [], 10); // returns an array of numbers or an empty array if none found
+    }
 
     useEffect(() => {
         const getBarChart = async () => {
@@ -41,7 +46,8 @@ function Statistics() {
                     labels: data.metadata.map((item) => item.LearningOutcome.learningOutcomeCode),
                     datasets: [{
                         label: 'Learning Outcome Score',
-                        data: data.metadata.map((item) => item.score),  // assuming 'score' is the field holding the score value
+                        data: data.metadata.map((item) => extractNumbers(item.highestLevel)),
+                        // data: data.metadata.map((item) => extractNumbers(item.highestLevel)),
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(255, 159, 64, 0.2)',
@@ -68,8 +74,35 @@ function Statistics() {
             }
         };
 
+        const getBarOption = async () => {
+            try {
+                const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-subject-by-LO/${studentID}`);
+                console.log(JSON.stringify(data.metadata))
+                setBarOption({
+                    responsive: true,
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 6,
+                            ticks: {
+                                stepSize: 1,
+                            },
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Learning Outcome Score'
+                        },
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching option:', error);
+            }
+        }
         // Fetch chart data when the component is mounted
         getBarChart();
+        getBarOption();
     }, [studentID]);
 
     // Render the Bar chart if barData is available
@@ -94,15 +127,7 @@ function Statistics() {
                 </select>
                 <Bar
                     data={barData}
-                    options={{
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Learning Outcome Score'
-                            }
-                        }
-                    }}
+                    options={barOption}
                 />
             </div>
             <div className='font-bold text-4xl items-center'>Thống kê</div>

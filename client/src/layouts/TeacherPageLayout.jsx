@@ -34,7 +34,6 @@ function TeacherPageLayout(props) {
             const response = await axios.get(
                 `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
             );
-            console.log("API Response:", response.data);
             setTeacherID(response.data.metadata.teacherID); // Make sure this is correct
         } catch (error) {
             console.error(error.response?.data?.message || "Error fetching teacherID");
@@ -56,7 +55,7 @@ function TeacherPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/teacher" end>{title1}</NavLink>
                     <NavLink style={navLinkStyles} to="/teacher/statistics">{title2}</NavLink>
 
-                    <button 
+                    <button
                         className='fixed right-10 space-x-8'
                         onClick={() => navigate(`/teacher/accountteacher/${teacherID}`)}
                     >

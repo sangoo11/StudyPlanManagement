@@ -377,32 +377,32 @@ const learningOutcomes = [
 ];
 
 const learningOutcomeScores = [
-  { studentID: 1, learningOutcomeID: 1, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 2, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 3, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 4, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 5, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 6, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 7, score: 0, highestLevel: null },
-  { studentID: 1, learningOutcomeID: 8, score: 0, highestLevel: null },
+  { studentID: 1, learningOutcomeID: 1, score: 0, highestLevel: 'NT1' },
+  { studentID: 1, learningOutcomeID: 2, score: 0, highestLevel: 'NT1' },
+  { studentID: 1, learningOutcomeID: 3, score: 0, highestLevel: 'KN1' },
+  { studentID: 1, learningOutcomeID: 4, score: 0, highestLevel: 'KN1' },
+  { studentID: 1, learningOutcomeID: 5, score: 0, highestLevel: 'KN1' },
+  { studentID: 1, learningOutcomeID: 6, score: 0, highestLevel: 'KN1' },
+  { studentID: 1, learningOutcomeID: 7, score: 0, highestLevel: 'KN1' },
+  { studentID: 1, learningOutcomeID: 8, score: 0, highestLevel: 'TD1' },
 
-  { studentID: 2, learningOutcomeID: 1, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 2, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 3, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 4, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 5, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 6, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 7, score: 0, highestLevel: null },
-  { studentID: 2, learningOutcomeID: 8, score: 0, highestLevel: null },
+  { studentID: 2, learningOutcomeID: 1, score: 0, highestLevel: 'NT1' },
+  { studentID: 2, learningOutcomeID: 2, score: 0, highestLevel: 'NT1' },
+  { studentID: 2, learningOutcomeID: 3, score: 0, highestLevel: 'KN1' },
+  { studentID: 2, learningOutcomeID: 4, score: 0, highestLevel: 'KN1' },
+  { studentID: 2, learningOutcomeID: 5, score: 0, highestLevel: 'KN1' },
+  { studentID: 2, learningOutcomeID: 6, score: 0, highestLevel: 'KN1' },
+  { studentID: 2, learningOutcomeID: 7, score: 0, highestLevel: 'KN1' },
+  { studentID: 2, learningOutcomeID: 8, score: 0, highestLevel: 'TD1' },
 
-  { studentID: 3, learningOutcomeID: 1, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 2, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 3, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 4, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 5, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 6, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 7, score: 0, highestLevel: null },
-  { studentID: 3, learningOutcomeID: 8, score: 0, highestLevel: null }
+  { studentID: 3, learningOutcomeID: 1, score: 0, highestLevel: 'NT1' },
+  { studentID: 3, learningOutcomeID: 2, score: 0, highestLevel: 'NT1' },
+  { studentID: 3, learningOutcomeID: 3, score: 0, highestLevel: 'KN1' },
+  { studentID: 3, learningOutcomeID: 4, score: 0, highestLevel: 'KN1' },
+  { studentID: 3, learningOutcomeID: 5, score: 0, highestLevel: 'KN1' },
+  { studentID: 3, learningOutcomeID: 6, score: 0, highestLevel: 'KN1' },
+  { studentID: 3, learningOutcomeID: 7, score: 0, highestLevel: 'KN1' },
+  { studentID: 3, learningOutcomeID: 8, score: 0, highestLevel: 'TD1' }
 ];
 
 const modifications = [

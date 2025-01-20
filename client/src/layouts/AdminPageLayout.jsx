@@ -88,7 +88,7 @@ function AdminPageLayout(props) {
                         <p className='text-xs font-thin'>{appMail}</p>
                     </div>
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 }

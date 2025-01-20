@@ -214,8 +214,6 @@ class LearningOutcomeService {
         return subjectLearningOutcome;
     }
 
-
-
     static getAllLearningOutcomeBySubjectID = async (subjectID) => {
         if (!subjectID) {
             throw new Error('Missing required fields');
