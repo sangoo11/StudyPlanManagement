@@ -15,6 +15,13 @@ const LearningOutcomeScore = sequelize.define('LearningOutcomeScore', {
             max: 10
         },
     },
+    highestLevel: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            is: /^[A-z]{2}[0-9]{1}$/
+        }
+    },
     studentID: {
         type: DataTypes.INTEGER,
         allowNull: false

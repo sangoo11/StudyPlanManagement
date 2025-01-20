@@ -17,6 +17,8 @@ router.put('/edit-subject/:subjectID', asyncHandler(SubjectController.editSubjec
 // Delete a subject
 router.put('/delete-subject/:subjectID', asyncHandler(SubjectController.deleteSubject));
 
-router.get('/get-all-subject-factor', asyncHandler(SubjectController.getAllSubjectFactor))
+router.get('/get-all-subject-factor', asyncHandler(SubjectController.getAllSubjectFactor));
+
+router.get('/get-subject-by-LO/:studentID', asyncHandler(SubjectController.getSubjectInLOByStudentID));
 
 module.exports = router;

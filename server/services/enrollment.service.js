@@ -98,7 +98,7 @@ class EnrollmentService {
                 const studentIncompleteCourse = await Enrollment.findAll({
                     where: {
                         studentID: student.studentID,
-                        completed: false,
+                        status: 'enrolled',
                     },
                     attributes: ['courseID'],
                 });

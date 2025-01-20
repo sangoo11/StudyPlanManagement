@@ -15,10 +15,13 @@ const Enrollment = sequelize.define('Enrollment', {
             max: 10,
         },
     },
-    completed: {
-        type: DataTypes.BOOLEAN,
+    status: {
+        type: DataTypes.ENUM('enrolled', 'pass', 'fail'),
         allowNull: false,
-        defaultValue: false,
+        defaultValue: 'enrolled',
+        validate: {
+            isIn: [['enrolled', 'pass', 'fail']],
+        },
     },
     enrolledDate: {
         type: DataTypes.DATE,
