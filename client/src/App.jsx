@@ -53,6 +53,7 @@ import DeleteSubjectInCriteria from './components/AdminPage/OutputCriteriaManage
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
 import StudentLearningOutcome from './components/StudentPage/LearningOutcome/LearningOutcome'
+import StudentAccount from './components/StudentPage/StudentAccount';
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
@@ -60,6 +61,7 @@ import ProtectedRouteUser from './components/ProtectedRoute/ProtectedRouteUser';
 import Statistics from './components/TeacherPage/Statistics/Statistics';
 import CourseDetail from './components/TeacherPage/CourseDetail';
 import EditPoint from './components/TeacherPage/EditPoint';
+import TeacherAccount from './components/TeacherPage/TeacherAccount';
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn');
@@ -87,7 +89,7 @@ function App() {
         <Route path='student' element={<StudentPage />}></Route>
         <Route path='student/results' element={<LearningResults />} />
         <Route path='student/outcome' element={<StudentLearningOutcome />} />
-        <Route path='student/accountstudent' element={<AccountPage />} />
+        <Route path='student/accountstudent/:accountID' element={<StudentAccount />} />
       </Route>
 
       <Route element={<TeacherPageLayout />}>
@@ -95,11 +97,11 @@ function App() {
         <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
         <Route path='/teacher/statistics' element={<Statistics />} />
         <Route path='teacher/editpoint/:studentID' element={<EditPoint />} />
-        <Route path='teacher/accountteacher' element={<AccountPage />} />
+        <Route path='teacher/accountteacher/:accountID' element={<TeacherAccount />} />
       </Route>
 
       <Route path='admin' element={<AdminPageLayout />}>
-        <Route path='statistics' element={<StatisticsPage />} />
+        <Route path='statistics' element={<Statistics />} />
         <Route path='students' element={<StudentsManagePage />} />
         <Route path='teachers' element={<TeachersManagePage />} />
         <Route path='subjects' element={<SubjectsManagePage />} />

@@ -1,44 +1,111 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import TrashIcon from "../../assets/images/trashIcon.jpg";
+import { useNavigate, useParams } from "react-router-dom";
 
-function EditCriteria({ onClose }) {
+function EditCriteria({ onClose, studentId }) {
+    const accountID = Number(localStorage.getItem("accountID"));
+    const [studentData, setStudentData] = useState(null);
+    const [teacherID, setTeacherID] = useState(null);
+    const { courseID } = useParams();
+    const courseId = Number(courseID);
+    const [scores, setScores] = useState([
+        { scoreType: "progress", score: "" },
+        { scoreType: "midterm", score: "" },
+        { scoreType: "final", score: "" }
+    ]);
+    
+    
+    // Fetch teacher ID for current user
+    const getTeacherId = async () => {
+        if (!accountID) return;
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
+            );
+            console.log("API Response:", response.data);
+            setTeacherID(response.data.metadata.teacherID); // Make sure this is correct
+        } catch (error) {
+            console.error(error.response?.data?.message || "Error fetching teacherID");
+        }
+    };
+    useEffect(() => {
+        getTeacherId();
+    }, []);
+    // Fetch student data on component mount
+    useEffect(() => {
+        if (studentId) {
+            axios
+                .get(`http://localhost:8080/v1/api/student/get-student/${studentId}`)
+                .then((response) => {
+                    if (response.status === 201) {
+                        setStudentData(response.data.metadata);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching student data:", error);
+                });
+        }
+    }, [studentId]);
 
-    // State to manage form inputs
-    const [formData, setFormData] = useState({
-        name: "",
-        semester: "1",
-        year: "",
-        teacherId: ""
-    });
-
-    // Handle input changes
+    // Handle input changes for student data
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
+        setStudentData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: value
         }));
     };
 
-    const [rows, setRows] = useState([]);
-
-    // Handle adding a new row
-    const handleAddRow = () => {
-        setRows((prevRows) => [
-            ...prevRows,
-            { quaTrinh: "", giuaKi: "", cuoiKi: "" }
-        ]);
+    // Handle score change
+    const handleScoreChange = (index, e) => {
+        const { value } = e.target;
+        const updatedScores = [...scores];
+        updatedScores[index].score = value;
+        setScores(updatedScores);
     };
 
-    // Handle input change for table rows
-    const handleRowChange = (index, e) => {
-        const { name, value } = e.target;
-        const updatedRows = [...rows];
-        updatedRows[index][name] = value;
-        setRows(updatedRows);
+    // Validate the score input
+    const isValidScore = (score) => {
+        const num = parseFloat(score);
+        return !isNaN(num) && num >= 0 && num <= 10;
     };
 
+    // Handle form submission
+    const handleSubmit = async () => {
+        if (scores.some((score) => !isValidScore(score.score))) {
+            alert("Please ensure all scores are between 0 and 10.");
+            return;
+        }
+
+        const scoresAsNumbers = scores.map((score) => ({
+            scoreType: score.scoreType,
+            score: parseFloat(score.score) // Ensure it's a number
+        }));
+
+        const dataToSend = {
+            courseID: courseID,
+            teacherID,
+            score: scoresAsNumbers
+        };
+        console.log(dataToSend);
+        console.log(studentId);
+
+        try {
+            const response = await axios.post(
+                `http://localhost:8080/v1/api/score/grade-score/${studentId}`,
+                dataToSend
+            );
+            if (response.status === 201) {
+                alert("Cập nhật điểm thành công!");
+                onClose();
+            }
+        } catch (error) {
+            console.error("Error saving score data:", error);
+            alert("Error saving score data. Please try again.");
+        }
+    };
+
+    if (!studentData) return <div>Loading...</div>;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -48,79 +115,66 @@ function EditCriteria({ onClose }) {
                     <form className="flex flex-col space-y-4 w-1/2">
                         <div>
                             <label className="block text-gray-700">Họ và tên:</label>
-                            <div className="flex w-full px-4 py-2 border rounded bg-white h-[5vh]"></div>
+                            <input
+                                type="text"
+                                name="fullName"
+                                value={studentData.fullName || ""}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded bg-white h-[5vh]"
+                            />
                         </div>
 
                         <div>
                             <label className="block text-gray-700">Mã số sinh viên:</label>
-                            <div className="flex w-full px-4 py-2 border rounded bg-white h-[5vh]"></div>
+                            <input
+                                type="text"
+                                name="id"
+                                value={studentData.id || ""}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded bg-white h-[5vh]"
+                                disabled
+                            />
                         </div>
 
                         <div>
                             <label className="block text-gray-700">Chuyên ngành:</label>
-                            <div className="flex w-full px-4 py-2 border rounded bg-white h-[5vh]"></div>
-                        </div>
-
-                        <div>
-                            <label className="block text-gray-700">Mã môn học:</label>
-                            <div className="flex w-full px-4 py-2 border rounded bg-white h-[5vh]"></div>
+                            <input
+                                type="text"
+                                name="major"
+                                value={studentData.major || ""}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded bg-white h-[5vh]"
+                            />
                         </div>
                     </form>
-                    <div className="flex w-1/2 h-full justify-end mt-[16vh]">
-                        <div className="w-16 h-24 bg-white flex items-center  rounded-md justify-center">
-                            <span className="text-gray-500">👤</span>
-                        </div>
-                    </div>
-
                 </div>
-
 
                 <div className="h-auto mb-[4vh] mt-[4vh]">
                     <table className="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr>
-                                <th className="py-2 px-4 border-b">Quá trình</th>
-                                <th className="py-2 px-4 border-b">Giữa kì</th>
-                                <th className="py-2 px-4 border-b">Cuối kì</th>
+                                <th className="py-2 px-4 border-b">Loại điểm</th>
+                                <th className="py-2 px-4 border-b">Điểm</th>
                             </tr>
                         </thead>
-                        <tbody className="items-center">
-                            <tr>
-                                <td className="py-2 px-4 border-b">
-                                    <input
-                                        type="text"
-                                        name="quaTrinh"
-                                        //value={row.maMon}
-                                        //onChange={(e) => handleRowChange(index, e)}
-                                        className="border border-gray-300 rounded w-full"
-                                        placeholder="Quá trình"
-                                    />
-                                </td>
-                                <td className="py-2 px-4 border-b">
-                                    <input
-                                        type="text"
-                                        name="giuaKi"
-                                        //value={row.tenMon}
-                                        //onChange={(e) => handleRowChange(index, e)}
-                                        className="border border-gray-300 rounded w-full"
-                                        placeholder="Giữa kì"
-                                    />
-                                </td>
-                                <td className="py-2 px-4 border-b">
-                                    <input
-                                        type="text"
-                                        name="cuoiKi"
-                                        //value={row.heSo}
-                                        //onChange={(e) => handleRowChange(index, e)}
-                                        className="border border-gray-300 rounded w-full"
-                                        placeholder="Cuối kì"
-                                    />
-                                </td>
-                            </tr>
+                        <tbody>
+                            {scores.map((score, index) => (
+                                <tr key={index}>
+                                    <td className="py-2 px-4 border-b">{score.scoreType}</td>
+                                    <td className="py-2 px-4 border-b">
+                                        <input
+                                            type="number"
+                                            value={score.score}
+                                            onChange={(e) => handleScoreChange(index, e)}
+                                            className="border border-gray-300 rounded w-full"
+                                            placeholder={`Điểm ${score.scoreType}`}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
-
 
                 <div className="flex space-x-4 justify-end">
                     <button
@@ -131,14 +185,13 @@ function EditCriteria({ onClose }) {
                         Hủy
                     </button>
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleSubmit}
                         className="px-6 py-2 bg-[#1DA599] text-white font-bold rounded hover:bg-green-400"
                     >
                         Xác nhận
                     </button>
-
                 </div>
-
             </div>
         </div>
     );

@@ -74,7 +74,7 @@ class ScoreService {
             where: {
                 studentID,
                 courseID,
-                // status: 'enrolled',
+                status: 'enrolled',
             }
         });
         if (!enrollment) {

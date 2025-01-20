@@ -6,6 +6,7 @@ import minusButton from '../../assets/images/minusButton.png';
 import ReturnIcon from '../../assets/images/returnIcon.png';
 import SearchIcon from '../../assets/images/searchIcon.png';
 import EditClassroom from '../AdminPage/SubjectsManagePage/components/EditClassroom';
+import EditPoint from './EditPoint';
 
 function CourseDetail() {
     const { courseID } = useParams();
@@ -16,9 +17,7 @@ function CourseDetail() {
 
     const [modals, setModals] = useState({
         editClassroom: { visible: false, courseId: null },
-        addStudent: { visible: false, courseId: null },
-        editStudent: { visible: false, studentId: null },
-        deleteStudent: { visible: false, studentId: null },
+        editPoint: { visible: false, studentId: null },
     });
 
     const toggleClassesVisibility = useCallback((courseId) => {
@@ -88,7 +87,7 @@ function CourseDetail() {
                                 <p className='ml-2'> {courseData.courseCode} </p>
                             </div>
                         </div>
-                        <div className='flex ml-[2vw]'>
+                        {/* <div className='flex ml-[2vw]'>
                             <button 
                                 onClick={() => 
                                     setModals((prev) => ({
@@ -99,7 +98,7 @@ function CourseDetail() {
                             >
                                 <h1 className='text-0.5xl text-[#1DA599] font-bold hover:text-yellow-400'>Chỉnh sửa thông tin lớp học</h1>
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -136,22 +135,18 @@ function CourseDetail() {
                                 {/* Edit button */}
                                 <div className="flex items-center h-full rounded-md">
                                     <button
-                                        className="w-20 h-8 text-black bg-transparent"
-                                        onClick={() => navigate(`/teacher/editpoint/${student.id}`)}
+                                        className="flex w-auto h-auto p-2 font-bold text-white bg-transparent bg-green-400 border-4 border-white hover:border-4 hover:border-yellow-400"
+                                        onClick={() => 
+                                            setModals((prev) => ({
+                                                ...prev,
+                                                editPoint: { visible: true, studentId: student.id },
+                                            }))
+                                        }
                                     >
                                         Thêm điểm
                                     </button>
                                 </div>
 
-                                {/* Delete button */}
-                                {/* <div className="rounded-full">
-                                    <button
-                                        className="w-8 h-full text-white rounded-full"
-                                        onClick={() => deleteStudent(student.id)}
-                                    >
-                                        <img src={minusButton} alt="Delete Student" />
-                                    </button>
-                                </div> */}
                             </div>
                         </div>
 
@@ -160,19 +155,16 @@ function CourseDetail() {
 
             </div>
 
-            {/* <div className='flex h-[4vh] w-full items-center justify-end mt-[4vh]'>
-                <button
-                    className="w-8 h-full text-white rounded-full hover:border-4 hover:border-yellow-400 mr-[5vw]"
-                    onClick={() => setAddStudentVisible(true)}
-                >
-                    <img src={addButton} alt="Add Student" />
-                </button>
-            </div> */}
-
                 {courseData && modals.editClassroom.visible && (
                     <EditClassroom
                         courseId={courseData.id}
                         onClose={() => setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))}
+                    />
+                )}
+                {modals.editPoint.visible && (
+                    <EditPoint
+                        studentId={modals.editPoint.studentId}
+                        onClose={() => setModals(prev => ({...prev, editPoint: { visible: false, studentId: null } }))}
                     />
                 )}
         </div>
