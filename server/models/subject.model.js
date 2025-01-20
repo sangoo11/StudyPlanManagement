@@ -38,6 +38,10 @@ const Subject = sequelize.define('Subject', {
     type: DataTypes.STRING,
     allowNull: true
   },
+  subjectSyllabusUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   active: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
