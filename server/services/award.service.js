@@ -17,6 +17,30 @@ class AwardService {
         return await Award.findByPk(awardID);
     }
 
+    static getStudentByAwardId = async (awardID) => {
+        if (!awardID) {
+            throw new Error('awardID is required');
+        }
+        const award = await Award.findByPk(awardID);
+        if (!award) {
+            throw new Error('Award not found');
+        }
+
+        const student = await AwardStudent.findAll({
+            where: {
+                awardID: awardID,
+            },
+            include: {
+                model: Student,
+            },
+        });
+        if (student.length === 0) {
+            throw new Error('Student not found');
+        }
+
+        return student;
+    }
+
     static createAward = async ({
         awardName,
         awardType,

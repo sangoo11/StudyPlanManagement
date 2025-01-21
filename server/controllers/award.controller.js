@@ -18,6 +18,14 @@ class AwardController {
         }).send(res);
     }
 
+    getStudentByAwardId = async (req, res, next) => {
+        new CREATED({
+            message: "Get Student By Award Success",
+            metadata: await AwardService.getStudentByAwardId(req.params.awardID),
+            options: { limit: 10 }
+        }).send(res);
+    }
+
     createAward = async (req, res, next) => {
         new CREATED({
             message: "Create Award Success",
