@@ -44,6 +44,8 @@ import SetActive from './components/AdminPage/ActiveTeacher/SetActive';
 import AddAward from './components/AdminPage/AwardStudent/AddAward';
 import EditAward from './components/AdminPage/AwardStudent/EditAward';
 import DeleteAward from './components/AdminPage/AwardStudent/DeleteAward';
+import AddStudentToAward from './components/AdminPage/AwardStudent/AddStudentToAward';
+import DeleteStudentToAward from './components/AdminPage/AwardStudent/DeleteStudentToAward';
 
 import AddTeacher from './components/AdminPage/TeachersManagePage/AddTeacher';
 import DeleteTeacher from './components/AdminPage/TeachersManagePage/DeleteTeacher';
@@ -137,6 +139,8 @@ function App() {
       <Route path='admin/awardstudent/addaward' element={<AddAward />} />
       <Route path='admin/awardstudent/editaward' element={<EditAward />} />
       <Route path='admin/awardstudent/deleteaward' element={<DeleteAward />} />
+      <Route path='admin/awardstudent/addstudent' element={<AddStudentToAward />} />
+      <Route path='admin/awardstudent/deletestudent' element={<DeleteStudentToAward />} />
 
       <Route path='admin/teachers/addteacher' element={<AddTeacher />} />
       <Route path='admin/teachers/editteacher' element={<EditTeacher />} />
