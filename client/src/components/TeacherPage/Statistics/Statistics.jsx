@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from "chart.js";
-import { Bar } from 'react-chartjs-2';
+import PieChart from './PieChart';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import { Bar, Pie } from 'react-chartjs-2';
 
 // Register the necessary Chart.js components
 ChartJS.register(
     BarElement,
     CategoryScale,
     LinearScale,
+    ArcElement,
     Title,
     Tooltip,
     Legend
@@ -15,31 +17,42 @@ ChartJS.register(
 
 function Statistics() {
     const [barData, setBarData] = useState(null);
+    const [barOption, setBarOption] = useState(null);
     const [studentID, setStudentID] = useState(1);
     const [studentList, setStudentList] = useState({})
 
-    const [barOption, setBarOption] = useState(null);
+    const [pieData, setPieData] = useState(['html', 'css', 'js']);
+    const [pieOption, setPieOption] = useState('Pie Chart');
+    const [LOID, setLOID] = useState(1);
+    const [LOIDList, setLOIDList] = useState({})
 
     useEffect(() => {
-        const getStudentList = async () => {
-            try {
-                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
-                setStudentList(data.metadata)
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        getStudentList()
+
     }, [])
 
     const extractNumbers = (str) => {
         return parseInt(str.match(/\d+/g) || [], 10); // returns an array of numbers or an empty array if none found
     }
 
-    const subjects = [1, 2, 3, 4, 5, 6, 7];
+    const getHighestScore = (arr) => {
+        const counts = {};
+
+        arr.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+        return counts;
+    }
 
     useEffect(() => {
         const getBarChart = async () => {
+            const getStudentList = async () => {
+                try {
+                    const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
+                    setStudentList(data.metadata)
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+            getStudentList();
+
             try {
                 // Fetch data from API
                 const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentID}`);
@@ -151,7 +164,12 @@ function Statistics() {
                         options={barOption}
                     />
                 </div>
-                {/* <div className='font-bold text-4xl items-center'>Thống kê</div> */}
+                <div>
+                    <Pie
+                        data={pieData}
+                        options={pieOption}
+                    />
+                </div>
             </div>
         </>
     );

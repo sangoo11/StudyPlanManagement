@@ -70,6 +70,16 @@ class SubjectController {
             },
         }).send(res);
     }
+
+    getLOScore = async (req, res, next) => {
+        new CREATED({
+            message: "Get LO Score Success",
+            metadata: await SubjectService.getLOScore(req.params.LOID),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    }
 }
 
 module.exports = new SubjectController();

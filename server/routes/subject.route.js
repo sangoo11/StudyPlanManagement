@@ -20,5 +20,6 @@ router.put('/delete-subject/:subjectID', asyncHandler(SubjectController.deleteSu
 router.get('/get-all-subject-factor', asyncHandler(SubjectController.getAllSubjectFactor));
 
 router.get('/get-subject-by-LO/:studentID', asyncHandler(SubjectController.getSubjectInLOByStudentID));
+router.get('/get-LO-score/:LOID', asyncHandler(SubjectController.getLOScore));
 
 module.exports = router;
