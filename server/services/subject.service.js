@@ -196,6 +196,21 @@ class SubjectService {
         }
         return subjectList;
     }
+
+    static getLOScore = async (LOID) => {
+        if (!LOID) throw new Error("Please provide LO ID");
+        const learningOutcome = await LearningOutcome.findByPk(LOID);
+        if (!learningOutcome) throw new Error("Learning outcome not found");
+
+        const result = await sequelize.query(
+            `SELECT *
+            FROM learningoutcomescore
+            WHERE learningoutcomescore.learningoutcomeID = ${LOID}`,
+            { type: sequelize.QueryTypes.SELECT }
+        );
+        if (!result) throw new Error("No LO score found");
+        return result
+    }
 }
 
 module.exports = SubjectService;
