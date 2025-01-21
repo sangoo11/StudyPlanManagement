@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PieChart from './PieChart';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement } from "chart.js";
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar, Pie, Doughnut } from 'react-chartjs-2';
 
 // Register the necessary Chart.js components
 ChartJS.register(
@@ -19,16 +18,63 @@ function Statistics() {
     const [barData, setBarData] = useState(null);
     const [barOption, setBarOption] = useState(null);
     const [studentID, setStudentID] = useState(1);
-    const [studentList, setStudentList] = useState({})
+    const [studentList, setStudentList] = useState(null)
 
-    const [pieData, setPieData] = useState(['html', 'css', 'js']);
-    const [pieOption, setPieOption] = useState('Pie Chart');
-    const [LOID, setLOID] = useState(1);
+    const [doughnutData, setDoughnutData] = useState(null);
+    const [LOID, setLOID] = useState(2);
     const [LOIDList, setLOIDList] = useState({})
 
     useEffect(() => {
+        const getLOIDList = async () => {
+            try {
+                const { data } = await axios.get(`http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome`)
+                setLOIDList(data.metadata)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        getLOIDList();
 
-    }, [])
+        const getDoughnutData = async () => {
+
+            try {
+                // Fetch data from API
+                const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-LO-score/${LOID}`);
+                console.log(parseFloat(Object.values(getHighestScore(data.metadata.map((item) => item.highestLevel)))))
+                // Process and set the chart data
+                setDoughnutData({
+                    labels: Object.keys(getHighestScore(data.metadata.map((item) => item.highestLevel))),
+                    datasets: [{
+                        label: 'Learning Outcome Score',
+                        data: (Object.values(getHighestScore(data.metadata.map((item) => item.highestLevel)))),
+                        backgroundColor: [
+                            'rgb(255, 105, 180)',   // Hot Pink
+                            'rgb(255, 165, 0)',     // Orange
+                            'rgb(255, 223, 186)',   // Light Peach
+                            'rgb(100, 149, 237)',   // Cornflower Blue
+                            'rgb(34, 193, 195)',    // Turquoise
+                            'rgb(255, 105, 180)',   // Hot Pink
+                            'rgb(72, 61, 139)'      // Dark Slate Blue
+                        ],
+                        borderColor: [
+                            "rgb(34, 185, 129)",
+                            "rgb(210, 45, 158)",
+                            "rgb(55, 112, 200)",
+                            "rgb(248, 94, 53)",
+                            "rgb(132, 77, 224)",
+                            "rgb(12, 195, 178)",
+                            "rgb(180, 55, 111)"  // Dark Slate Blue
+                        ],
+                        borderWidth: 1
+                    }]
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        // Fetch chart data when the component is mounted
+        getDoughnutData();
+    }, [LOID]);
 
     const extractNumbers = (str) => {
         return parseInt(str.match(/\d+/g) || [], 10); // returns an array of numbers or an empty array if none found
@@ -42,16 +88,17 @@ function Statistics() {
     }
 
     useEffect(() => {
-        const getBarChart = async () => {
-            const getStudentList = async () => {
-                try {
-                    const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
-                    setStudentList(data.metadata)
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
+        const getStudentList = async () => {
+            try {
+                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
+                setStudentList(data.metadata)
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-            getStudentList();
+        }
+        getStudentList();
+
+        const getBarChart = async () => {
 
             try {
                 // Fetch data from API
@@ -62,7 +109,6 @@ function Statistics() {
                     datasets: [{
                         label: 'Learning Outcome Score',
                         data: data.metadata.map((item) => extractNumbers(item.highestLevel)),
-                        // data: data.metadata.map((item) => extractNumbers(item.highestLevel)),
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(255, 159, 64, 0.2)',
@@ -106,7 +152,7 @@ function Statistics() {
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Learning Outcome Score'
+                            text: 'Bar Chart'
                         },
                         tooltip: {
                             callbacks: {
@@ -143,12 +189,13 @@ function Statistics() {
 
     return (
         <>
-            <div className='ml-[4vw] mt-[8vh] font-bold text-4xl text-center'>Thống kê</div>
-            <div className='ml-[4vw] mt-[8vh] grid grid-cols-2 col-span-4'>
+            <div className='mx-[4vw] mt-[10vh] font-bold text-4xl text-center'>Thống kê</div>
+            <div className='mx-[4vw] mt-[8vh] grid grid-cols-2 space-x-10 max-h-screen'>
 
                 <div>
+                    <h1 className="text-2xl font-bold text-center">Biểu đồ cột</h1>
                     <select
-                        className="px-4 py-2 border rounded-md bg-white ml-[2.6vw]"
+                        className="p-4 border rounded-md bg-white"
                         value={studentID}
                         onChange={(e) => setStudentID(e.target.value)}
                     >
@@ -165,9 +212,33 @@ function Statistics() {
                     />
                 </div>
                 <div>
-                    <Pie
-                        data={pieData}
-                        options={pieOption}
+                    <h1 className="text-2xl font-bold text-center">Biểu đồ tròn</h1>
+                    <select
+                        className="p-4 border rounded-md bg-white"
+                        value={LOID}
+                        onChange={(e) => setLOID(e.target.value)}
+                    >
+                        <option value="">Chọn tiêu chuẩn đầu ra</option>
+                        {LOIDList && LOIDList.map((LO, index) => (
+                            <option key={index} value={LO.id}>
+                                {LO.id}. {LO.learningOutcomeCode}
+                            </option>
+                        ))}
+                    </select>
+                    <Doughnut
+                        data={doughnutData}
+                        options={{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            aspectRatio: 2 / 1,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Doughnut Chart'
+                                },
+                            },
+
+                        }}
                     />
                 </div>
             </div>
