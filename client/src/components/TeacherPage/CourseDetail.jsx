@@ -74,7 +74,7 @@ function CourseDetail() {
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Học kì:</label>
                         <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                        <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded ml-1'>
+                            <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded ml-1'>
                                 <p className='ml-2'> {courseData.semester} </p>
                             </div>
                         </div>
@@ -135,8 +135,8 @@ function CourseDetail() {
                                 {/* Edit button */}
                                 <div className="flex items-center h-full rounded-md">
                                     <button
-                                        className="flex w-auto h-auto p-2 font-bold text-white bg-transparent bg-green-400 border-4 border-white hover:border-4 hover:border-yellow-400"
-                                        onClick={() => 
+                                        className="flex w-auto h-auto p-2 font-bold text-black bg-transparent bg-green-400 border-4 border-white hover:border-4 hover:border-yellow-400"
+                                        onClick={() =>
                                             setModals((prev) => ({
                                                 ...prev,
                                                 editPoint: { visible: true, studentId: student.id },
@@ -155,18 +155,18 @@ function CourseDetail() {
 
             </div>
 
-                {courseData && modals.editClassroom.visible && (
-                    <EditClassroom
-                        courseId={courseData.id}
-                        onClose={() => setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))}
-                    />
-                )}
-                {modals.editPoint.visible && (
-                    <EditPoint
-                        studentId={modals.editPoint.studentId}
-                        onClose={() => setModals(prev => ({...prev, editPoint: { visible: false, studentId: null } }))}
-                    />
-                )}
+            {courseData && modals.editClassroom.visible && (
+                <EditClassroom
+                    courseId={courseData.id}
+                    onClose={() => setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))}
+                />
+            )}
+            {modals.editPoint.visible && (
+                <EditPoint
+                    studentId={modals.editPoint.studentId}
+                    onClose={() => setModals(prev => ({ ...prev, editPoint: { visible: false, studentId: null } }))}
+                />
+            )}
         </div>
 
 

@@ -13,8 +13,8 @@ function EditCriteria({ onClose, studentId }) {
         { scoreType: "midterm", score: "" },
         { scoreType: "final", score: "" }
     ]);
-    
-    
+
+
     // Fetch teacher ID for current user
     const getTeacherId = async () => {
         if (!accountID) return;
@@ -107,6 +107,11 @@ function EditCriteria({ onClose, studentId }) {
 
     if (!studentData) return <div>Loading...</div>;
 
+    const capitalizeFirstLetter = (string) => {
+        if (!string) return '';
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
             <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
@@ -160,13 +165,13 @@ function EditCriteria({ onClose, studentId }) {
                         <tbody>
                             {scores.map((score, index) => (
                                 <tr key={index}>
-                                    <td className="py-2 px-4 border-b">{score.scoreType}</td>
-                                    <td className="py-2 px-4 border-b">
+                                    <td className="py-2 px-4">{capitalizeFirstLetter(score.scoreType)}</td>
+                                    <td className="py-2 px-4 bg-transparent border-none outline-none">
                                         <input
                                             type="number"
                                             value={score.score}
                                             onChange={(e) => handleScoreChange(index, e)}
-                                            className="border border-gray-300 rounded w-full"
+                                            className="border-none outline-none rounded w-full"
                                             placeholder={`Điểm ${score.scoreType}`}
                                         />
                                     </td>
