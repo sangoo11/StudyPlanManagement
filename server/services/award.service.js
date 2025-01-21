@@ -163,6 +163,31 @@ class AwardService {
         await existingAward.destroy();
         return "Delete Award for Student Success";
     }
+
+    static getNumberAward = async (accountID) => {
+        if (!accountID) {
+            throw new Error('accountID is required');
+        }
+        const student = await Student.findOne({
+            where: {
+                accountID: accountID,
+            },
+        });
+        if (!student) {
+            throw new Error('Student not found');
+        }
+
+        const award = await AwardStudent.findAll({
+            where: {
+                studentID: student.id,
+            },
+        });
+        return {
+            studentID: student.id,
+            awardCount: award.length,
+        };
+
+    }
 }
 
 module.exports = AwardService

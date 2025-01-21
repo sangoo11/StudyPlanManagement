@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, NavLink } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router';
 import UserLogo from '../assets/images/userlogo.png';
-import {  useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import axios from "axios";
 
 function StudentPageLayout(props) {
@@ -28,14 +28,13 @@ function StudentPageLayout(props) {
             paddingBottom: isActive ? "5px" : "0",
         };
     };
-    
+
     const getStudentId = async () => {
         if (!accountID) return;
         try {
             const response = await axios.get(
                 `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
             );
-            console.log("API Response:", response.data);
             setStudentID(response.data.metadata.teacherID); // Make sure this is correct
         } catch (error) {
             console.error(error.response?.data?.message || "Error fetching studentID");
@@ -46,7 +45,7 @@ function StudentPageLayout(props) {
     }, []);
 
     return (
-        <div> 
+        <div>
             {/* Header */}
             <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-12">
@@ -61,13 +60,13 @@ function StudentPageLayout(props) {
 
                     <button className='fixed right-10 space-x-2' onClick={() => navigate(`/student/accountstudent/${studentID}`)}>
                         <div className='fixed w-6 h-6 items-center justify-center'>
-                            <img src={UserLogo}/>
+                            <img src={UserLogo} />
                         </div>
                         <h1 className="text-[#1DA599] pl-10">{student}</h1>
                     </button>
                 </div>
             </div>
-            
+
             {/* Content */}
             <Outlet />
 
