@@ -6,13 +6,6 @@ const StudentLearningResults = () => {
     const [student, setStudentData] = useState({});
     const [learningOutcomes, setLearningOutcomes] = useState([]);
 
-    // Toggle visibility for a specific semester
-    const toggleSemesterVisibility = (semesterId) => {
-        setVisibleSemesters((prev) => ({
-            ...prev,
-            [semesterId]: !prev[semesterId],
-        }));
-    };
 
     // Fetch student data
     useEffect(() => {

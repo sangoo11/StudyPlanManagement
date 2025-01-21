@@ -25,6 +25,9 @@ import SubjectsManagePage from './components/AdminPage/SubjectsManagePage/Subjec
 import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManagePage/OutputCriteriaManagePage';
 import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage';
 import DetailClassroom from './components/AdminPage/SubjectsManagePage/components/DetailClassroom';
+import ActiveTeacher from './components/AdminPage/ActiveTeacher/ActiveTeacher';
+import AwardStudent from './components/AdminPage/AwardStudent/AwardStudent';
+
 //Modal
 import AddClassroom from './components/AdminPage/SubjectsManagePage/components/AddClassroom';
 import DeleteClassroom from './components/AdminPage/SubjectsManagePage/components/DeleteClassroom';
@@ -36,6 +39,12 @@ import EditStudent from './components/AdminPage/SubjectsManagePage/components/Ed
 
 import AddStudentInManagePage from './components/AdminPage/StudentsManagePage/AddStudent';
 
+import SetActive from './components/AdminPage/ActiveTeacher/SetActive';
+
+import AddAward from './components/AdminPage/AwardStudent/AddAward';
+import EditAward from './components/AdminPage/AwardStudent/EditAward';
+import DeleteAward from './components/AdminPage/AwardStudent/DeleteAward';
+
 import AddTeacher from './components/AdminPage/TeachersManagePage/AddTeacher';
 import DeleteTeacher from './components/AdminPage/TeachersManagePage/DeleteTeacher';
 import EditTeacher from './components/AdminPage/TeachersManagePage/EditTeacher';
@@ -43,6 +52,7 @@ import EditTeacher from './components/AdminPage/TeachersManagePage/EditTeacher';
 import AddSubject from './components/AdminPage/SubjectsManagePage/components/AddSubject';
 import DeleteSubject from './components/AdminPage/SubjectsManagePage/components/DeleteSubject';
 import EditSubject from './components/AdminPage/SubjectsManagePage/components/EditSubject';
+import EditSubjectLevelInLO from './components/AdminPage/SubjectsManagePage/components/EditSubjectLevelInLO';
 
 import AddCriteria from './components/AdminPage/OutputCriteriaManagePage/AddCriteria';
 import DeleteCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteCriteria';
@@ -55,6 +65,7 @@ import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
 import StudentLearningOutcome from './components/StudentPage/LearningOutcome/LearningOutcome'
 import StudentAccount from './components/StudentPage/StudentAccount';
+import Award from './components/StudentPage/Award/Award';
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
@@ -90,6 +101,7 @@ function App() {
         <Route path='student' element={<StudentPage />}></Route>
         <Route path='student/results' element={<LearningResults />} />
         <Route path='student/outcome' element={<StudentLearningOutcome />} />
+        <Route path='student/award' element={<Award />} />
         <Route path='student/accountstudent/:accountID' element={<StudentAccount />} />
       </Route>
 
@@ -109,6 +121,8 @@ function App() {
         <Route path='outputcriteria' element={<OutputCriteriaManagePage />} />
         <Route path='detailclassroom/:courseID' element={<DetailClassroom />} />
         <Route path='accountadmin' element={<AccountPage />} />
+        <Route path='activeteacher' element={<ActiveTeacher />} />
+        <Route path='awardstudent' element={<AwardStudent />} />
       </Route>
 
       {/* Admin modals */}
@@ -117,6 +131,12 @@ function App() {
       <Route path='admin/subjects/editclassroom' element={<EditClassroom />} />
 
       <Route path='admin/students/addstudent' element={<AddStudentInManagePage />} />
+
+      <Route path='admin/activeteacher/setactive' element={<SetActive />} />
+
+      <Route path='admin/awardstudent/addaward' element={<AddAward />} />
+      <Route path='admin/awardstudent/editaward' element={<EditAward />} />
+      <Route path='admin/awardstudent/deleteaward' element={<DeleteAward />} />
 
       <Route path='admin/teachers/addteacher' element={<AddTeacher />} />
       <Route path='admin/teachers/editteacher' element={<EditTeacher />} />
@@ -129,6 +149,7 @@ function App() {
       <Route path='admin/subjects/addsubject' element={<AddSubject />} />
       <Route path='admin/subjects/deletesubject' element={<DeleteSubject />} />
       <Route path='admin/subjects/editsubject' element={<EditSubject />} />
+      <Route path='admin/subjects/editsubjectlevel' element={<EditSubjectLevelInLO />} />
 
       <Route path='admin/outputcriteria/addcriteria' element={<AddSubject />} />
       <Route path='admin/outputcriteria/deletecriteria' element={<DeleteCriteria />} />

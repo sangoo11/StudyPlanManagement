@@ -7,11 +7,10 @@ import ShowMore from "../../../assets/images/showmore.png";
 import ShowLess from "../../../assets/images/showless.png";
 import AddClassroom from "./components/AddClassroom";
 import DeleteClassroom from "./components/DeleteClassroom";
-import EditClassroom from "./components/EditClassroom";
 import AddSubject from "./components/AddSubject";
 import DeleteSubject from "./components/DeleteSubject";
 import EditSubject from "./components/EditSubject";
-import DetailClassroom from "./components/DetailClassroom";
+import EditSubjectInCriteria from "./components/EditSubjectLevelInLO";
 
 function SubjectManagement() {
     const navigate = useNavigate();
@@ -29,6 +28,7 @@ function SubjectManagement() {
         editClassroom: { visible: false, courseId: null },
         deleteClassroom: { visible: false, courseId: null },
         detailClassroom: { visible: false, courseId: null },
+        editSubjectInCriteria: { visible: false, lOID: null },
     });
 
     // Toggle visibility of classes
@@ -130,7 +130,7 @@ function SubjectManagement() {
                                 </h2>
                                 <div className="flex">
                                     <button
-                                        className="px-4 py-2 text-white bg-[#1DA599] rounded-md mr-2"
+                                        className="px-4 py-2 text-white bg-[#1DA599] rounded-md mr-2 hover:bg-green-400 font-bold"
                                         onClick={() =>
                                             setModals((prev) => ({
                                                 ...prev,
@@ -141,7 +141,7 @@ function SubjectManagement() {
                                         Chỉnh sửa môn học
                                     </button>
                                     <button
-                                        className="px-4 py-2 text-white bg-red-500 rounded-md mr-2"
+                                        className="px-4 py-2 text-white bg-red-400 rounded-md mr-2 hover:bg-red-600 font-bold"
                                         onClick={() =>
                                             setModals((prev) => ({
                                                 ...prev,
@@ -170,7 +170,7 @@ function SubjectManagement() {
                         {visibleClasses[subject.id] && (
                             <div className="p-4">
                                 {/* Learning Outcomes Table */}
-                                <div className="flex mt-8 justify-center mb-[4vw]">
+                                <div className="flex mt-8 justify-center mb-[4vw] items-center">
                                     <table className="w-[40vw] border-collapse border border-gray-300 items-center">
                                         <thead>
                                             <tr className="bg-gray-200">
@@ -187,6 +187,17 @@ function SubjectManagement() {
                                             ))}
                                         </tbody>
                                     </table>
+                                    {/* <button
+                                        className="px-4 py-2 text-white bg-[#1DA599] rounded-md mt-4 h-[6vh] ml-[10vw] hover:bg-green-400 font-bold"
+                                        onClick={() =>
+                                            setModals((prev) => ({
+                                                ...prev,
+                                                editSubjectInCriteria: { visible: true, lOID: learningOutcomes.id },
+                                            }))
+                                        }
+                                    >
+                                        Chỉnh sửa mức độ
+                                    </button> */}
                                 </div>
 
                                 {subject.courses.map((course) => (
@@ -214,7 +225,7 @@ function SubjectManagement() {
                                     </button>
                                 ))}
                                 <button
-                                    className="px-4 py-2 text-white bg-[#1DA599] rounded-md mt-4"
+                                    className="px-4 py-2 text-white bg-[#1DA599] rounded-md mt-4 hover:bg-green-400 font-bold"
                                     onClick={() =>
                                         setModals((prev) => ({
                                             ...prev,
@@ -254,6 +265,12 @@ function SubjectManagement() {
                 <DeleteClassroom
                     courseID={modals.deleteClassroom.courseId}
                     onClose={() => setModals((prev) => ({ ...prev, deleteClassroom: { visible: false, courseId: null } }))}
+                />
+            )}
+            {modals.editSubjectInCriteria.visible && (
+                <EditSubjectInCriteria
+                    lOID={modals.editSubjectInCriteria.lOID}
+                    onClose={() => setModals((prev) => ({ ...prev, editSubjectInCriteria: { visible: false, lOID: null } }))}
                 />
             )}
         </div>
