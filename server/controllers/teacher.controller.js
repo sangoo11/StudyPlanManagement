@@ -23,6 +23,18 @@ class TeacherController {
             }
         }).send(res)
     }
+
+    //handle get all inactive teachers
+    getAllInactiveTeachers = async (req, res, next) => {
+        new CREATED({
+            message: "GET All Inactive Teachers OK",
+            metadata: await TeacherService.getAllInactiveTeachers(),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
+
     //handle get Teacher by ID
     getTeacherByID = async (req, res, next) => {
         new CREATED({

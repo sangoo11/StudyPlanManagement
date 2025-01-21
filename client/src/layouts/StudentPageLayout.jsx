@@ -13,6 +13,7 @@ function StudentPageLayout(props) {
     const title1 = 'Home Page';
     const title2 = 'Learning Results';
     const title3 = 'Learning Outcomes';
+    const title4 = 'Award';
     const accountID = localStorage.getItem('accountID');
     const [studentID, setStudentID] = useState(null);
 
@@ -56,6 +57,7 @@ function StudentPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/student" end>{title1}</NavLink>
                     <NavLink style={navLinkStyles} to="/student/results">{title2}</NavLink>
                     <NavLink style={navLinkStyles} to="/student/outcome">{title3}</NavLink>
+                    <NavLink style={navLinkStyles} to="/student/award">{title4}</NavLink>
 
                     <button className='fixed right-10 space-x-2' onClick={() => navigate(`/student/accountstudent/${studentID}`)}>
                         <div className='fixed w-6 h-6 items-center justify-center'>
