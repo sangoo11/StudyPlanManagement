@@ -73,6 +73,14 @@ class AwardController {
             options: { limit: 10 }
         }).send(res);
     }
+
+    getNumberAward = async (req, res, next) => {
+        new CREATED({
+            message: "Get Number Award Success",
+            metadata: await AwardService.getNumberAward(req.params.accountID),
+            options: { limit: 10 }
+        }).send(res);
+    }
 }
 
 module.exports = new AwardController();
