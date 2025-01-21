@@ -71,7 +71,7 @@ function SubjectManagement() {
             const visibleSubjectIDs = Object.keys(visibleClasses).filter(
                 (key) => visibleClasses[key]
             );
-    
+
             if (visibleSubjectIDs.length > 0) {
                 try {
                     const res = await axios.get(
@@ -85,10 +85,10 @@ function SubjectManagement() {
                 setLearningOutcomes([]); // Clear outcomes when no subject is visible
             }
         };
-    
+
         fetchLearningOutcomes();
     }, [visibleClasses]);
-    
+
 
     return (
         <div className="h-auto mt-[8vh] bg-gray-50 p-6">
@@ -125,9 +125,12 @@ function SubjectManagement() {
                         {/* Subject Header */}
                         <div className="p-4 bg-[#f9f9f9] border-b border-gray-200 flex-col justify-between items-center">
                             <div className="flex justify-between items-center">
-                                <h2 className={`font-bold ${subject.active ? 'text-green-500' : 'text-red-500'}`}>
-                                    {subject.subjectCode} - {subject.subjectName}
-                                </h2>
+                                <div>
+                                    <h2 className={`font-bold ${subject.active ? 'text-green-500' : 'text-red-500'}`}>
+                                        {subject.subjectCode} - {subject.subjectName}
+                                    </h2>
+                                    <a target="_blank" className="text-base font-medium text-[#1A56DB] underline" href={subject.subjectSyllabusUrl}>{subject.subjectCode} Syllabus</a>
+                                </div>
                                 <div className="flex">
                                     <button
                                         className="px-4 py-2 text-white bg-[#1DA599] rounded-md mr-2 hover:bg-green-400 font-bold"
@@ -162,9 +165,9 @@ function SubjectManagement() {
                                     </button>
                                 </div>
                             </div>
-                            
 
-                            
+
+
                         </div>
                         {/* Classes Table */}
                         {visibleClasses[subject.id] && (

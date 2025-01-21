@@ -18,19 +18,10 @@ const LearningOutcomeScore = sequelize.define('LearningOutcomeScore', {
     },
     highestLevel: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
             is: /^[A-z]{2}[0-9]{1}$/
-        },
-        beforeCreate() {
-            if (this.learningOutcomeID == 2 || this.learningOutcomeID == 1) {
-                this.highestLevel = 'NT1';
-            } else if (this.learningOutcomeID == 8) {
-                this.highestLevel = 'TD1';
-            } else {
-                this.highestLevel = 'KN1';
-            }
-        },
+        }
     },
     studentID: {
         type: DataTypes.INTEGER,
@@ -41,7 +32,18 @@ const LearningOutcomeScore = sequelize.define('LearningOutcomeScore', {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    hooks: {
+        beforeCreate: (record) => {
+            if (record.learningOutcomeID == 2 || record.learningOutcomeID == 1) {
+                record.highestLevel = 'NT1';
+            } else if (record.learningOutcomeID == 8) {
+                record.highestLevel = 'TD1';
+            } else {
+                record.highestLevel = 'KN1';
+            }
+        }
+    }
 });
 
-module.exports = LearningOutcomeScore; 
+module.exports = LearningOutcomeScore;
