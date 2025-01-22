@@ -59,7 +59,8 @@ function AddStudent({ onClose, courseId }) {
                 enrollmentPayload
             );
             alert("Student successfully added to the course.");
-            onClose(); // Close the modal
+            onClose();
+            window.location.reload();
         } catch (err) {
             setError(
                 err.response?.data?.message || "Failed to enroll student. Please try again."

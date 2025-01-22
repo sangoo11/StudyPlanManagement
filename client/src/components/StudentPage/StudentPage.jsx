@@ -100,7 +100,6 @@ function StudentPage(props) {
             <div className="flex flex-col w-1/2 text-black items-center justify-center">
                 <div className="flex flex-col pb-[6vh]">
                     <h2 className="text-3xl font-bold">{titleLeftHandSide}</h2>
-                    <h2 className="text-2xl font-bold ml-4">Year : 1 | Term : 1</h2>
                 </div>
                 <div className='flex justify-center py-[4vw] w-1/2 border-2 border-[#1DA599]'>
                     {treeImage}
