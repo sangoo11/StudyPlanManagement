@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function AddClassroom({ onClose, subjectID }) {
+function AddClassroom({ onClose, subjectID, onAddedCourse }) {
     // State to manage form inputs
     const [formData, setFormData] = useState({
         courseCode: "",
@@ -80,6 +80,9 @@ function AddClassroom({ onClose, subjectID }) {
 
             alert("Tạo lớp thành công!");
             console.log("Response:", response.data);
+            if (onAddedCourse) {
+                onAddedCourse();
+            }
             onClose(); // Close the modal after successful submission
             window.location.reload();
         } catch (err) {

@@ -2,15 +2,18 @@ import React from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function DeleteTeacher({ onClose, teacherData }) {
+function DeleteTeacher({ onClose, teacherData, onTeacherDeleted }) {
     const handleDelete = async () => {
         console.log(teacherData.id);
         try {
-            const response = await axios.delete(
+            const response = await axios.put(
                 `http://localhost:8080/v1/api/teacher/delete-teacher/${teacherData.id}`
             );
             toast.success("teacher deleted successfully!");
             console.log("teacher deleted successfully:", response.data);
+            if (onTeacherDeleted){
+                onTeacherDeleted();
+            }
             onClose();
         } catch (error) {
             toast.error("Failed to delete teacher.");

@@ -17,7 +17,7 @@ function StudentManagement() {
 
     const [isDeleteStudentVisible, setDeleteStudentVisible] = useState('');
 
-    useEffect(() => {
+    const fetchStudents = () => {
         axios
             .get('http://localhost:8080/v1/api/student/get-all-student')
             .then((response) => {
@@ -27,6 +27,10 @@ function StudentManagement() {
             .catch((error) => {
                 console.error('Error fetching students:', error);
             });
+    };
+
+    useEffect(() => {
+        fetchStudents();
     }, []);
 
     const uniqueYears = [...new Set(students.map(student => student.year))];
@@ -148,18 +152,20 @@ function StudentManagement() {
             
             {/* Modals */}
             {isAddStudentVisible && (
-                <AddStudent onClose={() => setAddStudentVisible(false)} />
+                <AddStudent onClose={() => setAddStudentVisible(false)} onStudentAdded={fetchStudents} />
             )}
             {isEditStudentVisible && (
                 <EditStudent
                     onClose={() => setEditStudentVisible(false)}
                     studentData={isEditStudentVisible}
+                    onStudentEdited={fetchStudents}
                 />
             )}
             {isDeleteStudentVisible && (
                 <DeleteStudent
                     onClose={() => setDeleteStudentVisible(false)}
                     studentData={isDeleteStudentVisible}
+                    onStudentDeleted={fetchStudents}
                 />
             )}
         </div>

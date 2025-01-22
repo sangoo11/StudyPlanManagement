@@ -1,30 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function AddSubjectInCriteria({ onClose, id }) {
+function AddSubjectInCriteria({ onClose, id, onAddedSubject }) {
   const [subjectID, setSubjectID] = useState(""); // Default empty value for subjectID
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [subjects, setSubjects] = useState([]); // To store the subjects from the API
   const [level, setLevel] = useState('');
-  console.log(id);
   // Fetch the subjects when the component mounts
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/v1/api/subject/get-all-subject"
-        );
-        if (response.status === 201) {
-          setSubjects(response.data.metadata); // Set the fetched subjects
-        }
-      } catch (err) {
-        setError("Failed to fetch subjects");
-        console.error("Error fetching subjects:", err);
+  const fetchSubjects = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/v1/api/subject/get-all-subject"
+      );
+      if (response.status === 201) {
+        setSubjects(response.data.metadata); // Set the fetched subjects
       }
-    };
-
+    } catch (err) {
+      setError("Failed to fetch subjects");
+      console.error("Error fetching subjects:", err);
+    }
+  };
+  useEffect(() => {
     fetchSubjects();
   }, []);
 
@@ -41,6 +39,9 @@ function AddSubjectInCriteria({ onClose, id }) {
       );
       if (response.status === 201) {
         setSuccess(true);
+        if (onAddedSubject) {
+          onAddedSubject();
+        }
       }
     } catch (err) {
       // Make sure error is a string, not an object

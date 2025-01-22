@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function EditTeacher({ onClose, teacherData }) {
+function EditTeacher({ onClose, teacherData, onTeacherEdited }) {
     const [formData, setFormData] = useState({
         fullName: teacherData?.fullName || "",
         year: teacherData?.year || "",
@@ -27,6 +27,9 @@ function EditTeacher({ onClose, teacherData }) {
             );
             toast.success("teacher updated successfully!");
             console.log("teacher updated successfully:", response.data);
+            if (onTeacherEdited){
+                onTeacherEdited();
+            }
             onClose();
         } catch (error) {
             toast.error("Failed to update teacher.");
@@ -69,8 +72,8 @@ function EditTeacher({ onClose, teacherData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Active"
-                                    checked={formData.status === "Active"}
+                                    value="active"
+                                    checked={formData.status === "active"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
@@ -80,8 +83,8 @@ function EditTeacher({ onClose, teacherData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Terminated"
-                                    checked={formData.status === "Terminated"}
+                                    value="terminated"
+                                    checked={formData.status === "terminated"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
@@ -91,8 +94,8 @@ function EditTeacher({ onClose, teacherData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="On leave"
-                                    checked={formData.status === "On leave"}
+                                    value="onleave"
+                                    checked={formData.status === "onleave"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />
@@ -102,8 +105,8 @@ function EditTeacher({ onClose, teacherData }) {
                                 <input
                                     type="radio"
                                     name="status"
-                                    value="Suspended"
-                                    checked={formData.status === "Suspended"}
+                                    value="suspended"
+                                    checked={formData.status === "suspended"}
                                     onChange={handleChange}
                                     className="mr-2"
                                 />

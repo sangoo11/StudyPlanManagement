@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function EditCriteria({ onClose, id }) {
+function EditCriteria({ onClose, id, onEditedCriteria}) {
     const [learningOutcomeName, setLearningOutcomeName] = useState("");
     const [description, setDescription] = useState("");
     const [active, setActive] = useState(true);
@@ -23,6 +23,9 @@ function EditCriteria({ onClose, id }) {
                 data
             );
             console.log("Success:", response.data);
+            if (onEditedCriteria) {
+                onEditedCriteria();
+            }
             onClose(); // Close modal after successful update
         } catch (error) {
             console.error("Error:", error);

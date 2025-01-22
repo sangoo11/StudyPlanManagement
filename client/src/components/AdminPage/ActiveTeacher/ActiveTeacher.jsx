@@ -8,19 +8,19 @@ function ActiveTeacher() {
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const fetchInactiveTeachers = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/v1/api/teacher/get-all-inactive-teacher');
+            setInactiveTeachers(response.data.metadata);
+            setIsLoading(false);
+        } catch (err) {
+            setError('Failed to fetch inactive teachers.');
+            setIsLoading(false);
+        }
+    };
+
     // Fetch inactive teachers on component mount
     useEffect(() => {
-        const fetchInactiveTeachers = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/v1/api/teacher/get-all-inactive-teacher');
-                setInactiveTeachers(response.data.metadata);
-                setIsLoading(false);
-            } catch (err) {
-                setError('Failed to fetch inactive teachers.');
-                setIsLoading(false);
-            }
-        };
-
         fetchInactiveTeachers();
     }, []);
 
@@ -78,7 +78,8 @@ function ActiveTeacher() {
             {/* SetActive modal */}
             {isModalOpen && (
                 <SetActive
-                    onClose={() => setIsModalOpen(false)} // Pass a function to close the modal
+                    onClose={() => setIsModalOpen(false)}
+                    onActive = {fetchInactiveTeachers}
                 />
             )}
         </div>

@@ -16,17 +16,18 @@ function TeacherManagement() {
     
     const [isDeleteTeacherVisible, setDeleteTeacherVisible] = useState('');
 
+    const fetchTeachers = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/v1/api/teacher/get-all-teacher');
+            console.log('API Response:', response.data);
+            setTeachers(response.data.metadata || []);
+        } catch (error) {
+            console.error('Error fetching teachers:', error);
+        }
+    };
+
     useEffect(() => {
-        axios
-            .get('http://localhost:8080/v1/api/teacher/get-all-teacher')
-            .then((response) => {
-                console.log('API Response:', response.data);
-                // Access the 'metadata' array in the response
-                setTeachers(response.data.metadata || []);
-            })
-            .catch((error) => {
-                console.error('Error fetching teachers:', error);
-            });
+        fetchTeachers();
     }, []);
 
     const filteredTeachers = teachers.filter(teacher =>
@@ -122,9 +123,20 @@ function TeacherManagement() {
             </div>
 
             {/* Modals */}
-            {isAddTeacherVisible && <AddTeacher onClose={() => setAddTeacherVisible(false)} />}
-            {isEditTeacherVisible && <EditTeacher teacherData={isEditTeacherVisible} onClose={() => setEditTeacherVisible(false)} />}
-            {isDeleteTeacherVisible && <DeleteTeacher teacherData={isDeleteTeacherVisible} onClose={() => setDeleteTeacherVisible(false)} />}
+            {isAddTeacherVisible && <AddTeacher onClose={() => setAddTeacherVisible(false)} onTeacherAdded={fetchTeachers} />}
+            {isEditTeacherVisible && 
+                <EditTeacher teacherData={isEditTeacherVisible} 
+                    onClose={() => setEditTeacherVisible(false)} 
+                    onTeacherEdited={fetchTeachers}
+                />
+            }
+            {isDeleteTeacherVisible && 
+                <DeleteTeacher 
+                    teacherData={isDeleteTeacherVisible} 
+                    onClose={() => setDeleteTeacherVisible(false)} 
+                    onTeacherDeleted={fetchTeachers}
+                />
+            }
         </div>
     );
 }

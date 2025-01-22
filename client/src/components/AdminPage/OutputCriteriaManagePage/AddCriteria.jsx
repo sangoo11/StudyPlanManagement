@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddCriteria({ onClose }) {
+function AddCriteria({ onClose, onAddedCriteria }) {
     const [formData, setFormData] = useState({
         learningOutcomeCode: "",
         learningOutcomeName: "",
@@ -53,6 +53,9 @@ function AddCriteria({ onClose }) {
                     learningOutcomeName: "",
                     description: "",
                 });
+                if (onAddedCriteria) {
+                    onAddedCriteria();
+                }
                 onClose();
             }
         } catch (error) {

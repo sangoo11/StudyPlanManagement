@@ -10,7 +10,7 @@ import DeleteClassroom from "./components/DeleteClassroom";
 import AddSubject from "./components/AddSubject";
 import DeleteSubject from "./components/DeleteSubject";
 import EditSubject from "./components/EditSubject";
-import EditSubjectInCriteria from "./components/EditSubjectLevelInLO";
+// import EditSubjectInCriteria from "./components/EditSubjectLevelInLO";
 
 function SubjectManagement() {
     const navigate = useNavigate();
@@ -40,52 +40,52 @@ function SubjectManagement() {
     };
 
     // Fetch data and map courses with subjects
+    const fetchData = async () => {
+        try {
+            const [subjectRes, courseRes] = await Promise.all([
+                axios.get("http://localhost:8080/v1/api/subject/get-all-subject"),
+                axios.get("http://localhost:8080/v1/api/course/get-all-courses"),
+            ]);
+
+            const subjects = subjectRes.data.metadata || [];
+            const courses = courseRes.data.metadata || [];
+
+            // Map courses to subjects
+            const mapped = subjects.map((subject) => ({
+                ...subject,
+                courses: courses.filter((course) => course.subjectID === subject.id),
+            }));
+
+            setSubjects(subjects);
+            setMappedCourses(mapped);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [subjectRes, courseRes] = await Promise.all([
-                    axios.get("http://localhost:8080/v1/api/subject/get-all-subject"),
-                    axios.get("http://localhost:8080/v1/api/course/get-all-courses"),
-                ]);
-
-                const subjects = subjectRes.data.metadata || [];
-                const courses = courseRes.data.metadata || [];
-
-                // Map courses to subjects
-                const mapped = subjects.map((subject) => ({
-                    ...subject,
-                    courses: courses.filter((course) => course.subjectID === subject.id),
-                }));
-
-                setSubjects(subjects);
-                setMappedCourses(mapped);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchLearningOutcomes = async () => {
-            const visibleSubjectIDs = Object.keys(visibleClasses).filter(
-                (key) => visibleClasses[key]
-            );
+    const fetchLearningOutcomes = async () => {
+        const visibleSubjectIDs = Object.keys(visibleClasses).filter(
+            (key) => visibleClasses[key]
+        );
 
-            if (visibleSubjectIDs.length > 0) {
-                try {
-                    const res = await axios.get(
-                        `http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome/${visibleSubjectIDs[0]}`
-                    );
-                    setLearningOutcomes(res.data.metadata || []);
-                } catch (error) {
-                    console.error("Error fetching learning outcomes:", error);
-                }
-            } else {
-                setLearningOutcomes([]); // Clear outcomes when no subject is visible
+        if (visibleSubjectIDs.length > 0) {
+            try {
+                const res = await axios.get(
+                    `http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome/${visibleSubjectIDs[0]}`
+                );
+                setLearningOutcomes(res.data.metadata || []);
+            } catch (error) {
+                console.error("Error fetching learning outcomes:", error);
             }
-        };
+        } else {
+            setLearningOutcomes([]); // Clear outcomes when no subject is visible
+        }
+    };
 
+    useEffect(() => {
         fetchLearningOutcomes();
     }, [visibleClasses]);
 
@@ -245,37 +245,42 @@ function SubjectManagement() {
             </div>
 
             {/* Modals */}
-            {modals.addSubject && <AddSubject onClose={() => setModals((prev) => ({ ...prev, addSubject: false }))} />}
+            {modals.addSubject && <AddSubject onClose={() => setModals((prev) => ({ ...prev, addSubject: false }))} onAddedSubject = {fetchData} />}
             {modals.editSubject.visible && (
                 <EditSubject
                     subjectID={modals.editSubject.subjectId}
                     onClose={() => setModals((prev) => ({ ...prev, editSubject: { visible: false, subjectId: null } }))}
+                    onEditedSubject = {fetchData}
                 />
             )}
             {modals.deleteSubject.visible && (
                 <DeleteSubject
                     subjectID={modals.deleteSubject.subjectId}
                     onClose={() => setModals((prev) => ({ ...prev, deleteSubject: { visible: false, subjectId: null } }))}
+                    onDeletedSubject = {fetchData}
                 />
             )}
             {modals.addClassroom.visible && (
                 <AddClassroom
                     subjectID={modals.addClassroom.subjectId}
                     onClose={() => setModals((prev) => ({ ...prev, addClassroom: { visible: false, subjectId: null } }))}
+                    onAddedCourse = {fetchData}
                 />
             )}
             {modals.deleteClassroom.visible && (
                 <DeleteClassroom
                     courseID={modals.deleteClassroom.courseId}
                     onClose={() => setModals((prev) => ({ ...prev, deleteClassroom: { visible: false, courseId: null } }))}
+                    onDeletedCourse = {fetchData}
                 />
             )}
-            {modals.editSubjectInCriteria.visible && (
+            {/* {modals.editSubjectInCriteria.visible && (
                 <EditSubjectInCriteria
                     lOID={modals.editSubjectInCriteria.lOID}
                     onClose={() => setModals((prev) => ({ ...prev, editSubjectInCriteria: { visible: false, lOID: null } }))}
+                    onEditedCourse = {fetchData}
                 />
-            )}
+            )} */}
         </div>
     );
 }

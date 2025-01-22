@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function EditSubjectInCriteria({ onClose, lOID }) {
+function EditSubjectInCriteria({ onClose, lOID, onEditedSubject }) {
   const [subjects, setSubjects] = useState([]);  // To store fetched subjects with details
   const [selectedSubjectID, setSelectedSubjectID] = useState(null);  // To store the selected subject ID
   const [level, setLevel] = useState("");  // To store the selected level
@@ -57,6 +57,9 @@ function EditSubjectInCriteria({ onClose, lOID }) {
       );
       if (response.status === 201) {
         alert("Chỉnh sửa môn học thành công");
+        if (onEditedSubject) {
+          onEditedSubject();
+        }
         onClose(); // Close the modal after successful editing
       } else {
         alert("Không thể chỉnh sửa môn học. Vui lòng thử lại!");

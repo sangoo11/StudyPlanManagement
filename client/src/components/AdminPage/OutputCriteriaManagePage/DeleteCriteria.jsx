@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-function DeleteCriteria({ onClose, id, lOID }) {
+function DeleteCriteria({ onClose, id, lOID, onDeletedCriteria }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent form default submission behavior
     try {
@@ -11,6 +11,9 @@ function DeleteCriteria({ onClose, id, lOID }) {
 
       if (response.status === 201) {
         alert("Xóa tiêu chuẩn thành công");
+        if (onDeletedCriteria) {
+          onDeletedCriteria();
+        }
         onClose(); // Close the modal after successful deletion
       } else {
         alert("Failed to delete the learning outcome. Please try again.");

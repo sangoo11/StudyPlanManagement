@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function EditSubject({ onClose, subjectID }) {
+function EditSubject({ onClose, subjectID, onEditedSubject }) {
     console.log(subjectID);
     const [subject, setSubject] = useState(null);
     const [formData, setFormData] = useState({
@@ -75,6 +75,9 @@ function EditSubject({ onClose, subjectID }) {
             // Check for successful response
             if (response.status === 200 || response.status === 201) {
                 alert("Thay đổi thông tin thành công!");
+                if (onEditedSubject) {
+                    onEditedSubject();
+                }
                 onClose();
             } else {
                 setError("Thay đổi thông tin không thành công. Vui lòng thử lại");

@@ -15,6 +15,7 @@ function AwardStudent() {
     const [error, setError] = useState(null);
     const [visibleAwards, setVisibleAwards] = useState({});
     const [studentsData, setStudentsData] = useState({});
+    const [toggledAwardId, setToggledAwardId] = useState(null);
 
     const [modals, setModals] = useState({
         addAward: { visible: false },
@@ -24,27 +25,30 @@ function AwardStudent() {
         deleteStudent: { visible: false, awardId: null },
     });
 
+    const fetchAwards = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/v1/api/award/get-all-award');
+            setAwards(response.data.metadata || []);
+        } catch (err) {
+            console.error('Error fetching awards:', err);
+            setError('Failed to fetch awards. Please try again later.');
+        }
+    };
+
     useEffect(() => {
-        const fetchAwards = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/v1/api/award/get-all-award');
-                setAwards(response.data.metadata || []);
-            } catch (err) {
-                console.error('Error fetching awards:', err);
-                setError('Failed to fetch awards. Please try again later.');
-            }
-        };
-
         fetchAwards();
-    }, []);
+    }, [awards]);
 
-    const toggleAwardVisibility = async (awardId) => {
+    const toggleAwardVisibility = (awardId) => {
         setVisibleAwards((prev) => ({
             ...prev,
             [awardId]: !prev[awardId],
         }));
+        setToggledAwardId(awardId); // Track the toggled awardId
+    };
 
-        if (!studentsData[awardId] && !visibleAwards[awardId]) {
+    useEffect(() => {
+        const fetchStudentsData = async (awardId) => {
             try {
                 const response = await axios.get(`http://localhost:8080/v1/api/award/get-student/${awardId}`);
                 setStudentsData((prev) => ({
@@ -55,8 +59,12 @@ function AwardStudent() {
                 console.error(`Error fetching students for award ${awardId}:`, err);
                 setError(`Failed to fetch students for award ID ${awardId}.`);
             }
+        };
+
+        if (toggledAwardId && visibleAwards[toggledAwardId]) {
+            fetchStudentsData(toggledAwardId);
         }
-    };
+    }, [toggledAwardId, visibleAwards, studentsData]);
 
     const openModal = (modalType, awardId = null) => {
         setModals((prev) => ({
@@ -127,6 +135,20 @@ function AwardStudent() {
 
                                 {visibleAwards[award.id] && (
                                     <div className="mt-6">
+                                        <div className="flex space-x-4 mb-4">
+                                            <button
+                                                onClick={() => openModal('addStudent', award.id)}
+                                                className="w-auto h-8 flex items-center px-4 bg-green-500 text-white rounded-lg"
+                                            >
+                                                Thêm sinh viên
+                                            </button>
+                                            <button
+                                                onClick={() => openModal('deleteStudent', award.id)}
+                                                className="w-auto h-8 flex items-center px-4 bg-red-500 text-white rounded-lg"
+                                            >
+                                                Xóa sinh viên
+                                            </button>
+                                        </div>
                                         {studentsData[award.id] ? (
                                             <div>
                                                 <table className="w-full border border-gray-300 bg-white rounded-md shadow-md">
@@ -164,20 +186,7 @@ function AwardStudent() {
                                                         ))}
                                                     </tbody>
                                                 </table>
-                                                <div className="flex space-x-4 mt-4">
-                                                    <button
-                                                        onClick={() => openModal('addStudent', award.id)}
-                                                        className="w-auto h-8 flex items-center px-4 bg-green-500 text-white rounded-lg"
-                                                    >
-                                                        Thêm sinh viên
-                                                    </button>
-                                                    <button
-                                                        onClick={() => openModal('deleteStudent', award.id)}
-                                                        className="w-auto h-8 flex items-center px-4 bg-red-500 text-white rounded-lg"
-                                                    >
-                                                        Xóa sinh viên
-                                                    </button>
-                                                </div>
+                                                
                                             </div>
                                         ) : (
                                             <p className="text-sm text-gray-500">Loading students...</p>

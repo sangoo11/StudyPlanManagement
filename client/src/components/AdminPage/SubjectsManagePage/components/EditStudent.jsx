@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function EditStudent({ onClose, studentData }) {
+function EditStudent({ onClose, studentData, onStudentEdited }) {
     const [formData, setFormData] = useState({
         fullName: studentData?.fullName || "",
         year: studentData?.year || "",
@@ -27,6 +27,9 @@ function EditStudent({ onClose, studentData }) {
             );
             toast.success("Student updated successfully!");
             console.log("Student updated successfully:", response.data);
+            if (onStudentEdited) {
+                onStudentEdited();
+            }
             onClose();
         } catch (error) {
             toast.error("Failed to update student.");

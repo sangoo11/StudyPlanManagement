@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function SetActive({ onClose }) {
+function SetActive({ onClose, onActive}) {
     const [inactiveTeachers, setInactiveTeachers] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +37,10 @@ function SetActive({ onClose }) {
             setSuccessMessage('Teacher account activated successfully!');
             setInactiveTeachers((prev) => prev.filter((teacher) => teacher.accountID !== parseInt(accountID)));
             setSelectedTeacher('');
+            if (onActive) {
+                onActive();
+            }
+            onClose();
         } catch (err) {
             alert('Failed to activate the teacher account. Please try again.');
         }
