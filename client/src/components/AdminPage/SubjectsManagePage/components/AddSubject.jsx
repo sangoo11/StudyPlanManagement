@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddSubject({ onClose }) {
+function AddSubject({ onClose, onAddedSubject }) {
     const [formData, setFormData] = useState({
         subjectCode: "",
         subjectName: "",
@@ -45,6 +45,9 @@ function AddSubject({ onClose }) {
 
             if (response.status === 201) {
                 alert("Môn học mới đã được thêm thành công!");
+                if (onAddedSubject) {
+                    onAddedSubject();
+                }
                 onClose(); // Close the modal
             } else {
                 setError("Có lỗi xảy ra. Vui lòng thử lại.");

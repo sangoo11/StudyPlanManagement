@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function DeleteSubjectInCriteria({ onClose, lOID }) {
+function DeleteSubjectInCriteria({ onClose, lOID, onDeletedSubject }) {
   const [subjects, setSubjects] = useState([]);  // To store fetched subjects with details
   const [selectedSubjectID, setSelectedSubjectID] = useState(null);  // To store the selected subject ID
 
@@ -56,6 +56,9 @@ function DeleteSubjectInCriteria({ onClose, lOID }) {
       );
       if (response.status === 201) {
         alert("Xóa môn học thành công");
+        if (onDeletedSubject) {
+          onDeletedSubject();
+        }
         onClose(); // Close the modal after successful deletion
       } else {
         alert("Không thể xóa môn học. Vui lòng thử lại!");

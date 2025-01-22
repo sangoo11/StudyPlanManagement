@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function AddTeacher({ onClose }) {
+function AddTeacher({ onClose, onTeacherAdded }) {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -26,6 +26,9 @@ function AddTeacher({ onClose }) {
             const response = await axios.post("http://localhost:8080/v1/api/access/signup", formData);
             console.log("Teacher added successfully:", response.data);
             toast.success("Create teacher successful");
+            if (onTeacherAdded) {
+                onTeacherAdded();
+            }
             onClose();
         } catch (error) {
             toast.error("Error creating student");

@@ -29,18 +29,18 @@ function OutputCriteriaManagePage() {
   const [isDeleteSubjectVisible, setDeleteSubjectVisible] = useState(false);
   const [isEditSubjectVisible, setEditSubjectVisible] = useState(false);
   
+  const fetchLearningOutcomes = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome"
+      );
+      const { metadata } = response.data;
+      setLearningOutcomes(metadata || []);
+    } catch (error) {
+      console.error("Error fetching learning outcomes:", error);
+    }
+  };
   useEffect(() => {
-    const fetchLearningOutcomes = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome"
-        );
-        const { metadata } = response.data;
-        setLearningOutcomes(metadata || []);
-      } catch (error) {
-        console.error("Error fetching learning outcomes:", error);
-      }
-    };
     fetchLearningOutcomes();
   }, []);
 
@@ -73,6 +73,12 @@ function OutputCriteriaManagePage() {
       console.error(`Error fetching subjects for learning outcome ${learningOutcomeID}:`, error);
     }
   }, []);
+  
+  useEffect(() => {
+    if (selectedLearningOutcomeId) {
+      fetchSubjects(selectedLearningOutcomeId);
+    }
+  }, [selectedLearningOutcomeId, fetchSubjects]);
 
   // Toggle visibility for a specific semester
   const toggleSemesterVisibility = useCallback(
@@ -241,12 +247,13 @@ function OutputCriteriaManagePage() {
 
       {/* Modals */}
       {isAddCriteriaVisible && (
-        <AddCriteria onClose={() => setAddCriteriaVisible(false)} />
+        <AddCriteria onClose={() => setAddCriteriaVisible(false)} onAddedCriteria={fetchLearningOutcomes} />
       )}
       {isEditCriteriaVisible && (
         <EditCriteria 
             onClose={() => setEditCriteriaVisible(false)} 
             id={selectedLearningOutcomeId}
+            onEditedCriteria={fetchLearningOutcomes}
         />
       )}
       {isDeleteCriteriaVisible && (
@@ -254,24 +261,28 @@ function OutputCriteriaManagePage() {
             onClose={() => setDeleteCriteriaVisible(false)} 
             id={selectedLearningOutcomeId}
             lOID={selectedLearningOutcomeCode}
+            onDeletedCriteria={fetchLearningOutcomes}
         />
       )}
       {isDeleteSubjectVisible && (
         <DeleteSubject
             onClose={() => setDeleteSubjectVisible(false)} 
             lOID={selectedLearningOutcomeId}
+            onDeletedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
         />
       )}
       {isAddSubjectVisible && (
         <AddSubject
             onClose={() => setAddSubjectVisible(false)} 
             id={selectedLearningOutcomeId}
+            onAddedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
         />
       )}
       {isEditSubjectVisible && (
         <EditSubject
             onClose={() => setEditSubjectVisible(false)} 
             lOID={selectedLearningOutcomeId}
+            onEditedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
         />
       )}
       

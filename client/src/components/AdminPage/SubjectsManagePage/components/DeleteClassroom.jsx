@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import axios from "axios";
 
-function DeleteClassroom({ courseID, onClose }) {
+function DeleteClassroom({ courseID, onClose, onDeletedCourse }) {
     const [course, setCourse] = useState(null);
     const [formData, setFormData] = useState({
         courseCode: "",
@@ -38,6 +38,9 @@ function DeleteClassroom({ courseID, onClose }) {
         try {
             await axios.put(`http://localhost:8080/v1/api/course/delete-course/${courseID}`);
             alert("Xóa lớp học thành công!");
+            if(onDeletedCourse) {
+                onDeletedCourse();
+            }
             onClose();
         } catch (error) {
             console.error("Error deleting classroom:", error);
