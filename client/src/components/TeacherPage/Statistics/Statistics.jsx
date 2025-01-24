@@ -77,8 +77,10 @@ function Statistics() {
     }, [LOID]);
 
     const extractNumbers = (str) => {
-        return parseInt(str.match(/\d+/g) || [], 10); // returns an array of numbers or an empty array if none found
-    }
+        if (!str) return 0; // Return 0 or another default value if str is null/undefined
+        const matches = str.match(/\d+/g); 
+        return matches ? parseInt(matches[0], 10) : 0; // Return the first matched number or 0 if none found
+    };
 
     const getHighestScore = (arr) => {
         const counts = {};
