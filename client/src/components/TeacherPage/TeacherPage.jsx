@@ -95,8 +95,8 @@ function TeacherPage(props) {
                 </h1>
             </div>
 
-            <div className="flex flex-col mb-8">
-                {/* Major Dropdown */}
+            {/* <div className="flex flex-col mb-8">
+
                 <div className="flex mb-4 items-center ml-6">
                     <label className="text-gray-700 font-medium mr-4">Mã môn học:</label>
                     <select
@@ -112,7 +112,7 @@ function TeacherPage(props) {
                         ))}
                     </select>
                 </div>
-                {/* Year Dropdown */}
+
                 <div className="flex mb-4 items-center ml-6">
                     <label className="text-gray-700 font-medium mr-4">Năm học:</label>
                     <select
@@ -128,7 +128,7 @@ function TeacherPage(props) {
                         ))}
                     </select>
                 </div>
-                {/* Semester Dropdown */}
+
                 <div className="flex mb-4 items-center ml-6">
                     <label className="text-gray-700 font-medium mr-4">Học kỳ:</label>
                     <select
@@ -141,7 +141,7 @@ function TeacherPage(props) {
                         <option value={2}>HK2</option>
                     </select>
                 </div>
-            </div>
+            </div> */}
 
             <div className='border-t border-[1px] border-gray-200'>
                 <div className="flex flex-col mt-4 space-y-4">
