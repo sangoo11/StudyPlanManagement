@@ -135,7 +135,7 @@ function CourseDetail() {
                                 {/* Edit button */}
                                 <div className="flex items-center h-full rounded-md">
                                     <button
-                                        className="flex w-auto h-auto p-2 font-bold text-black bg-transparent bg-green-400 border-4 border-white hover:border-4 hover:border-yellow-400"
+                                        className="flex w-auto h-auto p-2 font-bold text-white rounded-lg bg-[#1DA599] border-4 border-white hover:border-4 hover:border-yellow-400"
                                         onClick={() =>
                                             setModals((prev) => ({
                                                 ...prev,

@@ -1,51 +1,92 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function EditCriteria({ onClose, studentId }) {
     const accountID = Number(localStorage.getItem("accountID"));
-    const [studentData, setStudentData] = useState(null);
-    const [teacherID, setTeacherID] = useState(null);
     const { courseID } = useParams();
     const courseId = Number(courseID);
+
+    const [studentData, setStudentData] = useState(null);
+    const [teacherID, setTeacherID] = useState(null);
     const [scores, setScores] = useState([
         { scoreType: "progress", score: "" },
         { scoreType: "midterm", score: "" },
         { scoreType: "final", score: "" }
     ]);
 
-
-    // Fetch teacher ID for current user
-    const getTeacherId = async () => {
-        if (!accountID) return;
-        try {
-            const response = await axios.get(
-                `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
-            );
-            console.log("API Response:", response.data);
-            setTeacherID(response.data.metadata.teacherID); // Make sure this is correct
-        } catch (error) {
-            console.error(error.response?.data?.message || "Error fetching teacherID");
-        }
+    const scoreTypeMap = {
+        progress: "Quá trình",
+        midterm: "Giữa kì",
+        final: "Cuối kì",
     };
+
+    // Fetch teacher ID for the current user
     useEffect(() => {
-        getTeacherId();
-    }, []);
-    // Fetch student data on component mount
+        const fetchTeacherId = async () => {
+            if (!accountID) return;
+            try {
+                const response = await axios.get(
+                    `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
+                );
+                setTeacherID(response.data.metadata.teacherID);
+            } catch (error) {
+                console.error("Error fetching teacherID:", error.response?.data?.message || error);
+            }
+        };
+        fetchTeacherId();
+    }, [accountID]);
+
+    // Fetch student data
     useEffect(() => {
-        if (studentId) {
-            axios
-                .get(`http://localhost:8080/v1/api/student/get-student/${studentId}`)
-                .then((response) => {
-                    if (response.status === 201) {
-                        setStudentData(response.data.metadata);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching student data:", error);
-                });
-        }
+        if (!studentId) return;
+        const fetchStudentData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8080/v1/api/student/get-student/${studentId}`
+                );
+                if (response.status === 201) {
+                    setStudentData(response.data.metadata);
+                }
+            } catch (error) {
+                console.error("Error fetching student data:", error);
+            }
+        };
+        fetchStudentData();
     }, [studentId]);
+
+    // Fetch student scores
+    useEffect(() => {
+        if (!studentId || !courseId) return;
+        const fetchStudentScores = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8080/v1/api/score/get-student-score-by-id/${studentId}`,
+                    { courseID: courseId }
+                );
+    
+                if (response.status === 201 && response.data.metadata) {
+                    const { scores, teacherID } = response.data.metadata;
+                    console.log("Lấy điểm thành công");
+    
+                    setScores(
+                        scores.map((score) => ({
+                            ...score,
+                            score: parseFloat(score.score),
+                        }))
+                    );
+    
+                    if (teacherID) setTeacherID(teacherID);
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy điểm sinh viên:", error);
+            }
+        };
+    
+        fetchStudentScores(); 
+    }, [studentId, courseId]); 
+    
+    
 
     // Handle input changes for student data
     const handleInputChange = (e) => {
@@ -59,9 +100,11 @@ function EditCriteria({ onClose, studentId }) {
     // Handle score change
     const handleScoreChange = (index, e) => {
         const { value } = e.target;
-        const updatedScores = [...scores];
-        updatedScores[index].score = value;
-        setScores(updatedScores);
+        setScores((prevScores) =>
+            prevScores.map((score, i) =>
+                i === index ? { ...score, score: value } : score
+            )
+        );
     };
 
     // Validate the score input
@@ -73,22 +116,20 @@ function EditCriteria({ onClose, studentId }) {
     // Handle form submission
     const handleSubmit = async () => {
         if (scores.some((score) => !isValidScore(score.score))) {
-            alert("Please ensure all scores are between 0 and 10.");
+            alert("Vui lòng nhập điểm hợp lệ (từ 0-10)!");
             return;
         }
 
-        const scoresAsNumbers = scores.map((score) => ({
+        const formattedScores = scores.map((score) => ({
             scoreType: score.scoreType,
-            score: parseFloat(score.score) // Ensure it's a number
+            score: parseFloat(score.score)
         }));
 
         const dataToSend = {
-            courseID: courseID,
+            courseID: courseId,
             teacherID,
-            score: scoresAsNumbers
+            score: formattedScores
         };
-        console.log(dataToSend);
-        console.log(studentId);
 
         try {
             const response = await axios.post(
@@ -107,15 +148,10 @@ function EditCriteria({ onClose, studentId }) {
 
     if (!studentData) return <div>Loading...</div>;
 
-    const capitalizeFirstLetter = (string) => {
-        if (!string) return '';
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    };
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
             <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
-                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Thông tin sinh viên</h2>
+                <h2 className="flex w-full justify-center text-3xl font-bold mb-4 text-[#1DA599]">Thông tin sinh viên</h2>
                 <div className="flex">
                     <form className="flex flex-col space-y-4 w-1/2">
                         <div>
@@ -125,7 +161,8 @@ function EditCriteria({ onClose, studentId }) {
                                 name="fullName"
                                 value={studentData.fullName || ""}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border rounded bg-white h-[5vh]"
+                                className="w-[40vw] px-4 py-2 border rounded bg-white h-[5vh]"
+                                disabled
                             />
                         </div>
 
@@ -136,7 +173,7 @@ function EditCriteria({ onClose, studentId }) {
                                 name="id"
                                 value={studentData.id || ""}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border rounded bg-white h-[5vh]"
+                                className="w-[40vw] px-4 py-2 border rounded bg-white h-[5vh]"
                                 disabled
                             />
                         </div>
@@ -148,31 +185,32 @@ function EditCriteria({ onClose, studentId }) {
                                 name="major"
                                 value={studentData.major || ""}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border rounded bg-white h-[5vh]"
+                                className="w-[40vw] px-4 py-2 border rounded bg-white h-[5vh]"
+                                disabled
                             />
                         </div>
                     </form>
                 </div>
 
                 <div className="h-auto mb-[4vh] mt-[4vh]">
-                    <table className="min-w-full bg-white border border-gray-300">
+                    <table className="w-full bg-white border border-[#1DA599] border-2">
                         <thead>
                             <tr>
-                                <th className="py-2 px-4 border-b">Loại điểm</th>
-                                <th className="py-2 px-4 border-b">Điểm</th>
+                                <th className="py-2 px-4 border-b text-[#1DA599] text-xl">Loại điểm</th>
+                                <th className="py-2 px-8 border-b text-[#1DA599] text-xl">Điểm</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-center">
                             {scores.map((score, index) => (
                                 <tr key={index}>
-                                    <td className="py-2 px-4">{capitalizeFirstLetter(score.scoreType)}</td>
+                                    <td className="py-2 px-4">{scoreTypeMap[score.scoreType] || score.scoreType}</td>
                                     <td className="py-2 px-4 bg-transparent border-none outline-none">
                                         <input
                                             type="number"
                                             value={score.score}
                                             onChange={(e) => handleScoreChange(index, e)}
-                                            className="border-none outline-none rounded w-full"
-                                            placeholder={`Điểm ${score.scoreType}`}
+                                            className="border-none outline-none rounded w-full items-center pb-2"
+                                            placeholder={`Điểm ${scoreTypeMap[score.scoreType] || score.scoreType}`}
                                         />
                                     </td>
                                 </tr>
