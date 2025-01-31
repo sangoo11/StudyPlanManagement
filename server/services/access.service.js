@@ -117,6 +117,7 @@ class AccessService {
 
         return {
             accessToken,
+            expiresIn: process.env.TOKEN_EXPIRE,
         }
     }
 
