@@ -9,6 +9,6 @@ const router = express.Router();
 router.post("/grade-score/:studentID", asyncHandler(ScoreController.gradeScore));
 
 // handle get all scores
-router.get("/get-student-score-by-id/:studentID", asyncHandler(ScoreController.getStudentScoreByID));
+router.post("/get-student-score-by-id/:studentID", asyncHandler(ScoreController.getStudentScoreByID));
 
 module.exports = router;

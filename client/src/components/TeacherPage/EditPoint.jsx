@@ -60,33 +60,34 @@ function EditCriteria({ onClose, studentId }) {
         if (!studentId || !courseId) return;
         const fetchStudentScores = async () => {
             try {
-                const response = await axios.get(
+                const response = await axios.post(
                     `http://localhost:8080/v1/api/score/get-student-score-by-id/${studentId}`,
                     { courseID: courseId }
                 );
-    
+
+
                 if (response.status === 201 && response.data.metadata) {
                     const { scores, teacherID } = response.data.metadata;
                     console.log("Lấy điểm thành công");
-    
+
                     setScores(
                         scores.map((score) => ({
                             ...score,
                             score: parseFloat(score.score),
                         }))
                     );
-    
+
                     if (teacherID) setTeacherID(teacherID);
                 }
             } catch (error) {
                 console.error("Lỗi khi lấy điểm sinh viên:", error);
             }
         };
-    
-        fetchStudentScores(); 
-    }, [studentId, courseId]); 
-    
-    
+
+        fetchStudentScores();
+    }, [studentId, courseId]);
+
+
 
     // Handle input changes for student data
     const handleInputChange = (e) => {
