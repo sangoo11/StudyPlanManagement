@@ -31,6 +31,7 @@ const Student = sequelize.define(
     majorID: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     credit: {
       type: DataTypes.INTEGER,
