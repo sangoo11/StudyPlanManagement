@@ -36,6 +36,17 @@ Admin.belongsTo(Account, {
   as: "Admin",
 });
 
+// Student/ Teacher - Major
+Student.belongsTo(Major, {
+  foreignKey: "majorID",
+  constraints: false,
+});
+
+Teacher.belongsTo(Major, {
+  foreignKey: "majorID",
+  constraints: false,
+});
+
 // Student - Course - Enrollment relationships
 Student.belongsToMany(Course, {
   through: "Enrollment",
@@ -123,6 +134,16 @@ AwardStudent.belongsTo(Award, {
 });
 AwardStudent.belongsTo(Student, {
   foreignKey: "studentID",
+});
+
+// Subject - KnowledgeField
+Subject.belongsTo(KnowledgeField, {
+  foreignKey: "knowledgeFieldID",
+});
+
+// KnowledgeField - KnowledgeDomain
+KnowledgeField.belongsTo(KnowledgeDomain, {
+  foreignKey: "knowledgeDomainID",
 });
 
 // Create data
@@ -215,6 +236,7 @@ const students = [
     major: "Computer Science",
     credit: 0,
     status: "active",
+    majorID: 2,
   },
   {
     accountID: 3,
@@ -222,6 +244,7 @@ const students = [
     major: "Mathematics",
     credit: 0,
     status: "active",
+    majorID: 12,
   },
   {
     accountID: 4,
@@ -229,6 +252,7 @@ const students = [
     major: "Physics",
     credit: 0,
     status: "active",
+    majorID: 3,
   },
   {
     accountID: 5,
@@ -236,6 +260,7 @@ const students = [
     major: "Engineering",
     credit: 0,
     status: "active",
+    majorID: 12,
   },
   {
     accountID: 6,
@@ -243,6 +268,7 @@ const students = [
     major: "Economics",
     credit: 0,
     status: "active",
+    majorID: 5,
   },
   {
     accountID: 7,
@@ -250,6 +276,7 @@ const students = [
     major: "Psychology",
     credit: 0,
     status: "active",
+    majorID: 8,
   },
   {
     accountID: 8,
@@ -257,6 +284,7 @@ const students = [
     major: "Biology",
     credit: 0,
     status: "active",
+    majorID: 8,
   },
   {
     accountID: 9,
@@ -264,6 +292,7 @@ const students = [
     major: "Chemistry",
     credit: 0,
     status: "active",
+    majorID: 5,
   },
   {
     accountID: 10,
@@ -271,6 +300,7 @@ const students = [
     major: "History",
     credit: 0,
     status: "active",
+    majorID: 3,
   },
   {
     accountID: 11,
@@ -278,6 +308,7 @@ const students = [
     major: "Literature",
     credit: 0,
     status: "active",
+    majorID: 12,
   },
 ];
 
@@ -287,18 +318,21 @@ const teachers = [
     fullName: "Dr. Alan Green",
     major: "Mathematics",
     status: "active",
+    majorID: 12,
   },
   {
     accountID: 13,
     fullName: "Prof. Sarah White",
     major: "Computer Science",
     status: "active",
+    majorID: 6,
   },
   {
     accountID: 14,
     fullName: "Dr. Henry Black",
     major: "Physics",
     status: "active",
+    majorID: 6,
   },
 ];
 
@@ -800,10 +834,10 @@ const createData = async () => {
   await Award.bulkCreate(awards);
 
   // Create KnowledgeDomain
-  await KnowledgeDomain.create(knowledgeDomain);
+  await KnowledgeDomain.bulkCreate(knowledgeDomain);
 
   // Create KnowledgeField
-  await KnowledgeField.create(knowledgeField);
+  await KnowledgeField.bulkCreate(knowledgeField);
 };
 
 const checkAndCreateData = async () => {

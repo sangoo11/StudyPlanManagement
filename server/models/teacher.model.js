@@ -16,7 +16,8 @@ const Teacher = sequelize.define(
     },
     majorID: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: 0,
     },
     status: {
       type: DataTypes.ENUM("active", "terminated", "onleave", "suspended"),

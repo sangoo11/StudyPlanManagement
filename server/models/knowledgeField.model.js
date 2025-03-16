@@ -24,14 +24,10 @@ const KnowledgeField = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    KnowledgeDomainID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
     },
   },
   {

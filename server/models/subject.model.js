@@ -40,10 +40,6 @@ const Subject = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    knowledgeFieldId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
