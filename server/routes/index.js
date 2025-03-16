@@ -19,5 +19,5 @@ router.use("/v1/api/major", require("./major.route"));
 router.use("/v1/api/score", require("./score.route"));
 router.use("/v1/api/award", require("./award.route"));
 
-//test
+// test 1
 module.exports = router;
