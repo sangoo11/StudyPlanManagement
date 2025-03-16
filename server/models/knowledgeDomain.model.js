@@ -1,28 +1,27 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/sequelize");
 
-const Account = sequelize.define(
-  "Account",
+const KnowledgeDomain = sequelize.define(
+  "KnowledgeDomain",
   {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       autoIncrement: true,
+      primaryKey: true,
     },
-    email: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
-    password: {
+    description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    accountableType: {
-      type: DataTypes.ENUM("student", "teacher", "admin"),
+    minCredit: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      valdidate: {
-        isIn: [["student", "teacher", "admin"]],
-      },
+      defaultValue: 0,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -31,8 +30,8 @@ const Account = sequelize.define(
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );
 
-module.exports = Account;
+module.exports = KnowledgeDomain;
