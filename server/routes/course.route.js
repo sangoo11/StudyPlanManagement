@@ -1,26 +1,46 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const asyncHandler = require("../helpers/asyncHandler");
-const CourseController = require('../controllers/course.controller');
+const CourseController = require("../controllers/course.controller");
 
 // Create course route
-router.post('/create-new-course/:subjectID', asyncHandler(CourseController.createCourse));
+router.post(
+  "/create-new-course/:subjectID",
+  asyncHandler(CourseController.createCourse)
+);
 
 // Delete course route
-router.put('/delete-course/:courseID', asyncHandler(CourseController.deleteCourse));
+router.put(
+  "/delete-course/:courseID",
+  asyncHandler(CourseController.deleteCourse)
+);
 
 // Edit course route
-router.put('/edit-course/:courseID', asyncHandler(CourseController.editCourse));
+router.put("/edit-course/:courseID", asyncHandler(CourseController.editCourse));
 
 //Get course route
-router.get('/get-course/:courseId', asyncHandler(CourseController.getCourseById));
-router.get('/get-all-courses', asyncHandler(CourseController.getAllCourses));
-router.get('/get-all-courses/:teacherID', asyncHandler(CourseController.getAllCoursesByTeacher));
-router.get('/get-all-courses/:studentID', asyncHandler(CourseController.getAllCoursesByStudent));
-router.get('/get-student-course/:courseID', asyncHandler(CourseController.getStudentCourse));
-
+router.get(
+  "/get-course/:courseId",
+  asyncHandler(CourseController.getCourseById)
+);
+router.get("/get-all-courses", asyncHandler(CourseController.getAllCourses));
+router.get(
+  "/get-all-courses/:teacherID",
+  asyncHandler(CourseController.getAllCoursesByTeacher)
+);
+router.get(
+  "/get-all-courses/:studentID",
+  asyncHandler(CourseController.getAllCoursesByStudent)
+);
+router.get(
+  "/get-student-course/:courseID",
+  asyncHandler(CourseController.getStudentCourse)
+);
 
 //Get courses year
-router.get('/get-all-course-year', asyncHandler(CourseController.getAllCoursesYear));
+router.get(
+  "/get-all-course-year",
+  asyncHandler(CourseController.getAllCoursesYear)
+);
 
 module.exports = router;

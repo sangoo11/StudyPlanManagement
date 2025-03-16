@@ -1,22 +1,34 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../configs/sequelize');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../configs/sequelize");
 
-const Major = sequelize.define('Major', {
+const Major = sequelize.define(
+  "Major",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
     majorName: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     majorCode: {
-        type: DataTypes.ENUM(
-            'IT', 'IS', 'CS', 'AI', 'SE', 'CE', 'VLSI',
-            'CNS', 'CNC', 'ISec', 'Ecom', 'DS'
-        ),
-        allowNull: false
+      type: DataTypes.ENUM(
+        "IT",
+        "IS",
+        "CS",
+        "AI",
+        "SE",
+        "CE",
+        "VLSI",
+        "CNS",
+        "CNC",
+        "ISec",
+        "Ecom",
+        "DS"
+      ),
+      allowNull: false,
     },
     // "Công nghệ Thông tin": "IT",
     // "Hệ thống Thông tin": "IS",
@@ -31,11 +43,18 @@ const Major = sequelize.define('Major', {
     // "Thương mại điện tử": "Ecom",
     // "Khoa học Dữ liệu": "DS",
     description: {
-        type: DataTypes.STRING,
-        allowNull: true
-    }
-}, {
-    timestamps: false
-});
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
 
-module.exports = Major; 
+module.exports = Major;
