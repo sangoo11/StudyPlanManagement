@@ -8,43 +8,6 @@ const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
 const LearningOutcome = require('../models/learningOutcome.model');
 
 class StudentService {
-    // static getCreditLearn = async (studentID) => {
-    //     const student = await Student.findOne({
-    //         where: {
-    //             id: studentID,
-    //         },
-    //         attributes: ['credit']
-    //     });
-    //     if (!student) throw new Error('Student not found');
-
-    //     return {
-    //         studentID: studentID,
-    //         creditLearned: student.credit,
-    //     };
-    //     // const enrollments = await Enrollment.findAll({
-    //     //     where: {
-    //     //         studentID: studentID,
-    //     //         completed: true
-    //     //     },
-    //     //     attributes: ['courseID'],
-    //     // });
-
-    //     // const courseIDs = enrollments.map(enrollment => enrollment.courseID)
-
-    //     // const subjects = await Subject.findAll({
-    //     //     where: {
-    //     //         id: courseIDs
-    //     //     },
-    //     //     attributes: ['credit']
-    //     // });
-
-    //     // const totalCredits = subjects.reduce((accumulator, subject) => accumulator + subject.credit, 0);
-
-    //     // return {
-    //     //     studentID: studentID,
-    //     //     creditLearned: totalCredits,
-    //     // };
-    // }
     static getAllStudents = async () => {
         const students = await Student.findAll();
         return students;
