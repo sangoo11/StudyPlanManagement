@@ -13,4 +13,6 @@ router.delete(
   asyncHandler(KnowledgeFieldController.deleteKnowledgeField)
 );
 
+router.get("/student/:studentID", asyncHandler(KnowledgeFieldController.getKnowledgeFieldStudentLearn));
+
 module.exports = router;

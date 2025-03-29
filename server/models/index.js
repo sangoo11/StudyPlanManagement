@@ -136,12 +136,22 @@ AwardStudent.belongsTo(Student, {
   foreignKey: "studentID",
 });
 
+
 // Subject - KnowledgeField
+KnowledgeField.hasMany(Subject, {
+  foreignKey: "knowledgeFieldID",
+  as: "subjects", // Optional alias
+});
 Subject.belongsTo(KnowledgeField, {
   foreignKey: "knowledgeFieldID",
 });
 
 // KnowledgeField - KnowledgeDomain
+KnowledgeDomain.hasMany(KnowledgeField, {
+  foreignKey: "knowledgeDomainID",
+  as: "fields",
+});
+
 KnowledgeField.belongsTo(KnowledgeDomain, {
   foreignKey: "knowledgeDomainID",
 });
@@ -751,6 +761,7 @@ const knowledgeField = [
     description: "Bao gồm khoá luận hoặc chuyên đề tốt nghiệp.",
     status: true,
     minCredit: 10,
+    knowledgeDomainID: 3,
   },
   {
     id: 2,
@@ -758,6 +769,7 @@ const knowledgeField = [
     description: "Bao gồm thực tập tại doanh nghiệp và đồ án tốt nghiệp.",
     status: true,
     minCredit: 6,
+    knowledgeDomainID: 3,
   },
   {
     id: 3,
@@ -765,6 +777,7 @@ const knowledgeField = [
     description: "Các môn học khác và các môn tự chọn tự do.",
     status: true,
     minCredit: 8,
+    knowledgeDomainID: 2,
   },
   {
     id: 4,
@@ -772,6 +785,7 @@ const knowledgeField = [
     description: "Gồm các môn học thuộc chuyên ngành.",
     status: true,
     minCredit: 14,
+    knowledgeDomainID: 2,
   },
   {
     id: 5,
@@ -779,6 +793,7 @@ const knowledgeField = [
     description: "Các môn học nền tảng cho ngành học.",
     status: true,
     minCredit: 49,
+    knowledgeDomainID: 2,
   },
   {
     id: 6,
@@ -786,6 +801,7 @@ const knowledgeField = [
     description: "Các môn học về ngoại ngữ.",
     status: true,
     minCredit: 12,
+    knowledgeDomainID: 1,
   },
   {
     id: 7,
@@ -793,6 +809,7 @@ const knowledgeField = [
     description: "Gồm các môn học về toán, tin học và khoa học tự nhiên.",
     status: true,
     minCredit: 18,
+    knowledgeDomainID: 1,
   },
   {
     id: 8,
@@ -800,6 +817,7 @@ const knowledgeField = [
     description: "Các môn học về lý luận chính trị và pháp luật.",
     status: true,
     minCredit: 13,
+    knowledgeDomainID: 1,
   },
 ];
 
