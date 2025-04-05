@@ -56,10 +56,9 @@ class KnowledgeFieldController {
   };
 
   getKnowledgeFieldStudentLearn = async (req, res, next) => {
-    console.log(req.params)
     new CREATED({
       message: "Get Knowledge Field Student Learn Success",
-      metadata: await KnowledgeFieldService.getKnowledgeFieldStudentLearn(req.params.studentID),
+      metadata: await KnowledgeFieldService.getKnowledgeFieldStudentLearn(req.params.studentID, req.query),
       options: {
         limit: 10,
       },

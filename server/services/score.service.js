@@ -345,6 +345,20 @@ class ScoreService {
         };
     }
 
+    static getStudentScore = async (studentID, query) => {
+        if (!studentID) {
+            throw new Error('Missing student ID');
+        }
+
+        const [studentScores] = await sequelize.query(`
+            select * from enrollment 
+            where studentID = 1 
+            ${query.courseID ? `and courseID = ${query.courseID}` : ''}
+        `)
+
+        return studentScores;
+    }
+
     // Helper function
     static compareLevel = (currentLevel, highestLevel) => {
         const currentLevelNumber = parseInt(currentLevel.match(/\d+/)[0]);

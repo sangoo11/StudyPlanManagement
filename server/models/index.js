@@ -428,6 +428,97 @@ const majors = [
   },
 ];
 
+const knowledgeDomain = [
+  {
+    id: 1,
+    name: "Khối kiến thức giáo dục đại cương",
+    description:
+        "Bao gồm các môn học nền tảng như Lý luận chính trị, Toán - Tin học, Ngoại ngữ.",
+    minCredit: 43,
+  },
+  {
+    id: 2,
+    name: "Khối kiến thức giáo dục chuyên nghiệp",
+    description:
+        "Gồm các môn học cơ sở ngành, chuyên ngành và môn học khác và tự chọn tự do.",
+    minCredit: 71,
+  },
+  {
+    id: 3,
+    name: "Tốt nghiệp",
+    description:
+        "Bao gồm thực tập doanh nghiệp, đồ án và khoá luận tốt nghiệp.",
+    minCredit: 16,
+  },
+];
+
+const knowledgeField = [
+  {
+    id: 1,
+    name: "Khóa luận hoặc chuyên đề tốt nghiệp",
+    description: "Bao gồm khoá luận hoặc chuyên đề tốt nghiệp.",
+    status: true,
+    minCredit: 10,
+    knowledgeDomainID: 3,
+  },
+  {
+    id: 2,
+    name: "Thực tập doanh nghiệp, đồ án",
+    description: "Bao gồm thực tập tại doanh nghiệp và đồ án tốt nghiệp.",
+    status: true,
+    minCredit: 6,
+    knowledgeDomainID: 3,
+  },
+  {
+    id: 3,
+    name: "Môn học khác và tự chọn tự do",
+    description: "Các môn học khác và các môn tự chọn tự do.",
+    status: true,
+    minCredit: 8,
+    knowledgeDomainID: 2,
+  },
+  {
+    id: 4,
+    name: "Chuyên ngành",
+    description: "Gồm các môn học thuộc chuyên ngành.",
+    status: true,
+    minCredit: 14,
+    knowledgeDomainID: 2,
+  },
+  {
+    id: 5,
+    name: "Cơ sở ngành",
+    description: "Các môn học nền tảng cho ngành học.",
+    status: true,
+    minCredit: 49,
+    knowledgeDomainID: 2,
+  },
+  {
+    id: 6,
+    name: "Ngoại ngữ",
+    description: "Các môn học về ngoại ngữ.",
+    status: true,
+    minCredit: 12,
+    knowledgeDomainID: 1,
+  },
+  {
+    id: 7,
+    name: "Toán - Tin học - Khoa học tự nhiên",
+    description: "Gồm các môn học về toán, tin học và khoa học tự nhiên.",
+    status: true,
+    minCredit: 18,
+    knowledgeDomainID: 1,
+  },
+  {
+    id: 8,
+    name: "Lý luận chính trị và pháp luật",
+    description: "Các môn học về lý luận chính trị và pháp luật.",
+    status: true,
+    minCredit: 13,
+    knowledgeDomainID: 1,
+  },
+];
+
 const subjects = [
   {
     subjectCode: "IT008",
@@ -436,31 +527,31 @@ const subjects = [
     description:
       "Môn học hướng dẫn lập trình trên Windows, bao gồm tạo ứng dụng, xử lý thông điệp, giao diện điều khiển, quản lý bộ nhớ, thư viện động và lập trình đa nhiệm.",
     majorID: 6,
-    subjectSyllabusUrl:
+    image:
       "https://drive.google.com/file/d/1gVo0lKuMpd5GKcfKBp7hs7cPA9LM_CAY/view?usp=sharing",
-    KnowledgeField: 5,
+    knowledgeFieldID: 5,
   },
   {
     subjectCode: "IT002",
     subjectName: "Nhập môn lập trình",
-    knowledgeField: 5,
     credit: 4,
     description:
       "Môn học dạy lập trình hướng đối tượng, thừa kế, đa hình, interface và giao tiếp giữa các đối tượng",
     majorID: 6,
     subjectSyllabusUrl:
       "https://drive.google.com/file/d/1EtWZXW0ZolUtGYPeQyTHsRPFcnPIcvTz/view?usp=sharing",
+    knowledgeFieldID: 5,
   },
   {
     subjectCode: "SE100",
     subjectName: "Phương pháp phát triển phần mềm hướng đối tượng",
-    knowledgeField: 5,
     credit: 4,
     description:
       "Môn học dạy phát triển phần mềm hướng đối tượng, tập trung vào phân tích, thiết kế hệ thống và nâng cao kỹ năng làm việc nhóm.",
     majorID: 6,
     subjectSyllabusUrl:
       "https://drive.google.com/file/d/1PurEyGaz2T1MMFgCRxvq-0A2GhEbroCn/view?usp=sharing",
+    knowledgeFieldID: 5,
   },
 ];
 
@@ -730,96 +821,7 @@ const awards = [
   },
 ];
 
-const knowledgeDomain = [
-  {
-    id: 1,
-    name: "Khối kiến thức giáo dục đại cương",
-    description:
-      "Bao gồm các môn học nền tảng như Lý luận chính trị, Toán - Tin học, Ngoại ngữ.",
-    minCredit: 43,
-  },
-  {
-    id: 2,
-    name: "Khối kiến thức giáo dục chuyên nghiệp",
-    description:
-      "Gồm các môn học cơ sở ngành, chuyên ngành và môn học khác và tự chọn tự do.",
-    minCredit: 71,
-  },
-  {
-    id: 3,
-    name: "Tốt nghiệp",
-    description:
-      "Bao gồm thực tập doanh nghiệp, đồ án và khoá luận tốt nghiệp.",
-    minCredit: 16,
-  },
-];
 
-const knowledgeField = [
-  {
-    id: 1,
-    name: "Khóa luận hoặc chuyên đề tốt nghiệp",
-    description: "Bao gồm khoá luận hoặc chuyên đề tốt nghiệp.",
-    status: true,
-    minCredit: 10,
-    knowledgeDomainID: 3,
-  },
-  {
-    id: 2,
-    name: "Thực tập doanh nghiệp, đồ án",
-    description: "Bao gồm thực tập tại doanh nghiệp và đồ án tốt nghiệp.",
-    status: true,
-    minCredit: 6,
-    knowledgeDomainID: 3,
-  },
-  {
-    id: 3,
-    name: "Môn học khác và tự chọn tự do",
-    description: "Các môn học khác và các môn tự chọn tự do.",
-    status: true,
-    minCredit: 8,
-    knowledgeDomainID: 2,
-  },
-  {
-    id: 4,
-    name: "Chuyên ngành",
-    description: "Gồm các môn học thuộc chuyên ngành.",
-    status: true,
-    minCredit: 14,
-    knowledgeDomainID: 2,
-  },
-  {
-    id: 5,
-    name: "Cơ sở ngành",
-    description: "Các môn học nền tảng cho ngành học.",
-    status: true,
-    minCredit: 49,
-    knowledgeDomainID: 2,
-  },
-  {
-    id: 6,
-    name: "Ngoại ngữ",
-    description: "Các môn học về ngoại ngữ.",
-    status: true,
-    minCredit: 12,
-    knowledgeDomainID: 1,
-  },
-  {
-    id: 7,
-    name: "Toán - Tin học - Khoa học tự nhiên",
-    description: "Gồm các môn học về toán, tin học và khoa học tự nhiên.",
-    status: true,
-    minCredit: 18,
-    knowledgeDomainID: 1,
-  },
-  {
-    id: 8,
-    name: "Lý luận chính trị và pháp luật",
-    description: "Các môn học về lý luận chính trị và pháp luật.",
-    status: true,
-    minCredit: 13,
-    knowledgeDomainID: 1,
-  },
-];
 
 const createData = async () => {
   await Account.bulkCreate(accounts);
@@ -829,6 +831,12 @@ const createData = async () => {
 
   // Create Majors
   await Major.bulkCreate(majors);
+
+  // Create KnowledgeDomain
+  await KnowledgeDomain.bulkCreate(knowledgeDomain);
+
+  // Create KnowledgeField
+  await KnowledgeField.bulkCreate(knowledgeField);
 
   // Create Subjects
   await Subject.bulkCreate(subjects);
@@ -850,12 +858,6 @@ const createData = async () => {
 
   // Create Awards
   await Award.bulkCreate(awards);
-
-  // Create KnowledgeDomain
-  await KnowledgeDomain.bulkCreate(knowledgeDomain);
-
-  // Create KnowledgeField
-  await KnowledgeField.bulkCreate(knowledgeField);
 };
 
 const checkAndCreateData = async () => {

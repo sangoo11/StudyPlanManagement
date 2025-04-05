@@ -8,6 +8,7 @@ const Student = require("../models/student.model");
 const Enrollment = require("../models/enrollment.model");
 const LearningOutcome = require("../models/learningOutcome.model");
 const LearningOutcomeScore = require("../models/learningOutcomeScore.model");
+const {normalizedPath} = require("../utils/utils");
 
 class SubjectService {
   static getAllSubject = async () => {
@@ -36,57 +37,40 @@ class SubjectService {
 
   static createSubject = async (
     majorID,
-    { subjectCode, subjectName, type, credit, description },
+    { subjectCode, subjectName, credit, description, knowledgeFieldID },
     image
   ) => {
     if (
       !subjectCode ||
       !subjectName ||
-      !type ||
       !credit ||
       !majorID ||
-      !image
+      !image ||
+      !knowledgeFieldID
     ) {
       throw new Error("Please provide all required fields");
     }
 
     const path = image.path;
-    const normalizedPath = path.replace(/\\/g, "/");
 
-    const majorExists = await Course.findByPk(majorID);
-    if (!majorExists) {
-      throw new Error("Major not found");
-    }
+    const codeExisted = await Subject.findOne({
+      where: {
+        subjectCode: subjectCode,
+      }
+    })
 
-    // Validate subject code format
-    const subjectCodeRegex = /^[A-Z]{2,4}\d{3}$/;
-    if (!subjectCodeRegex.test(subjectCode)) {
-      throw new Error("Invalid subject code format");
-    }
-    const subjectCodeExists = await Subject.findOne({
-      where: { subjectCode },
-    });
-    if (subjectCodeExists) {
-      throw new Error("Subject code already exists");
-    }
-
-    // Validate credit
-    if (credit < 1 || credit > 15) {
-      throw new Error("Credit must be between 1 and 15");
-    }
-
-    // Validate type
-    if (type !== "major" && type !== "core") {
-      throw new Error("Invalid subject type");
+    if (codeExisted) {
+      throw new Error('Code existed')
     }
 
     const subject = await Subject.create({
       subjectCode,
       subjectName,
-      type,
       credit,
       description,
-      subjectSyllabusUrl: normalizedPath,
+      knowledgeFieldID,
+      majorID,
+      image: normalizedPath(path),
     });
     if (!subject) throw new Error("Subject not created");
     return subject;
