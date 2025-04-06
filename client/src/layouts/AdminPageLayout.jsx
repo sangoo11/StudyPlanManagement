@@ -15,6 +15,7 @@ function AdminPageLayout(props) {
     const title5 = 'Subjects';
     const title6 = 'Award Student';
     const title7 = 'Active Teacher';
+    const title8 = 'Domain Knowledge';
     const navLinkStyles = ({ isActive }) => {
         return {
             color: isActive ? "#1DA599" : "black",
@@ -30,7 +31,7 @@ function AdminPageLayout(props) {
         <div>
             {/* Header */}
             <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
-                <div className="flex justify-center items-center space-x-12">
+                <div className="flex justify-center items-center space-x-4">
                     <div className='fixed left-0'>
                         <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{appName}</h1>
                     </div>
@@ -43,6 +44,7 @@ function AdminPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/admin/subjects">{title5}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/awardstudent">{title6}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/activeteacher">{title7}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/domainknowledge">{title8}</NavLink>
 
                     <button className='fixed right-10 space-x-2'>
                         <div className='fixed w-6 h-6 items-center justify-center'>
