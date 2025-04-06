@@ -34,7 +34,6 @@ class SubjectController {
     new CREATED({
       message: "Create Subject Success",
       metadata: await SubjectService.createSubject(
-        req.params.majorID,
         req.body,
         req.file
       ),
