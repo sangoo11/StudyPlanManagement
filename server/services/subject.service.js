@@ -36,7 +36,6 @@ class SubjectService {
   };
 
   static createSubject = async (
-    majorID,
     { subjectCode, subjectName, credit, description, knowledgeFieldID },
     image
   ) => {

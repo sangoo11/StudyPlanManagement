@@ -29,7 +29,7 @@ router.get(
 
 // Create a new subject
 router.post(
-  "/create-new-subject/:majorID",
+  "/create-new-subject",
   upload.single("image"),
   asyncHandler(SubjectController.createSubject)
 );
