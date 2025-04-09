@@ -1,1 +1,5 @@
-export const normalizedPath = (path)  => path.replace(/\\/g, "/");
+const normalizedPath = (path) =>
+    path.replace(/\\/g, "/").replace(/^public\//, "");
+  
+
+module.exports = { normalizedPath };

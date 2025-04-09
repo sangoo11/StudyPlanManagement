@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/sequelize");
+const KnowledgeField = require("./knowledgeField.model");
 
 const Subject = sequelize.define(
   "Subject",
@@ -44,6 +45,14 @@ const Subject = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    knowledgeFieldID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "KnowledgeField",
+        key: "id",
+      }, 
     },
   },
   {
