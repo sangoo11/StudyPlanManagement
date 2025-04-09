@@ -10,7 +10,6 @@ import DeleteClassroom from "./components/DeleteClassroom";
 import AddSubject from "./components/AddSubject";
 import DeleteSubject from "./components/DeleteSubject";
 import EditSubject from "./components/EditSubject";
-// import EditSubjectInCriteria from "./components/EditSubjectLevelInLO";
 
 function SubjectManagement() {
     const navigate = useNavigate();
@@ -25,13 +24,9 @@ function SubjectManagement() {
         editSubject: { visible: false, subjectId: null },
         deleteSubject: { visible: false, subjectId: null },
         addClassroom: { visible: false, subjectId: null },
-        editClassroom: { visible: false, courseId: null },
         deleteClassroom: { visible: false, courseId: null },
-        detailClassroom: { visible: false, courseId: null },
-        editSubjectInCriteria: { visible: false, lOID: null },
     });
 
-    // Toggle visibility of classes
     const toggleClassesVisibility = (subjectId) => {
         setVisibleClasses((prev) => ({
             ...prev,
@@ -39,7 +34,6 @@ function SubjectManagement() {
         }));
     };
 
-    // Fetch data and map courses with subjects
     const fetchData = async () => {
         try {
             const [subjectRes, courseRes] = await Promise.all([
@@ -50,7 +44,6 @@ function SubjectManagement() {
             const subjects = subjectRes.data.metadata || [];
             const courses = courseRes.data.metadata || [];
 
-            // Map courses to subjects
             const mapped = subjects.map((subject) => ({
                 ...subject,
                 courses: courses.filter((course) => course.subjectID === subject.id),
@@ -62,6 +55,7 @@ function SubjectManagement() {
             console.error("Error fetching data:", error);
         }
     };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -81,7 +75,7 @@ function SubjectManagement() {
                 console.error("Error fetching learning outcomes:", error);
             }
         } else {
-            setLearningOutcomes([]); // Clear outcomes when no subject is visible
+            setLearningOutcomes([]);
         }
     };
 
@@ -89,14 +83,12 @@ function SubjectManagement() {
         fetchLearningOutcomes();
     }, [visibleClasses]);
 
-
     return (
-        <div className="h-auto mt-[8vh] bg-gray-50 p-6">
+        <div className="min-h-screen mt-[8vh] bg-gray-50 p-6">
             <h1 className="text-3xl font-bold text-center text-[#1DA599] mb-6">
                 Quản lý môn học
             </h1>
 
-            {/* Major Filter */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex">
                     <label className="text-gray-700 font-medium mr-4 mt-2">Chuyên ngành:</label>
@@ -118,18 +110,25 @@ function SubjectManagement() {
                 </button>
             </div>
 
-            {/* Subject List */}
             <div className="space-y-4">
                 {mappedCourses.map((subject) => (
                     <div key={subject.id} className="bg-white shadow-lg rounded-lg border border-gray-300">
-                        {/* Subject Header */}
-                        <div className="p-4 bg-[#f9f9f9] border-b border-gray-200 flex-col justify-between items-center">
+                        <div className="p-4 bg-[#f9f9f9] border-b border-gray-200">
                             <div className="flex justify-between items-center">
                                 <div>
                                     <h2 className={`font-bold ${subject.active ? 'text-green-500' : 'text-red-500'}`}>
                                         {subject.subjectCode} - {subject.subjectName}
                                     </h2>
-                                    <a target="_blank" className="text-base font-medium text-[#1A56DB] underline" href={subject.subjectSyllabusUrl}>{subject.subjectCode} Syllabus</a>
+                                    <a
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-base font-medium text-[#1A56DB] underline"
+                                      href={`http://localhost:8080/${subject.image}`}
+                                    >
+                                      {subject.subjectCode} Syllabus
+                                    </a>
+
+
                                 </div>
                                 <div className="flex">
                                     <button
@@ -160,21 +159,17 @@ function SubjectManagement() {
                                     >
                                         <img
                                             src={visibleClasses[subject.id] ? ShowLess : ShowMore}
-                                            alt={visibleClasses[subject.id] ? "Show Less" : "Show More"}
+                                            alt="Toggle"
                                         />
                                     </button>
                                 </div>
                             </div>
-
-
-
                         </div>
-                        {/* Classes Table */}
+
                         {visibleClasses[subject.id] && (
                             <div className="p-4">
-                                {/* Learning Outcomes Table */}
-                                <div className="flex mt-8 justify-center mb-[4vw] items-center">
-                                    <table className="w-[40vw] border-collapse border border-gray-300 items-center">
+                                <div className="flex mt-8 justify-center mb-12 items-center">
+                                    <table className="w-[40vw] border-collapse border border-gray-300">
                                         <thead>
                                             <tr className="bg-gray-200">
                                                 <th className="border border-gray-300 px-4 py-2">Mã chuẩn đầu ra</th>
@@ -190,17 +185,6 @@ function SubjectManagement() {
                                             ))}
                                         </tbody>
                                     </table>
-                                    {/* <button
-                                        className="px-4 py-2 text-white bg-[#1DA599] rounded-md mt-4 h-[6vh] ml-[10vw] hover:bg-green-400 font-bold"
-                                        onClick={() =>
-                                            setModals((prev) => ({
-                                                ...prev,
-                                                editSubjectInCriteria: { visible: true, lOID: learningOutcomes.id },
-                                            }))
-                                        }
-                                    >
-                                        Chỉnh sửa mức độ
-                                    </button> */}
                                 </div>
 
                                 {subject.courses.map((course) => (
@@ -244,43 +228,35 @@ function SubjectManagement() {
                 ))}
             </div>
 
-            {/* Modals */}
-            {modals.addSubject && <AddSubject onClose={() => setModals((prev) => ({ ...prev, addSubject: false }))} onAddedSubject = {fetchData} />}
+            {modals.addSubject && <AddSubject onClose={() => setModals((prev) => ({ ...prev, addSubject: false }))} onAddedSubject={fetchData} />}
             {modals.editSubject.visible && (
                 <EditSubject
                     subjectID={modals.editSubject.subjectId}
                     onClose={() => setModals((prev) => ({ ...prev, editSubject: { visible: false, subjectId: null } }))}
-                    onEditedSubject = {fetchData}
+                    onEditedSubject={fetchData}
                 />
             )}
             {modals.deleteSubject.visible && (
                 <DeleteSubject
                     subjectID={modals.deleteSubject.subjectId}
                     onClose={() => setModals((prev) => ({ ...prev, deleteSubject: { visible: false, subjectId: null } }))}
-                    onDeletedSubject = {fetchData}
+                    onDeletedSubject={fetchData}
                 />
             )}
             {modals.addClassroom.visible && (
                 <AddClassroom
                     subjectID={modals.addClassroom.subjectId}
                     onClose={() => setModals((prev) => ({ ...prev, addClassroom: { visible: false, subjectId: null } }))}
-                    onAddedCourse = {fetchData}
+                    onAddedCourse={fetchData}
                 />
             )}
             {modals.deleteClassroom.visible && (
                 <DeleteClassroom
                     courseID={modals.deleteClassroom.courseId}
                     onClose={() => setModals((prev) => ({ ...prev, deleteClassroom: { visible: false, courseId: null } }))}
-                    onDeletedCourse = {fetchData}
+                    onDeletedCourse={fetchData}
                 />
             )}
-            {/* {modals.editSubjectInCriteria.visible && (
-                <EditSubjectInCriteria
-                    lOID={modals.editSubjectInCriteria.lOID}
-                    onClose={() => setModals((prev) => ({ ...prev, editSubjectInCriteria: { visible: false, lOID: null } }))}
-                    onEditedCourse = {fetchData}
-                />
-            )} */}
         </div>
     );
 }

@@ -36,7 +36,7 @@ class SubjectService {
   };
 
   static createSubject = async (
-    { subjectCode, subjectName, credit, description, knowledgeFieldID },
+    { subjectCode, subjectName, credit, description, knowledgeFieldID, majorID },
     image
   ) => {
     if (

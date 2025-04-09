@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function AddSubject({ onClose, onAddedSubject }) {
     const [formData, setFormData] = useState({
         subjectCode: "",
         subjectName: "",
-        type: "core", // Default value
         credit: "",
         majorID: "",
+        description: "",
+        knowledgeFieldID: "",
+        image: null,
     });
 
     const [error, setError] = useState("");
+    const [preview, setPreview] = useState(null); // Optional: image preview
 
-    // Handle input change
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -21,38 +24,78 @@ function AddSubject({ onClose, onAddedSubject }) {
         }));
     };
 
-    // Handle form submission
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (/\s/.test(file.name)) {
+                setError("Tên file ảnh không được chứa khoảng trắng. Vui lòng đổi tên, ví dụ: SyllabusProfile.png");
+                return;
+            }
+            setFormData((prevData) => ({
+                ...prevData,
+                image: file,
+            }));
+            setPreview(URL.createObjectURL(file));
+            setError(""); // Clear error if everything is good
+        }
+    };
+
+    const isFormValid = () => {
+        const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
+    
+        if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
+            setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
+            return false;
+        }
+    
+        if (/\s/.test(image.name)) {
+            setError("Tên file ảnh không được chứa khoảng trắng. Vui lòng đổi tên.");
+            return false;
+        }
+    
+        return true;
+    };
+    
+    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { subjectCode, subjectName, type, credit, majorID} = formData;
-
-        // Validate fields
-        if (!subjectCode || !subjectName || !type || !credit) {
-            setError("Vui lòng điền đầy đủ thông tin.");
+        if (!isFormValid()) return;
+    
+        const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
+    
+        if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
+            setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
             return;
         }
+    
         try {
+            const form = new FormData();
+            Object.entries(formData).forEach(([key, value]) => form.append(key, value));
+    
+            console.log([...form.entries()]); // Debug
+    
             const response = await axios.post(
-                `http://localhost:8080/v1/api/subject/create-new-subject/${majorID}`,
+                `http://localhost:8080/v1/api/subject/create-new-subject/`,
+                form,
                 {
-                    subjectCode,
-                    subjectName,
-                    type,
-                    credit,
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
                 }
             );
-
+    
             if (response.status === 201) {
-                alert("Môn học mới đã được thêm thành công!");
-                if (onAddedSubject) {
-                    onAddedSubject();
-                }
-                onClose(); // Close the modal
+                toast.success("Môn học mới đã được thêm thành công!");
+                onAddedSubject?.();
+                onClose();
             } else {
+                toast.error("Có lỗi xảy ra. Vui lòng thử lại.");
                 setError("Có lỗi xảy ra. Vui lòng thử lại.");
             }
         } catch (err) {
+            toast.error("Có lỗi xảy ra. Vui lòng thử lại.");
             console.error("Error creating subject:", err);
             setError("Không thể thêm môn học. Vui lòng kiểm tra kết nối.");
         }
@@ -60,12 +103,12 @@ function AddSubject({ onClose, onAddedSubject }) {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-            <div className="flex flex-col w-[50vw] bg-gray-200 p-6 rounded">
+            <div className="flex flex-col w-[50vw] bg-gray-200 p-6 rounded max-h-[90vh] overflow-y-auto">
                 <h2 className="text-3xl font-bold text-center mb-4">Thêm môn học mới</h2>
 
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-                <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+                <form className="flex flex-col h-auto space-y-4" onSubmit={handleSubmit}>
                     {/* Subject Code */}
                     <div>
                         <label className="block text-gray-700">Mã môn học:</label>
@@ -105,18 +148,29 @@ function AddSubject({ onClose, onAddedSubject }) {
                         />
                     </div>
 
-                    {/* Type */}
+                    {/* Description */}
                     <div>
-                        <label className="block text-gray-700">Loại môn học:</label>
-                        <select
-                            name="type"
-                            value={formData.type}
+                        <label className="block text-gray-700">Mô tả:</label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded bg-white"
-                        >
-                            <option value="major">Chuyên ngành</option>
-                            <option value="core">Cơ sở ngành</option>
-                        </select>
+                            className="w-full px-4 py-2 border rounded"
+                            placeholder="Nhập mô tả môn học"
+                        />
+                    </div>
+
+                    {/* Knowledge Field ID */}
+                    <div>
+                        <label className="block text-gray-700">Mã lĩnh vực kiến thức:</label>
+                        <input
+                            type="text"
+                            name="knowledgeFieldID"
+                            value={formData.knowledgeFieldID}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded"
+                            placeholder="Nhập mã lĩnh vực"
+                        />
                     </div>
 
                     {/* Major ID */}
@@ -130,6 +184,27 @@ function AddSubject({ onClose, onAddedSubject }) {
                             className="w-full px-4 py-2 border rounded"
                             placeholder="Nhập mã chuyên ngành"
                         />
+                    </div>
+
+                    {/* Image upload */}
+                    <div>
+                        <label className="block text-gray-700">Hình ảnh:</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="w-full px-4 py-2 border rounded bg-white"
+                        />
+                        <p className="text-sm text-red-600 mt-1">
+                            ⚠️ <strong>Lưu ý:</strong> Tên file ảnh <span className="font-semibold">không nên chứa khoảng trắng</span>. Ví dụ: <code>SyllabusProfile.png</code>
+                        </p>
+                        {preview && (
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="mt-2 w-32 h-32 object-cover rounded border"
+                            />
+                        )}
                     </div>
 
                     {/* Buttons */}

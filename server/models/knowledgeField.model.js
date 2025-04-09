@@ -29,9 +29,17 @@ const KnowledgeField = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
+    knowledgeDomainID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "KnowledgeDomain",
+        key: "id",
+      }, 
+    },
   },
   {
-    timestamps: false,
+    timestamps: false,  
   }
 );
 
