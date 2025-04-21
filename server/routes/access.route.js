@@ -8,5 +8,7 @@ const router = express.Router();
 //auth API
 router.post('/signup', asyncHandler(AccessController.SignUp));
 router.post('/signin', asyncHandler(AccessController.SignIn));
+router.post('/send-code', asyncHandler(AccessController.SendCode));
+router.post('/verify-code', asyncHandler(AccessController.VerifyCode));
 
 module.exports = router;

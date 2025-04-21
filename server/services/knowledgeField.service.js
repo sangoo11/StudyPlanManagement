@@ -70,8 +70,6 @@ class KnowledgeFieldService {
             studentSubjects,
         };
     }
-
-
 }
 
 module.exports = new KnowledgeFieldService();

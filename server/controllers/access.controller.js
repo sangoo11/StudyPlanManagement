@@ -23,6 +23,28 @@ class AccessController {
             },
         }).send(res);
     };
+
+    //handle send code
+    SendCode = async (req, res, next) => {
+        new CREATED({
+            message: "Send Code Success",
+            metadata: await AccessService.sendCode(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
+
+    //handle verify code
+    VerifyCode = async (req, res, next) => {
+        new CREATED({
+            message: "Verify Code Success",
+            metadata: await AccessService.verifyCode(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 }
 
 module.exports = new AccessController();

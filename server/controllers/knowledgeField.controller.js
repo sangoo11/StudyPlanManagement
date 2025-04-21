@@ -64,6 +64,26 @@ class KnowledgeFieldController {
       },
     }).send(res);
   };
+
+    addSubjectToKnowledgeField = async (req, res, next) => {
+        new CREATED({
+        message: "Add Subject To Knowledge Field Success",
+        metadata: await KnowledgeFieldService.addSubjectToKnowledgeField(
+            req.params.id,
+            req.params.subjectID
+        ),
+        }).send(res);
+    };
+
+    deleteSubjectFromKnowledgeField = async (req, res, next) => {
+        new CREATED({
+        message: "Delete Subject From Knowledge Field Success",
+        metadata: await KnowledgeFieldService.deleteSubjectFromKnowledgeField(
+            req.params.id,
+            req.params.subjectID
+        ),
+        }).send(res);
+    };
 }
 
 module.exports = new KnowledgeFieldController();

@@ -7,7 +7,9 @@ const sequelize = require("./configs/sequelize");
 
 // const firebase = require("./configs/firebase");
 
-const app = require("./app"); // Import app setup
+const app = require("./app");
+// const connectDB = require("./configs/mongodb");
+// connectDB();
 
 const server = http.createServer(app);
 
