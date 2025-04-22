@@ -12,6 +12,11 @@ router.delete(
   "/:id",
   asyncHandler(KnowledgeFieldController.deleteKnowledgeField)
 );
+router.post('/:id/subject/:id', asyncHandler(KnowledgeFieldController.addSubjectToKnowledgeField));
+router.delete(
+  "/:id/subject/:id",
+  asyncHandler(KnowledgeFieldController.deleteSubjectFromKnowledgeField)
+);
 
 router.get("/student/:studentID", asyncHandler(KnowledgeFieldController.getKnowledgeFieldStudentLearn));
 
