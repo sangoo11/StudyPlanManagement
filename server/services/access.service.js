@@ -22,9 +22,19 @@ class AccessService {
     accountableType,
     major,
   }) => {
-    if (!email || !password || !fullname || !accountableType || !major) {
-      throw new Error("Missing input fields");
-    }
+    console.log("SignUp", {
+      email,
+      password,
+      fullname,
+      accountableType,
+      major,
+    });
+    if (!email) throw new Error("Missing email");
+    if (!password) throw new Error("Missing password");
+    if (!fullname) throw new Error("Missing fullname");
+    if (!accountableType) throw new Error("Missing accountableType");
+    if (!major) throw new Error("Missing major");
+
     if (!validator.isEmail(email)) {
       throw new Error("Invalid email format");
     }
@@ -212,6 +222,26 @@ class AccessService {
       accessToken,
       expiresIn: process.env.TOKEN_EXPIRE,
     };
+  };
+
+  static resetPassword = async ({ email, password }) => {
+    if (!email) throw new Error("Missing email");
+    if (!validator.isEmail(email)) throw new Error("Invalid email format");
+
+    if (!password) throw new Error("Missing password");
+
+    const foundAccount = await Account.findOne({ where: { email } });
+    if (!foundAccount) throw new Error("Invalid email or password");
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const updatedAccount = await Account.update(
+      { password: hashPassword },
+      { where: { email } }
+    );
+    if (!updatedAccount) throw new Error("Cannot update password");
+
+    return updatedAccount;
   };
 }
 
