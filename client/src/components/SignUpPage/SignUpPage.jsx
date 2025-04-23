@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router";
 import { jwtDecode } from "jwt-decode";
+import {signUp} from "../../services/access.js";
 
 const SignUpPage = () => {
 
@@ -57,32 +58,22 @@ const SignUpPage = () => {
   const handleSignUp = async (event) => {
     event.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:8080/v1/api/access/signup', {
-        fullname: inputValue.fullname,
-        email: inputValue.email,
-        password: inputValue.password,
-        accountableType: inputValue.accountableType,
-        major: inputValue.major,
-      });
+    // Validate the input values
+    console.log(inputValue);
 
-      const decoded = jwtDecode(response.data.metadata.accessToken);
+    // Initiate sign-up process
+    const response = await signUp(
+        inputValue.fullname,
+        inputValue.email,
+        inputValue.password,
+        inputValue.accountableType,
+        inputValue.major
+    );
 
-      localStorage.setItem('accountID', decoded.accountID);
-      localStorage.setItem('accountableType', decoded.accountableType);
+    console.log(response)
 
-      if (decoded.accountableType === 'teacher') {
-        alert('Your account has been created successfully. Please active to continue.');
-        navigate('/signin');
-      }
-      if (decoded.accountableType === 'student') {
-        navigate('/student');
-      }
+    // redirect to the enter code page
 
-    } catch (error) {
-      const errorMessage = error.response.data.message;
-      console.error('Error during signup:', errorMessage);
-    }
   };
 
 
