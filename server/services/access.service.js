@@ -22,9 +22,19 @@ class AccessService {
     accountableType,
     major,
   }) => {
-    if (!email || !password || !fullname || !accountableType || !major) {
-      throw new Error("Missing input fields");
-    }
+    console.log("SignUp", {
+      email,
+      password,
+      fullname,
+      accountableType,
+      major,
+    });
+    if (!email) throw new Error("Missing email");
+    if (!password) throw new Error("Missing password");
+    if (!fullname) throw new Error("Missing fullname");
+    if (!accountableType) throw new Error("Missing accountableType");
+    if (!major) throw new Error("Missing major");
+
     if (!validator.isEmail(email)) {
       throw new Error("Invalid email format");
     }
@@ -103,6 +113,60 @@ class AccessService {
       console.error("Error sending email:", error);
       throw new Error("Error sending email");
     }
+    const checkStatus = foundAccount.active;
+    if (!checkStatus) throw new AuthFailureError("Account is not active");
+
+    const payload = {
+      accountableType: foundAccount.accountableType,
+      accountID: foundAccount.id,
+    };
+
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: process.env.TOKEN_EXPIRE,
+    });
+
+    return {
+      accessToken,
+      expiresIn: process.env.TOKEN_EXPIRE,
+    };
+  };
+
+  static sendCode = async ({ email }) => {
+    if (!email) throw new Error("Missing input fields");
+    const randomSixDigit = Math.floor(100000 + Math.random() * 900000);
+
+    const transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      service: process.env.SMTP_SERVICE,
+      port: process.env.SMTP_PORT,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_ADDRESS,
+      to: email,
+      subject: "Verification Code",
+      text: `Your verification code is ${randomSixDigit}`,
+      html: `<p>Your verification code is <strong>${randomSixDigit}</strong></p>`,
+    };
+
+    try {
+      await transport.sendMail(mailOptions);
+      console.log("Email sent successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      throw new Error("Error sending email");
+    }
+
+    // save code to db
+    const foundCode = await VerificationCode.create({
+      email,
+      code: randomSixDigit,
+    });
 
     // save code to db
     const foundCode = await VerificationCode.create({
@@ -212,6 +276,26 @@ class AccessService {
       accessToken,
       expiresIn: process.env.TOKEN_EXPIRE,
     };
+  };
+
+  static resetPassword = async ({ email, password }) => {
+    if (!email) throw new Error("Missing email");
+    if (!validator.isEmail(email)) throw new Error("Invalid email format");
+
+    if (!password) throw new Error("Missing password");
+
+    const foundAccount = await Account.findOne({ where: { email } });
+    if (!foundAccount) throw new Error("Invalid email or password");
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const updatedAccount = await Account.update(
+      { password: hashPassword },
+      { where: { email } }
+    );
+    if (!updatedAccount) throw new Error("Cannot update password");
+
+    return updatedAccount;
   };
 }
 
