@@ -80,6 +80,7 @@ import LearningResults from './components/StudentPage/LearningResults/LearningRe
 import StudentLearningOutcome from './components/StudentPage/LearningOutcome/LearningOutcome'
 import StudentAccount from './components/StudentPage/StudentAccount';
 import Award from './components/StudentPage/Award/Award';
+import StudentDomainField from './components/StudentPage/DomainField/DomainField';
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
@@ -118,6 +119,7 @@ function App() {
           <Route path='student/outcome' element={<StudentLearningOutcome />} />
           <Route path='student/award' element={<Award />} />
           <Route path='student/accountstudent/:accountID' element={<StudentAccount />} />
+          <Route path='student/domainfield' element={<StudentDomainField />} />
         </Route>
 
         <Route element={<TeacherPageLayout />}>
