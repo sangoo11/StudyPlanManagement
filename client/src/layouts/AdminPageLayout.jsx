@@ -16,6 +16,8 @@ function AdminPageLayout(props) {
     const title6 = 'Award Student';
     const title7 = 'Active Teacher';
     const title8 = 'Domain Knowledge';
+    const title9 = 'Domain Field';
+
     const navLinkStyles = ({ isActive }) => {
         return {
             color: isActive ? "#1DA599" : "black",
@@ -40,11 +42,13 @@ function AdminPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/admin/statistics" >{title1}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/students">{title2}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/teachers">{title3}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/activeteacher">{title7}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/outputcriteria">{title4}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/subjects">{title5}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/awardstudent">{title6}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/activeteacher">{title7}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/domainknowledge">{title8}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/domainfield">{title9}</NavLink>
+
 
                     <button className='fixed right-10 space-x-2'>
                         <div className='fixed w-6 h-6 items-center justify-center'>

@@ -2,28 +2,32 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function EditDN({ onClose, id, onEditedDN }) {
+function EditDomainField({ id ,onClose, onEditedDF }) {
     const [form, setForm] = useState({
         name: "",
         description: "",
         minCredit: "",
         active: true,
+        knowledgeDomainID: null,
     });
 
     // Fetch current data
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:8080/v1/api/knowledge-domain`);
-                const found = res.data.metadata.find(item => item.id === id);
+                console.log(id);
+                const res = await axios.get(`http://localhost:8080/v1/api/knowledge-field/${id}`);
+                const found = res.data.metadata;
                 if (found) {
                     setForm({
                         name: found.name,
                         description: found.description,
                         minCredit: found.minCredit,
-                        active: found.active
+                        active: found.active,
+                        knowledgeDomainID: found.knowledgeDomainID
                     });
                 }
+                
             } catch (err) {
                 toast.error("Không thể tải dữ liệu.");
             }
@@ -42,19 +46,31 @@ function EditDN({ onClose, id, onEditedDN }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.put(`http://localhost:8080/v1/api/knowledge-domain/${id}`, {
-                ...form,
-                minCredit: parseInt(form.minCredit)
-            });
-            if (res.status === 201) {
+            const payload = {
+                name: form.name,
+                description: form.description,
+                minCredit: parseInt(form.minCredit), // Ensure minCredit is an integer
+                active: form.active,
+            };
+
+            console.log("Sending payload:", payload); // Log the payload being sent
+
+            const res = await axios.put(`http://localhost:8080/v1/api/knowledge-field/${id}`, payload);
+
+            // Check if the response status is 200 or 201
+            if (res.status === 200 || res.status === 201) {
                 toast.success("Cập nhật khối kiến thức thành công!");
-                onEditedDN(); 
-                onClose(); 
+                onEditedDF();  // Call the callback to update the list
+                onClose();     // Close the modal
+            } else {
+                toast.error("Có lỗi xảy ra khi cập nhật dữ liệu.");
             }
         } catch (err) {
+            console.error("Error during update:", err);
             toast.error("Tên đã tồn tại hoặc có lỗi xảy ra.");
         }
     };
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
@@ -76,6 +92,15 @@ function EditDN({ onClose, id, onEditedDN }) {
                         value={form.description}
                         onChange={handleChange}
                         placeholder="Mô tả"
+                        required
+                        className="p-2 rounded w-full"
+                    />
+                    <input
+                        type="number"
+                        name="minCredit"
+                        value={form.minCredit}
+                        onChange={handleChange}
+                        placeholder="Số tín chỉ tối thiểu"
                         required
                         className="p-2 rounded w-full"
                     />
@@ -110,4 +135,4 @@ function EditDN({ onClose, id, onEditedDN }) {
     );
 }
 
-export default EditDN;
+export default EditDomainField;

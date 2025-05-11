@@ -168,11 +168,6 @@ class AccessService {
       code: randomSixDigit,
     });
 
-    // save code to db
-    const foundCode = await VerificationCode.create({
-      email,
-      code: randomSixDigit,
-    });
 
     if (!foundCode) throw new Error("Cannot save code to database");
 
