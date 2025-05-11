@@ -28,6 +28,8 @@ import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage
 import DetailClassroom from './components/AdminPage/SubjectsManagePage/components/DetailClassroom';
 import ActiveTeacher from './components/AdminPage/ActiveTeacher/ActiveTeacher';
 import AwardStudent from './components/AdminPage/AwardStudent/AwardStudent';
+import DomainKnowledge from './components/AdminPage/DomainKnowledge/DomainKnowledge';
+import DomainField from './components/AdminPage/DomainField/DomainField';
 
 //Modal
 import AddClassroom from './components/AdminPage/SubjectsManagePage/components/AddClassroom';
@@ -64,10 +66,13 @@ import AddSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePag
 import DeleteSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/DeleteSubjectInCriteria'
 import EditSubjectInCriteria from './components/AdminPage/OutputCriteriaManagePage/EditSubjectInCriteria'
 
-import DomainKnowledge from './components/AdminPage/DomainKnowledge/DomainKnowledge';
 import AddKnowledge from './components/AdminPage/DomainKnowledge/AddDN';
 import EditKnowledge from './components/AdminPage/DomainKnowledge/EditDN';
 import DeleteKnowledge from './components/AdminPage/DomainKnowledge/DeleteDN';
+
+import AddDomainField from './components/AdminPage/DomainField/AddDF';
+import EditDomainField from './components/AdminPage/DomainField/EditDF';
+import DeleteDomainField from './components/AdminPage/DomainField/DeleteDF';
 
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
@@ -134,6 +139,8 @@ function App() {
           <Route path='activeteacher' element={<ActiveTeacher />} />
           <Route path='awardstudent' element={<AwardStudent />} />
           <Route path='domainknowledge' element={<DomainKnowledge />}/>
+          <Route path='domainfield' element={<DomainField />}/>
+
         </Route>
 
         {/* Admin modals */}
@@ -174,6 +181,10 @@ function App() {
         <Route path='admin/domainknowledge/adddn' element={<AddKnowledge />} />
         <Route path='admin/domainknowledge/editdn' element={<EditKnowledge />} />
         <Route path='admin/domainknowledge/deletedn' element={<DeleteKnowledge />} />
+
+        <Route path='admin/domainfield/adddf' element={<AddDomainField />} />
+        <Route path='admin/domainfield/editdf' element={<EditDomainField />} />
+        <Route path='admin/domainfield/deletedf' element={<DeleteDomainField />} />
         {/* Catch-all route for undefined paths */}
         <Route path='*' element={<ErrorPage />} />
       </Routes>
