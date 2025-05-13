@@ -45,6 +45,17 @@ class AccessController {
             },
         }).send(res);
     };
+
+    //handle create account
+    CreateAccount = async (req, res, next) => {
+        new CREATED({
+            message: "Create Account Success",
+            metadata: await AccessService.createAccount(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 }
 
 module.exports = new AccessController();

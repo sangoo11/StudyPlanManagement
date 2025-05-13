@@ -10,5 +10,7 @@ router.post('/signup', asyncHandler(AccessController.SignUp));
 router.post('/signin', asyncHandler(AccessController.SignIn));
 router.post('/send-code', asyncHandler(AccessController.SendCode));
 router.post('/verify-code', asyncHandler(AccessController.VerifyCode));
+router.post('/create-account', asyncHandler(AccessController.CreateAccount));
+
 
 module.exports = router;

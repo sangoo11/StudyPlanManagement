@@ -28,11 +28,6 @@ class AccessService {
     if (!validator.isEmail(email)) {
       throw new Error("Invalid email format");
     }
-    if (validator.isStrongPassword(password)) {
-      throw new Error(
-        "Password is too weak. { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }"
-      );
-    }
     const foundUser = await Account.findOne({ where: { email } });
     if (foundUser) throw new Error("Email already exists");
 
