@@ -89,6 +89,7 @@ import Statistics from './components/TeacherPage/Statistics/Statistics';
 import CourseDetail from './components/TeacherPage/CourseDetail';
 import EditPoint from './components/TeacherPage/EditPoint';
 import TeacherAccount from './components/TeacherPage/TeacherAccount';
+import CodeVerifyPage from './components/CodeVerifyPage/CodeVerifyPage';
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn');
@@ -109,6 +110,7 @@ function App() {
 
         <Route element={<SignUpInLayout />}>
           <Route path='signin' element={<SignInPage />} />
+          <Route path='verify-code' element={<CodeVerifyPage />} />
           <Route path='signup' element={<SignUpPage />} />
         </Route>
 
@@ -142,7 +144,6 @@ function App() {
           <Route path='awardstudent' element={<AwardStudent />} />
           <Route path='domainknowledge' element={<DomainKnowledge />}/>
           <Route path='domainfield' element={<DomainField />}/>
-
         </Route>
 
         {/* Admin modals */}
@@ -205,10 +206,10 @@ function App() {
       />
 
     </>
-    
 
-    
-    
+
+
+
   );
 }
 
