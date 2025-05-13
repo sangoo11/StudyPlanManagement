@@ -1,9 +1,7 @@
 import SignUpPicture from '../../assets/images/signup.png';
 import React, { useState } from "react";
-import axios from 'axios'
 import { useNavigate } from "react-router";
-import { jwtDecode } from "jwt-decode";
-import {signUp} from "../../services/access.js";
+import { signUp } from "../../services/auth";
 
 const SignUpPage = () => {
 
@@ -30,16 +28,20 @@ const SignUpPage = () => {
   const validate = () => {
     if (!inputValue.fullname.trim() || inputValue.fullname.length < 2) {
       alert("* Full Name must be at least 2 characters.");
+      return false;
     } else if (!/^[A-Za-z\s]+$/.test(inputValue.fullname)) {
       alert("* Full Name must contain only alphabets.");
+      return false;
     }
 
     if (!inputValue.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValue.email)) {
       alert("* Invalid email address.");
+      return false;
     }
 
     if (!inputValue.password || inputValue.password.length < 8) {
       alert("* Password must be at least 8 characters.");
+      return false;
     } else if (
       !/[A-Z]/.test(inputValue.password) ||
       !/[a-z]/.test(inputValue.password) ||
@@ -47,11 +49,25 @@ const SignUpPage = () => {
       !/[!@#$%^&*]/.test(inputValue.password)
     ) {
       alert("* Password must contain at least one uppercase letter, one lowercase letter, one digit and one special character.");
+      return false;
     }
 
     if (inputValue.confirmPassword !== inputValue.password) {
       alert("* Passwords do not match.");
+      return false;
     }
+
+    if (!inputValue.accountableType) {
+      alert("* Please select an account type (Teacher or Student).");
+      return false;
+    }
+
+    if (!inputValue.major.trim()) {
+      alert("* Please enter your major.");
+      return false;
+    }
+
+    return true;
   };
 
   // Handle form submission
@@ -59,21 +75,38 @@ const SignUpPage = () => {
     event.preventDefault();
 
     // Validate the input values
-    console.log(inputValue);
+    if (!validate()) {
+      return;
+    }
 
-    // Initiate sign-up process
-    const response = await signUp(
+    try {
+      // Initiate sign-up process
+      const response = await signUp(
         inputValue.fullname,
         inputValue.email,
         inputValue.password,
         inputValue.accountableType,
         inputValue.major
-    );
+      );
 
-    console.log(response)
+      alert("Check your email to receive verification code")
 
-    // redirect to the enter code page
+      // Store user info in localStorage
+      const userInfo = {
+        fullname: inputValue.fullname,
+        email: inputValue.email,
+        password: inputValue.password,
+        accountableType: inputValue.accountableType,
+        major: inputValue.major
+      };
+      localStorage.setItem('user-info', JSON.stringify(userInfo));
 
+      // Navigate to verify code page
+      navigate('/verify-code');
+    } catch (error) {
+      console.error('Signup failed:', error);
+      alert('Signup failed. Please try again.');
+    }
   };
 
 
@@ -144,12 +177,12 @@ const SignUpPage = () => {
               </label>
             </div>
           </div>
-          <button onClick={handleSignUp} className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign Up</button>
-          <button onClick={() => navigate('/signin')} className="w-full underline">Already have account?</button>
+          <button type="submit" className="w-full text-white font-medium py-1 px-3 bg-yellow-500 hover:bg-yellow-600 rounded mt-2">Sign Up</button>
+          <button type="button" onClick={() => navigate('/signin')} className="w-full underline">Already have account?</button>
         </form>
       </div>
       <div className="flex-1">
-        <img className="w-3/4" src={SignUpPicture}></img>
+        <img className="w-3/4" src={SignUpPicture} alt="Sign Up"></img>
       </div>
     </div>
   );

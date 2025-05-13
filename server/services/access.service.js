@@ -22,26 +22,11 @@ class AccessService {
     accountableType,
     major,
   }) => {
-    console.log("SignUp", {
-      email,
-      password,
-      fullname,
-      accountableType,
-      major,
-    });
-    if (!email) throw new Error("Missing email");
-    if (!password) throw new Error("Missing password");
-    if (!fullname) throw new Error("Missing fullname");
-    if (!accountableType) throw new Error("Missing accountableType");
-    if (!major) throw new Error("Missing major");
-
+    if (!email || !password || !fullname || !accountableType || !major) {
+      throw new Error("Missing input fields");
+    }
     if (!validator.isEmail(email)) {
       throw new Error("Invalid email format");
-    }
-    if (validator.isStrongPassword(password)) {
-      throw new Error(
-        "Password is too weak. { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }"
-      );
     }
     const foundUser = await Account.findOne({ where: { email } });
     if (foundUser) throw new Error("Email already exists");
@@ -222,26 +207,6 @@ class AccessService {
       accessToken,
       expiresIn: process.env.TOKEN_EXPIRE,
     };
-  };
-
-  static resetPassword = async ({ email, password }) => {
-    if (!email) throw new Error("Missing email");
-    if (!validator.isEmail(email)) throw new Error("Invalid email format");
-
-    if (!password) throw new Error("Missing password");
-
-    const foundAccount = await Account.findOne({ where: { email } });
-    if (!foundAccount) throw new Error("Invalid email or password");
-
-    const hashPassword = await bcrypt.hash(password, 10);
-
-    const updatedAccount = await Account.update(
-      { password: hashPassword },
-      { where: { email } }
-    );
-    if (!updatedAccount) throw new Error("Cannot update password");
-
-    return updatedAccount;
   };
 }
 

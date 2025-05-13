@@ -27,7 +27,7 @@ const Account = sequelize.define(
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
     },
   },
   {
