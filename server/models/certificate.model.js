@@ -1,0 +1,65 @@
+const { DataTypes } = require("sequelize");
+const sequelize = require("../configs/sequelize");
+
+const Certificate = sequelize.define("Certificate", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    certificateNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    type: {
+        type: DataTypes.ENUM(
+            'Chứng chỉ TOEIC (Nghe-Đọc)',
+            'Chứng chỉ TOEIC (Nói- Viết)',
+            'Chứng chỉ TOEFL iBT',
+            'Chứng chỉ IELTS',
+            'Chứng chỉ PTE Academic',
+            'Chứng chỉ Cambridge',
+            'Chứng chỉ VNU-EPT',
+            'Tiếng Nhật',
+            'Tiếng Pháp',
+            'VPET',
+            'Chứng chỉ GDQP&AN',
+            'Bằng TN THPT',
+            'Giấy Khai sinh',
+            'VSTEP - Đánh giá năng lực',
+            'Bằng đại học ngoại ngữ',
+            'Bằng cao đẳng'
+        ),
+        allowNull: false,
+    },
+    point: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+    },
+    expiredAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    status: {
+        type: DataTypes.ENUM('valid', 'invalid', 'pending'),
+        allowNull: false,
+        defaultValue: 'pending',
+    },
+    studentID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }
+}, {
+    timestamps: true,
+});
+
+module.exports = Certificate;

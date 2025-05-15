@@ -16,6 +16,8 @@ const AwardStudent = require("./awardStudent.model");
 const Award = require("./award.model");
 const KnowledgeDomain = require("./knowledgeDomain.model");
 const KnowledgeField = require("./knowledgeField.model");
+const Certificate = require("./certificate.model");
+const VerificationLogs = require("./verificationLogs.model");
 
 // User - Account relationships
 Student.belongsTo(Account, {
@@ -155,6 +157,17 @@ KnowledgeDomain.hasMany(KnowledgeField, {
 KnowledgeField.belongsTo(KnowledgeDomain, {
   foreignKey: "knowledgeDomainID",
 });
+
+// 1 student can have many certificates
+Student.hasMany(Certificate, { foreignKey: "studentID" });
+Certificate.belongsTo(Student, { foreignKey: "studentID" });
+
+// 1 certificate can have many verification logs
+Certificate.hasMany(VerificationLogs, { foreignKey: "certificateID" });
+VerificationLogs.belongsTo(Certificate, { foreignKey: "certificateID" });
+
+// VerificationLogs - Account (verifiedBy is a userId, 1-1 relationship)
+VerificationLogs.belongsTo(Account, { foreignKey: "verifiedBy", as: "verifier" });
 
 // Create data
 const accounts = [
@@ -433,21 +446,21 @@ const knowledgeDomain = [
     id: 1,
     name: "Khối kiến thức giáo dục đại cương",
     description:
-        "Bao gồm các môn học nền tảng như Lý luận chính trị, Toán - Tin học, Ngoại ngữ.",
+      "Bao gồm các môn học nền tảng như Lý luận chính trị, Toán - Tin học, Ngoại ngữ.",
     minCredit: 43,
   },
   {
     id: 2,
     name: "Khối kiến thức giáo dục chuyên nghiệp",
     description:
-        "Gồm các môn học cơ sở ngành, chuyên ngành và môn học khác và tự chọn tự do.",
+      "Gồm các môn học cơ sở ngành, chuyên ngành và môn học khác và tự chọn tự do.",
     minCredit: 71,
   },
   {
     id: 3,
     name: "Tốt nghiệp",
     description:
-        "Bao gồm thực tập doanh nghiệp, đồ án và khoá luận tốt nghiệp.",
+      "Bao gồm thực tập doanh nghiệp, đồ án và khoá luận tốt nghiệp.",
     minCredit: 16,
   },
 ];
