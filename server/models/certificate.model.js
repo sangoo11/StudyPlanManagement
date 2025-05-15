@@ -7,18 +7,10 @@ const Certificate = sequelize.define("Certificate", {
         primaryKey: true,
         autoIncrement: true,
     },
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     certificateNumber: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-    },
-    description: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     type: {
         type: DataTypes.ENUM(
@@ -41,18 +33,31 @@ const Certificate = sequelize.define("Certificate", {
         ),
         allowNull: false,
     },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     point: {
         type: DataTypes.FLOAT,
         allowNull: true,
     },
+    takenAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
     expiredAt: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
     },
     status: {
         type: DataTypes.ENUM('valid', 'invalid', 'pending'),
         allowNull: false,
         defaultValue: 'pending',
+    },
+    invalidReason: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        comment: "Explanation of why the certificate is marked as invalid"
     },
     studentID: {
         type: DataTypes.INTEGER,

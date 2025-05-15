@@ -34,7 +34,7 @@ module.exports = {
         try {
             new CREATED({
                 message: 'Create certificate success',
-                metadata: await CertificateService.create(req.body)
+                metadata: await CertificateService.create(req.body, req.file)
             }).send(res);
         } catch (err) {
             res.status(400).json({ error: err.message });

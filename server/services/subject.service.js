@@ -8,7 +8,8 @@ const Student = require("../models/student.model");
 const Enrollment = require("../models/enrollment.model");
 const LearningOutcome = require("../models/learningOutcome.model");
 const LearningOutcomeScore = require("../models/learningOutcomeScore.model");
-const {normalizedPath} = require("../utils/utils");
+const { normalizedPath } = require("../utils/utils");
+const fs = require('fs').promises;
 
 class SubjectService {
   static getAllSubject = async () => {
@@ -51,28 +52,45 @@ class SubjectService {
     }
 
     const path = image.path;
+    let subject;
 
-    const codeExisted = await Subject.findOne({
-      where: {
-        subjectCode: subjectCode,
+    try {
+      const codeExisted = await Subject.findOne({
+        where: {
+          subjectCode: subjectCode,
+        }
+      });
+
+      if (codeExisted) {
+        throw new Error('Code existed');
       }
-    })
 
-    if (codeExisted) {
-      throw new Error('Code existed')
+      subject = await Subject.create({
+        subjectCode,
+        subjectName,
+        credit,
+        description,
+        knowledgeFieldID,
+        majorID,
+        image: normalizedPath(path),
+      });
+
+      if (!subject) {
+        // If subject creation fails, delete the uploaded image
+        await fs.unlink(path);
+        throw new Error("Subject not created");
+      }
+
+      return subject;
+    } catch (error) {
+      // If any error occurs during subject creation, delete the uploaded image
+      try {
+        await fs.unlink(path);
+      } catch (unlinkError) {
+        console.error('Error deleting image file:', unlinkError);
+      }
+      throw error;
     }
-
-    const subject = await Subject.create({
-      subjectCode,
-      subjectName,
-      credit,
-      description,
-      knowledgeFieldID,
-      majorID,
-      image: normalizedPath(path),
-    });
-    if (!subject) throw new Error("Subject not created");
-    return subject;
   };
 
   static editSubject = async (
