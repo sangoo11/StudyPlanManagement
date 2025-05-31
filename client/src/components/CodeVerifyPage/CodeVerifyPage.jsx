@@ -26,9 +26,6 @@ const CodeVerifyPage = () => {
         try {
             const verifyResponse = await verifyCode(email, code);
 
-            console.log(verifyResponse);
-
-
             if (verifyResponse.metadata.isValid) {
                 // Show success message
                 alert('Email verified successfully!');
@@ -69,8 +66,8 @@ const CodeVerifyPage = () => {
 
     return (
         <section className='relative'>
-            <img src={CodeVerifyPicture} alt='Hero image' className='mt-[-20rem] w-svw h-svh absolute -z-10 top-0 left-0' />
-            <div className='max-w-md sm mt-[20rem] rounded-md mx-auto p-10 bg-white text-center'>
+            <img src={CodeVerifyPicture} alt='Hero image' className='mt-[-10rem] w-svw h-svh absolute -z-10 top-0 left-0' />
+            <div className='max-w-md sm mt-[10rem] rounded-md mx-auto p-10 bg-white text-center'>
                 <h1 className='text-3xl font-semibold mb-4'>Check your mail</h1>
                 <p className='mb-4'>Enter a 6-digit verification code sent to your email</p>
                 <VeriForm onSubmit={handleVerification} />

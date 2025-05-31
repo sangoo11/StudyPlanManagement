@@ -10,9 +10,21 @@ const LearningOutcome = require("../models/learningOutcome.model");
 const LearningOutcomeScore = require("../models/learningOutcomeScore.model");
 const nodemailer = require("nodemailer");
 const VerificationCode = require("../models/verificationCode.model");
+const crypto = require("crypto");
+const { Op } = require("sequelize");
 
 const { AuthFailureError } = require("../core/error.response");
-const { getInfoData } = require("../utils");
+
+const transport = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  service: process.env.SMTP_SERVICE,
+  port: process.env.SMTP_PORT,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 class AccessService {
   static signUp = async ({
@@ -71,17 +83,6 @@ class AccessService {
   static sendCode = async ({ email }) => {
     if (!email) throw new Error("Missing input fields");
     const randomSixDigit = Math.floor(100000 + Math.random() * 900000);
-
-    const transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      service: process.env.SMTP_SERVICE,
-      port: process.env.SMTP_PORT,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_ADDRESS,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
 
     const mailOptions = {
       from: process.env.EMAIL_ADDRESS,
@@ -208,6 +209,109 @@ class AccessService {
       expiresIn: process.env.TOKEN_EXPIRE,
     };
   };
+
+  static async forgotPassword({ email }) {
+    if (!email) throw new Error('Please provide email');
+
+    // Find the account with the provided email
+    const account = await Account.findOne({
+      where: { email }
+    });
+
+    if (!account) {
+      throw new Error('No account found with this email address');
+    }
+
+    // Generate a password reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 3600000); // Token valid for 1 hour
+
+    // Update account with reset token
+    await account.update({
+      resetToken,
+      resetTokenExpiry
+    });
+
+    // Send reset password email
+    const resetUrl = `${process.env.FRONTEND_URL}/forgot-password?token=${resetToken}`;
+
+    const mailOptions = {
+      from: process.env.EMAIL_ADDRESS,
+      to: email,
+      subject: 'Password Reset Request',
+      html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #1DA599;">Password Reset Request</h2>
+                <p>You have requested to reset your password.</p>
+                <p>Click the button below to reset your password:</p>
+                <div style="text-align: center; margin: 30px 0; width: fit-content;">
+                    <a href="${resetUrl}" 
+                       style="background-color: #1DA599; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 1 hour.</p>
+                <p>If you didn't request this, please ignore this email.</p>
+                <hr style="border: 1px solid #eee; margin: 20px 0;">
+                <p style="color: #666; font-size: 12px;">
+                    This is an automated message, please do not reply to this email.
+                </p>
+            </div>
+        `
+    };
+
+    try {
+      await transport.sendMail(mailOptions);
+
+      return {
+        success: true,
+        message: 'Password reset link has been sent to your email'
+      };
+    } catch (error) {
+      console.error('Error sending email:', error);
+      // If email sending fails, remove the reset token
+      await account.update({
+        resetToken: null,
+        resetTokenExpiry: null
+      });
+      throw new Error('Failed to send reset password email. Please try again.');
+    }
+  }
+
+  static async resetPassword({ token, password }) {
+    if (!token || !password) {
+      throw new Error('Token and password are required');
+    }
+
+    // Find account with valid reset token
+    const account = await Account.findOne({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: {
+          [Op.gt]: new Date() // Token hasn't expired
+        }
+      }
+    });
+
+    if (!account) {
+      throw new Error('Invalid or expired reset token');
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update account with new password and clear reset token
+    await account.update({
+      password: hashedPassword,
+      resetToken: null,
+      resetTokenExpiry: null
+    });
+
+    return {
+      success: true,
+      message: 'Password has been reset successfully'
+    };
+  }
 }
 
 module.exports = { AccessService };

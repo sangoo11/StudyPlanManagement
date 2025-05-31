@@ -56,6 +56,28 @@ class AccessController {
             },
         }).send(res);
     };
+
+    //handle forgot password
+    ForgotPassword = async (req, res, next) => {
+        new CREATED({
+            message: "Send Email Success",
+            metadata: await AccessService.forgotPassword(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
+
+    // handle reser password
+    ResetPassword = async (req, res, next) => {
+        new CREATED({
+            message: "Send Email Success",
+            metadata: await AccessService.resetPassword(req.body),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 }
 
 module.exports = new AccessController();

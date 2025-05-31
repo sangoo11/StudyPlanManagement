@@ -1,9 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 
 function AccountPage() {
     const accountID = localStorage.getItem('accountID'); // Retrieve account ID from localStorage
-    
+
     const navigate = useNavigate(); // Use the navigate hook to navigate to other pages
 
     // Sample account information
@@ -18,7 +18,7 @@ function AccountPage() {
 
     // Handle log out
     const handleLogOut = () => {
-        localStorage.removeItem('accountID'); // Clear the stored account ID
+        localStorage.clear() // Clear 
         navigate("/signin");
     };
 

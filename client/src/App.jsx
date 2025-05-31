@@ -90,6 +90,7 @@ import CourseDetail from './components/TeacherPage/CourseDetail';
 import EditPoint from './components/TeacherPage/EditPoint';
 import TeacherAccount from './components/TeacherPage/TeacherAccount';
 import CodeVerifyPage from './components/CodeVerifyPage/CodeVerifyPage';
+import ForgotPasswordPage from './components/ForgotPasswordPage/ForgotPasswordPage';
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn');
@@ -112,6 +113,7 @@ function App() {
           <Route path='signin' element={<SignInPage />} />
           <Route path='verify-code' element={<CodeVerifyPage />} />
           <Route path='signup' element={<SignUpPage />} />
+          <Route path='forgot-password' element={<ForgotPasswordPage />} />
         </Route>
 
         {/* Protected Routes */}
@@ -142,8 +144,8 @@ function App() {
           <Route path='accountadmin' element={<AccountPage />} />
           <Route path='activeteacher' element={<ActiveTeacher />} />
           <Route path='awardstudent' element={<AwardStudent />} />
-          <Route path='domainknowledge' element={<DomainKnowledge />}/>
-          <Route path='domainfield' element={<DomainField />}/>
+          <Route path='domainknowledge' element={<DomainKnowledge />} />
+          <Route path='domainfield' element={<DomainField />} />
         </Route>
 
         {/* Admin modals */}
