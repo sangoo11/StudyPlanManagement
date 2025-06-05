@@ -5,7 +5,7 @@ module.exports = {
     // Get all certificates
     async getAll(req, res) {
         try {
-            const certificates = await CertificateService.getAll();
+            const certificates = await CertificateService.getAll(req.body);
             new OK({
                 message: 'Get all certificates success',
                 metadata: certificates

@@ -2,7 +2,12 @@ const Certificate = require('../models/certificate.model');
 const { normalizedPath } = require("../utils/utils");
 const fs = require('fs').promises;
 
-const getAll = async () => {
+const getAll = async ({ studentID }) => {
+    if (studentID) {
+        return await Certificate.findAll({
+            where: { studentID }
+        });
+    }
     return await Certificate.findAll();
 };
 
