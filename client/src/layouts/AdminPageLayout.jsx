@@ -17,6 +17,8 @@ function AdminPageLayout(props) {
     const title7 = 'Active Teacher';
     const title8 = 'Domain Knowledge';
     const title9 = 'Domain Field';
+    const title10 = 'Certificate';
+
 
     const navLinkStyles = ({ isActive }) => {
         return {
@@ -48,6 +50,8 @@ function AdminPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/admin/awardstudent">{title6}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/domainknowledge">{title8}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/domainfield">{title9}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/certificate">{title10}</NavLink>
+
 
 
                     <button className='fixed right-10 space-x-2'>
