@@ -74,6 +74,10 @@ import AddDomainField from './components/AdminPage/DomainField/AddDF';
 import EditDomainField from './components/AdminPage/DomainField/EditDF';
 import DeleteDomainField from './components/AdminPage/DomainField/DeleteDF';
 
+import Certificate from './components/AdminPage/Certificate/Certificate';
+import AddCertificate from './components/AdminPage/Certificate/AddCertificate';
+import EditCertificate from './components/AdminPage/Certificate/EditCertificate';
+
 // Student 
 import StudentPage from './components/StudentPage/StudentPage'
 import LearningResults from './components/StudentPage/LearningResults/LearningResults'
@@ -81,6 +85,9 @@ import StudentLearningOutcome from './components/StudentPage/LearningOutcome/Lea
 import StudentAccount from './components/StudentPage/StudentAccount';
 import Award from './components/StudentPage/Award/Award';
 import StudentDomainField from './components/StudentPage/DomainField/DomainField';
+import StudentCertificate from './components/StudentPage/Certificate/Certificate';
+import StudentAddCertificate from './components/StudentPage/Certificate/AddCertificate';
+import StudentEditCertificate from './components/StudentPage/Certificate/EditCertificate';
 
 // Teacher
 import TeacherPage from './components/TeacherPage/TeacherPage'
@@ -124,6 +131,7 @@ function App() {
           <Route path='student/award' element={<Award />} />
           <Route path='student/accountstudent/:accountID' element={<StudentAccount />} />
           <Route path='student/domainfield' element={<StudentDomainField />} />
+          <Route path='student/certificate' element={<StudentCertificate />} />
         </Route>
 
         <Route element={<TeacherPageLayout />}>
@@ -146,7 +154,13 @@ function App() {
           <Route path='awardstudent' element={<AwardStudent />} />
           <Route path='domainknowledge' element={<DomainKnowledge />} />
           <Route path='domainfield' element={<DomainField />} />
+          <Route path='certificate' element={<Certificate />} />
         </Route>
+
+        {/* Student modals */}
+        <Route path='student/certificate/addcertificate' element={<StudentAddCertificate />} />
+        <Route path='student/certificate/editcertificate' element={<StudentEditCertificate />} />
+    
 
         {/* Admin modals */}
         <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />
@@ -190,6 +204,10 @@ function App() {
         <Route path='admin/domainfield/adddf' element={<AddDomainField />} />
         <Route path='admin/domainfield/editdf' element={<EditDomainField />} />
         <Route path='admin/domainfield/deletedf' element={<DeleteDomainField />} />
+
+        <Route path='admin/certificate/addcertificate' element={<AddCertificate />} />
+        <Route path='admin/certificate/editcertificate' element={<EditCertificate />} />
+
         {/* Catch-all route for undefined paths */}
         <Route path='*' element={<ErrorPage />} />
       </Routes>
