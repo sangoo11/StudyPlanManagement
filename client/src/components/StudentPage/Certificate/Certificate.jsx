@@ -7,53 +7,47 @@ import { toast } from 'react-toastify';
 
 function Certificate() {
   const [certificates, setCertificates] = useState([]);
-  const [students, setStudents] = useState([]);
+  const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-  const fetchCertificates = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get('http://localhost:8080/v1/api/certificate');
-        const certs = res.data.metadata;
-        setCertificates(certs);
+  const getStudentDataAndCertificates = async () => {
+    setLoading(true);
+    try {
+      const accountID = localStorage.getItem('accountID');
+      const { data } = await axios.get(
+        `http://localhost:8080/v1/api/account/get-user-data/${accountID}`
+      );
+      const student = data.metadata;
+      setStudentData(student);
 
-        // Get unique student IDs
-        const studentIDs = [...new Set(certs.map(cert => cert.studentID))];
+      const studentID = student.id;
+      const certResponse = await axios.get(
+         `http://localhost:8080/v1/api/certificate/${studentID}`   
+      );
 
-        // Fetch student info for each ID
-        const studentPromises = studentIDs.map(id =>
-          axios.get(`http://localhost:8080/v1/api/student/get-student/${id}`)
-        );
+      const certData = Array.isArray(certResponse.data.metadata)
+        ? certResponse.data.metadata
+        : [certResponse.data.metadata];
 
-        const studentResponses = await Promise.all(studentPromises);
-
-        const studentsMap = {};
-        studentResponses.forEach(resp => {
-          const student = resp.data.metadata;
-          studentsMap[student.id] = student;
-        });
-
-        setStudents(studentsMap);
-      } catch (error) {
-        console.error('Failed to fetch certificates or students:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+      setCertificates(certData);
+    } catch (error) {
+      console.error('Failed to fetch student or certificates:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/v1/api/certificate/${id}`);
       if (window.confirm('Bạn có chắc chắn muốn xoá chứng chỉ này?')) {
+        await axios.delete(`http://localhost:8080/v1/api/certificate/${id}`);
         toast.success('Xoá chứng chỉ thành công!');
-        await fetchCertificates();
-      }
-      else {
-        toast.error('Xoá chứng chỉ thất bại!');
+        await getStudentDataAndCertificates();
+      } else {
+        toast.info('Đã huỷ xoá chứng chỉ.');
       }
     } catch (error) {
       console.error('Failed to delete certificate:', error);
@@ -67,7 +61,7 @@ function Certificate() {
   };
 
   useEffect(() => {
-    fetchCertificates();
+    getStudentDataAndCertificates();
   }, []);
 
   return (
@@ -89,51 +83,63 @@ function Certificate() {
         <p className="text-center mt-10">Đang tải...</p>
       ) : (
         <div className="mt-10 max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6">
-          <table className="min-w-full table-auto border border-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-3 border">Mã chứng chỉ</th>
-                <th className="p-3 border">Loại</th>
-                <th className="p-3 border">Sinh viên</th>
-                <th className="p-3 border">Điểm</th>
-                <th className="p-3 border">Ngày thi</th>
-                <th className="p-3 border">Ngày hết hạn</th>
-                <th className="p-3 border">Trạng thái</th>
-                <th className="p-3 border">Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {certificates.map((cert) => (
-                <tr key={cert.id} className="border-t hover:bg-gray-50">
-                  <td className="p-3 border">{cert.certificateNumber}</td>
-                  <td className="p-3 border">{cert.type}</td>
-                  <td className="p-3 border"> {students[cert.studentID]?.fullName || 'Không rõ'} </td>
-                  <td className="p-3 border">{cert.point}</td>
-                  <td className="p-3 border">{new Date(cert.takenAt).toLocaleDateString()}</td>
-                  <td className="p-3 border">{new Date(cert.expiredAt).toLocaleDateString()}</td>
-                  <td className="p-3 border">
-                    <span className={cert.status === 'pending' ? 'font-bold text-yellow-600' : cert.status === 'valid' ? 'font-bold text-green-600' : 'font-bold text-red-600'}>
-                      {cert.status}
-                    </span>
-                  </td>
-                  <td className="p-3 border space-x-2">
-                    <button
-                      className="bg-yellow-500 text-white px-3 py-1 rounded"
-                      onClick={() => handleEditClick(cert.id)}
-                    >
-                      Sửa
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-3 py-1 rounded"
-                      onClick={() => handleDelete(cert.id)}
-                    >
-                      Xoá
-                    </button>
-                  </td>
+          {certificates.length === 0 ? (
+            <p className="text-center text-gray-500">Không có chứng chỉ nào.</p>
+          ) : (
+            <table className="min-w-full table-auto border border-gray-200">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-3 border">Mã chứng chỉ</th>
+                  <th className="p-3 border">Loại</th>
+                  <th className="p-3 border">Sinh viên</th>
+                  <th className="p-3 border">Điểm</th>
+                  <th className="p-3 border">Ngày thi</th>
+                  <th className="p-3 border">Ngày hết hạn</th>
+                  <th className="p-3 border">Trạng thái</th>
+                  <th className="p-3 border">Hành động</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {certificates.map((cert) => (
+                  <tr key={cert.id} className="border-t hover:bg-gray-50">
+                    <td className="p-3 border">{cert.certificateNumber}</td>
+                    <td className="p-3 border">{cert.type}</td>
+                    <td className="p-3 border">{studentData?.fullName || 'Không rõ'}</td>
+                    <td className="p-3 border">{cert.point}</td>
+                    <td className="p-3 border">{new Date(cert.takenAt).toLocaleDateString()}</td>
+                    <td className="p-3 border">{new Date(cert.expiredAt).toLocaleDateString()}</td>
+                    <td className="p-3 border">
+                      <span
+                        className={
+                          cert.status === 'pending'
+                            ? 'font-bold text-yellow-600'
+                            : cert.status === 'valid'
+                            ? 'font-bold text-green-600'
+                            : 'font-bold text-red-600'
+                        }
+                      >
+                        {cert.status}
+                      </span>
+                    </td>
+                    <td className="p-3 border space-x-2">
+                      <button
+                        className="bg-yellow-500 text-white px-3 py-1 rounded"
+                        onClick={() => handleEditClick(cert.id)}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        className="bg-red-500 text-white px-3 py-1 rounded"
+                        onClick={() => handleDelete(cert.id)}
+                      >
+                        Xoá
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
 
@@ -141,18 +147,14 @@ function Certificate() {
       {showAddModal && (
         <AddCertificate
           onClose={() => setShowAddModal(false)}
-          onAdded={() => {
-            fetchCertificates();
-          }}
+          onAdded={() => getStudentDataAndCertificates()}
         />
       )}
       {showEditModal && selectedId && (
         <EditCertificate
           id={selectedId}
           onClose={() => setShowEditModal(false)}
-          onEdited={() => {
-            fetchCertificates();
-          }}
+          onEdited={() => getStudentDataAndCertificates()}
         />
       )}
     </div>
