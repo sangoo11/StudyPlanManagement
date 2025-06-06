@@ -8,7 +8,7 @@ function AccountPage() {
 
     // Sample account information
     const accountInfo = {
-        id: accountID, // Use account ID from localStorage
+        id: accountID, 
         name: 'John Doe',
         major: 'Computer Science',
         role: 'Student',
