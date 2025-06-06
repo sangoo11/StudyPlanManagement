@@ -18,6 +18,9 @@ function AdminPageLayout(props) {
     const title8 = 'Domain Knowledge';
     const title9 = 'Domain Field';
     const title10 = 'Certificate';
+    const title11 = 'Certificate Approval';
+    const title12 = 'Expired Certificate';
+
 
 
     const navLinkStyles = ({ isActive }) => {
@@ -51,6 +54,9 @@ function AdminPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/admin/domainknowledge">{title8}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/domainfield">{title9}</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/certificate">{title10}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/cerapproval">{title11}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/cerexpired">{title12}</NavLink>
+
 
 
 
