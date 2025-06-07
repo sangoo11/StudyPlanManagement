@@ -10,6 +10,7 @@ function AccountPage() {
     // Fetch admin info from backend (pseudo, you may want to use useEffect/axios in real app)
     // For now, just show the accountID and role as admin
     const accountInfo = {
+
         id: accountID,
         role: 'Admin',
         email: 'admin@example.com',

@@ -30,6 +30,9 @@ import ActiveTeacher from './components/AdminPage/ActiveTeacher/ActiveTeacher';
 import AwardStudent from './components/AdminPage/AwardStudent/AwardStudent';
 import DomainKnowledge from './components/AdminPage/DomainKnowledge/DomainKnowledge';
 import DomainField from './components/AdminPage/DomainField/DomainField';
+import AdminAccountPage from './components/AdminPage/AdminAccount';
+import ApprovalCertificate from './components/AdminPage/Certificate/ApprovalCertificate';
+import ExpiredCertificate from './components/AdminPage/Certificate/ExpiredCertificate';
 
 //Modal
 import AddClassroom from './components/AdminPage/SubjectsManagePage/components/AddClassroom';
@@ -129,7 +132,7 @@ function App() {
           <Route path='student/results' element={<LearningResults />} />
           <Route path='student/outcome' element={<StudentLearningOutcome />} />
           <Route path='student/award' element={<Award />} />
-          <Route path='student/accountstudent/:accountID' element={<StudentAccount />} />
+          <Route path='student/account/:accountID' element={<StudentAccount />} />
           <Route path='student/domainfield' element={<StudentDomainField />} />
           <Route path='student/certificate' element={<StudentCertificate />} />
         </Route>
@@ -139,10 +142,11 @@ function App() {
           <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
           <Route path='/teacher/statistics' element={<Statistics />} />
           <Route path='teacher/editpoint/:studentID' element={<EditPoint />} />
-          <Route path='teacher/accountteacher/:accountID' element={<TeacherAccount />} />
+          <Route path='teacher/account/:accountID' element={<TeacherAccount />} />
         </Route>
 
         <Route path='admin' element={<AdminPageLayout />}>
+          <Route path='account/:accountID' element={<AdminAccountPage />} />
           <Route path='statistics' element={<Statistics />} />
           <Route path='students' element={<StudentsManagePage />} />
           <Route path='teachers' element={<TeachersManagePage />} />
@@ -155,6 +159,8 @@ function App() {
           <Route path='domainknowledge' element={<DomainKnowledge />} />
           <Route path='domainfield' element={<DomainField />} />
           <Route path='certificate' element={<Certificate />} />
+          <Route path='cerapproval' element={<ApprovalCertificate />} />
+          <Route path='cerexpired' element={<ExpiredCertificate />} />
         </Route>
 
         {/* Student modals */}
