@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,40 @@ function AddSubject({ onClose, onAddedSubject }) {
     });
 
     const [error, setError] = useState("");
-    const [preview, setPreview] = useState(null); // Optional: image preview
+    const [preview, setPreview] = useState(null);
+    const [knowledgeFields, setKnowledgeFields] = useState([]);
+    const [majors, setMajors] = useState([]);
+
+    useEffect(() => {
+        const fetchKnowledgeFields = async () => {
+            try {
+                const res = await axios.get("http://localhost:8080/v1/api/knowledge-field");
+                if (res.status === 201) {
+                    setKnowledgeFields(res.data.metadata);
+                } else {
+                    toast.error("Không thể tải danh sách lĩnh vực kiến thức.");
+                }
+            } catch (error) {
+                toast.error("Lỗi khi tải lĩnh vực kiến thức.");
+            }
+        };
+
+        const fetchMajors = async () => {
+            try {
+                const res = await axios.get("http://localhost:8080/v1/api/major/get-all-major");
+                if (res.status === 201) {
+                    setMajors(res.data.metadata);
+                } else {
+                    toast.error("Không thể tải danh sách chuyên ngành.");
+                }
+            } catch (error) {
+                toast.error("Lỗi khi tải chuyên ngành.");
+            }
+        };
+
+        fetchKnowledgeFields();
+        fetchMajors();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,7 +61,7 @@ function AddSubject({ onClose, onAddedSubject }) {
         const file = e.target.files[0];
         if (file) {
             if (/\s/.test(file.name)) {
-                setError("Tên file ảnh không được chứa khoảng trắng. Vui lòng đổi tên, ví dụ: SyllabusProfile.png");
+                setError("Tên file ảnh không được chứa khoảng trắng. Vui lòng đổi tên.");
                 return;
             }
             setFormData((prevData) => ({
@@ -36,46 +69,35 @@ function AddSubject({ onClose, onAddedSubject }) {
                 image: file,
             }));
             setPreview(URL.createObjectURL(file));
-            setError(""); // Clear error if everything is good
+            setError("");
         }
     };
 
     const isFormValid = () => {
         const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
-    
+
         if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
             setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
             return false;
         }
-    
+
         if (/\s/.test(image.name)) {
             setError("Tên file ảnh không được chứa khoảng trắng. Vui lòng đổi tên.");
             return false;
         }
-    
+
         return true;
     };
-    
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!isFormValid()) return;
-    
-        const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
-    
-        if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
-            setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
-            return;
-        }
-    
+
         try {
             const form = new FormData();
             Object.entries(formData).forEach(([key, value]) => form.append(key, value));
-    
-            console.log([...form.entries()]); // Debug
-    
+
             const response = await axios.post(
                 `http://localhost:8080/v1/api/subject/create-new-subject/`,
                 form,
@@ -85,7 +107,7 @@ function AddSubject({ onClose, onAddedSubject }) {
                     },
                 }
             );
-    
+
             if (response.status === 201) {
                 toast.success("Môn học mới đã được thêm thành công!");
                 onAddedSubject?.();
@@ -95,7 +117,7 @@ function AddSubject({ onClose, onAddedSubject }) {
                 setError("Có lỗi xảy ra. Vui lòng thử lại.");
             }
         } catch (err) {
-            toast.error("Có lỗi xảy ra. Vui lòng thử lại.");
+            toast.error("Không thể thêm môn học. Vui lòng kiểm tra kết nối.");
             console.error("Error creating subject:", err);
             setError("Không thể thêm môn học. Vui lòng kiểm tra kết nối.");
         }
@@ -109,7 +131,6 @@ function AddSubject({ onClose, onAddedSubject }) {
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
                 <form className="flex flex-col h-auto space-y-4" onSubmit={handleSubmit}>
-                    {/* Subject Code */}
                     <div>
                         <label className="block text-gray-700">Mã môn học:</label>
                         <input
@@ -122,7 +143,6 @@ function AddSubject({ onClose, onAddedSubject }) {
                         />
                     </div>
 
-                    {/* Subject Name */}
                     <div>
                         <label className="block text-gray-700">Tên môn học:</label>
                         <input
@@ -135,7 +155,6 @@ function AddSubject({ onClose, onAddedSubject }) {
                         />
                     </div>
 
-                    {/* Credit */}
                     <div>
                         <label className="block text-gray-700">Số tín chỉ:</label>
                         <input
@@ -148,7 +167,6 @@ function AddSubject({ onClose, onAddedSubject }) {
                         />
                     </div>
 
-                    {/* Description */}
                     <div>
                         <label className="block text-gray-700">Mô tả:</label>
                         <textarea
@@ -160,33 +178,40 @@ function AddSubject({ onClose, onAddedSubject }) {
                         />
                     </div>
 
-                    {/* Knowledge Field ID */}
                     <div>
-                        <label className="block text-gray-700">Mã lĩnh vực kiến thức:</label>
-                        <input
-                            type="text"
+                        <label className="block text-gray-700">Lĩnh vực kiến thức:</label>
+                        <select
                             name="knowledgeFieldID"
                             value={formData.knowledgeFieldID}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                            placeholder="Nhập mã lĩnh vực"
-                        />
+                            className="w-full px-4 py-2 border rounded bg-white"
+                        >
+                            <option value="">-- Chọn lĩnh vực kiến thức --</option>
+                            {knowledgeFields.map((field) => (
+                                <option key={field.id} value={field.id}>
+                                    {field.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    {/* Major ID */}
                     <div>
-                        <label className="block text-gray-700">Mã chuyên ngành:</label>
-                        <input
-                            type="number"
+                        <label className="block text-gray-700">Chuyên ngành:</label>
+                        <select
                             name="majorID"
                             value={formData.majorID}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                            placeholder="Nhập mã chuyên ngành"
-                        />
+                            className="w-full px-4 py-2 border rounded bg-white"
+                        >
+                            <option value="">-- Chọn chuyên ngành --</option>
+                            {majors.map((major) => (
+                                <option key={major.id} value={major.id}>
+                                    {major.majorName}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    {/* Image upload */}
                     <div>
                         <label className="block text-gray-700">Hình ảnh:</label>
                         <input
@@ -207,7 +232,6 @@ function AddSubject({ onClose, onAddedSubject }) {
                         )}
                     </div>
 
-                    {/* Buttons */}
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
