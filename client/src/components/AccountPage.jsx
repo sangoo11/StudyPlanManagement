@@ -3,27 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import AccountInfo from "./AccountInfo";
 
 function AccountPage() {
-    const accountID = localStorage.getItem('accountID'); // Retrieve account ID from localStorage
+    const accountID = localStorage.getItem('accountID');
+    const navigate = useNavigate();
 
-    const navigate = useNavigate(); // Use the navigate hook to navigate to other pages
-
-    // Fetch admin info from backend (pseudo, you may want to use useEffect/axios in real app)
-    // For now, just show the accountID and role as admin
+    // Show admin info only
     const accountInfo = {
-
         id: accountID,
         role: 'Admin',
         email: 'admin@example.com',
         status: 'Active',
     };
 
-    // Handle log out
     const handleLogOut = () => {
-        localStorage.clear() // Clear 
+        localStorage.clear();
         navigate("/signin");
     };
 
-    // Handle return (navigate back)
     const handleReturn = () => {
         navigate(-1);
     };
