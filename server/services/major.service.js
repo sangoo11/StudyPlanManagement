@@ -6,11 +6,20 @@ const Teacher = require('../models/teacher.model');
 const Subject = require('../models/subject.model');
 const Major = require('../models/major.model');
 const sequelize = require('../configs/sequelize');
-const { ROLE } = require('./access.service');
+const {ROLE} = require('./access.service');
 
 class MajorService {
-    static getAllMajor = async () => {
-        const majorLists = await Major.findAll();
+    static getMajors = async ({fields}) => {
+        let attributes = ['id']
+
+        if (fields) {
+            fields = fields.split(',')
+            attributes = [...attributes, ...fields]
+        }
+
+        const majorLists = await Major.findAll({
+            attributes: fields ? attributes : null,
+        });
         return majorLists;
     }
 
@@ -22,4 +31,5 @@ class MajorService {
     }
 
 }
+
 module.exports = MajorService;

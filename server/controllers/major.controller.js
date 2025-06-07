@@ -1,11 +1,11 @@
-const { CREATED } = require("../core/success.response");
+const {CREATED} = require("../core/success.response");
 const MajorService = require('../services/major.service');
 
 class MajorController {
-    getAllMajor = async (req, res, next) => {
+    getMajors = async (req, res, next) => {
         new CREATED({
             message: "Get All Major Success",
-            metadata: await MajorService.getAllMajor(),
+            metadata: await MajorService.getMajors(req.query),
             options: {
                 limit: 10,
             },
