@@ -36,6 +36,9 @@ function AdminPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/admin/domainknowledge">Domain Knowledge</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/domainfield">Domain Field</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/certificate">Certificate</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/cerapproval">Approval Certificate</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/cerexpired">Expired Certificate</NavLink>
+
 
                     <button className='fixed right-10 space-x-2' onClick={() => navigate('/admin/accountadmin')}>
                         <div className='fixed w-6 h-6 items-center justify-center'>
