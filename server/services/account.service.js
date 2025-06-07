@@ -3,6 +3,7 @@ const Course = require("../models/course.model");
 const Teacher = require("../models/teacher.model");
 const Subject = require("../models/subject.model");
 const Student = require("../models/student.model");
+const Admin = require("../models/admin.model");
 const sequelize = require("../configs/sequelize");
 
 class AccountService {
@@ -142,29 +143,23 @@ class AccountService {
 
   static getUserDataByAccountID = async (accountID) => {
     if (!accountID) throw new Error("Missing account ID");
-    if (parseInt(accountID) === 1)
-      throw new Error("This account is not allowed to get user data");
     const account = await Account.findByPk(accountID);
     if (!account) throw new Error("Account not found");
 
     const accountRole = account.accountableType;
 
     if (accountRole === "teacher") {
-      const teacher = await Teacher.findOne({
-        where: {
-          accountID,
-        },
-      });
+      const teacher = await Teacher.findOne({ where: { accountID } });
       if (!teacher) throw new Error("Teacher not found");
       return teacher;
     } else if (accountRole === "student") {
-      const student = await Student.findOne({
-        where: {
-          accountID,
-        },
-      });
+      const student = await Student.findOne({ where: { accountID } });
       if (!student) throw new Error("Student not found");
       return student;
+    } else if (accountRole === "admin") {
+      const admin = await Admin.findOne({ where: { accountID } });
+      if (!admin) throw new Error("Admin not found");
+      return admin;
     } else {
       throw new Error("This account is not allowed to get user data");
     }
@@ -172,8 +167,6 @@ class AccountService {
 
   static editUserDataByAccountID = async (accountID, { fullName, major }) => {
     if (!accountID) throw new Error("Missing account ID");
-    if (parseInt(accountID) === 1)
-      throw new Error("This account is not allowed to edit user data");
     const account = await Account.findByPk(accountID);
     if (!account) throw new Error("Account not found");
 
@@ -204,8 +197,6 @@ class AccountService {
       });
       if (!updateStudent) throw new Error("Update student failed");
       return updateStudent;
-    } else {
-      throw new Error("This account is not allowed to edit user data");
     }
   };
 }

@@ -53,6 +53,7 @@ function TeacherPageLayout(props) {
                     </div>
 
                     <NavLink style={navLinkStyles} to="/teacher" end>{title1}</NavLink>
+                    <NavLink style={navLinkStyles} to="/teacher/outcome" end>Out come</NavLink>
                     <NavLink style={navLinkStyles} to="/teacher/statistics">{title2}</NavLink>
 
                     <button

@@ -166,7 +166,7 @@ function App() {
         {/* Student modals */}
         <Route path='student/certificate/addcertificate' element={<StudentAddCertificate />} />
         <Route path='student/certificate/editcertificate' element={<StudentEditCertificate />} />
-    
+
 
         {/* Admin modals */}
         <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />

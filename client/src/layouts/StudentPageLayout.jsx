@@ -38,7 +38,9 @@ function StudentPageLayout(props) {
             const response = await axios.get(
                 `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
             );
-            setStudentID(response.data.metadata.teacherID); // Make sure this is correct
+            console.log(response);
+
+            setStudentID(response.data.metadata.studentID); // Make sure this is correct
         } catch (error) {
             console.error(error.response?.data?.message || "Error fetching studentID");
         }
