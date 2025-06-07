@@ -1,36 +1,36 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import AccountInfo from "./AccountInfo";
+import {Link, useNavigate} from 'react-router-dom';
+import AccountInfo from "./AccountInfo.jsx";
 
 function AccountPage() {
-    const accountID = localStorage.getItem('accountID'); // Retrieve account ID from localStorage
+    const accountID = localStorage.getItem('accountID');
+    const accountableType = localStorage.getItem('accountableType');
+    const navigate = useNavigate();
 
-    const navigate = useNavigate(); // Use the navigate hook to navigate to other pages
+    if (!accountID) {
+        return (
+            <div className='w-screen h-screen flex flex-col justify-center items-center'>
+                <h1 className={'text-2xl'}>You need to login first to see the account info</h1>
+                <Link
+                    className={'mt-4 text-green-700 text-lg hover:text-green-900 hover:underline hover:scale-110 border border-green-700 rounded-lg px-6 py-2'}
+                    to={'/signin'}>Login</Link>
+            </div>
+        )
+    }
 
-    // Fetch admin info from backend (pseudo, you may want to use useEffect/axios in real app)
-    // For now, just show the accountID and role as admin
-    const accountInfo = {
-
-        id: accountID,
-        role: 'Admin',
-        email: 'admin@example.com',
-        status: 'Active',
-    };
-
-    // Handle log out
     const handleLogOut = () => {
-        localStorage.clear() // Clear 
+        localStorage.clear();
         navigate("/signin");
     };
 
-    // Handle return (navigate back)
     const handleReturn = () => {
         navigate(-1);
     };
 
+
     return (
         <div className='w-full min-h-screen bg-green-50 p-6'>
-            <AccountInfo accountInfo={accountInfo} title="Admin Account Info" />
+            <AccountInfo accountableType={accountableType} accountID={accountID}/>
             <div className='mt-6 flex justify-between w-full max-w-md mx-auto'>
                 <button
                     onClick={handleReturn}
