@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
-function AddSubject({ onClose, onAddedSubject }) {
+function AddSubject({onClose, onAddedSubject}) {
     const [formData, setFormData] = useState({
         subjectCode: "",
         subjectName: "",
@@ -13,11 +13,39 @@ function AddSubject({ onClose, onAddedSubject }) {
         image: null,
     });
 
+    const [fieldOptions, setFieldOptions] = useState([]);
+    const [domainOptions, setDomainOptions] = useState([]);
+    const [selectedDomain, setSelectedDomain] = useState("");
+    const [majorOptions, setMajorOptions] = useState([]);
+
+    useEffect(() => {
+        const fetchMajorOptions = async () => {
+            const {data} = await axios.get(`http://localhost:8080/v1/api/major?fields=majorName`);
+            setMajorOptions(data.metadata);
+        }
+        const fetchDomainOptions = async () => {
+            const {data} = await axios.get(`http://localhost:8080/v1/api/knowledge-domain?fields=name`);
+            setDomainOptions(data.metadata);
+        }
+
+
+        fetchMajorOptions();
+        fetchDomainOptions();
+
+        if (selectedDomain) {
+            const fetchFieldOptions = async () => {
+                const {data} = await axios.get(`http://localhost:8080/v1/api/knowledge-field?fields=name&knowledgeDomainID=${selectedDomain}`);
+                setFieldOptions(data.metadata);
+            }
+            fetchFieldOptions();
+        }
+    }, [selectedDomain]);
+
     const [error, setError] = useState("");
     const [preview, setPreview] = useState(null); // Optional: image preview
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -41,41 +69,41 @@ function AddSubject({ onClose, onAddedSubject }) {
     };
 
     const isFormValid = () => {
-        const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
-    
+        const {subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image} = formData;
+
         if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
             setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
             return false;
         }
-    
+
         if (/\s/.test(image.name)) {
             setError("Tên file ảnh không được chứa khoảng trắng. Vui lòng đổi tên.");
             return false;
         }
-    
+
         return true;
     };
-    
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData);
 
         if (!isFormValid()) return;
-    
-        const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
-    
+
+        const {subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image} = formData;
+
         if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
             setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
             return;
         }
-    
+
         try {
             const form = new FormData();
             Object.entries(formData).forEach(([key, value]) => form.append(key, value));
-    
+
             console.log([...form.entries()]); // Debug
-    
+
             const response = await axios.post(
                 `http://localhost:8080/v1/api/subject/create-new-subject/`,
                 form,
@@ -85,7 +113,7 @@ function AddSubject({ onClose, onAddedSubject }) {
                     },
                 }
             );
-    
+
             if (response.status === 201) {
                 toast.success("Môn học mới đã được thêm thành công!");
                 onAddedSubject?.();
@@ -160,30 +188,45 @@ function AddSubject({ onClose, onAddedSubject }) {
                         />
                     </div>
 
-                    {/* Knowledge Field ID */}
+                    {/* Knowledge Domain ID */}
                     <div>
-                        <label className="block text-gray-700">Mã lĩnh vực kiến thức:</label>
-                        <input
-                            type="text"
-                            name="knowledgeFieldID"
-                            value={formData.knowledgeFieldID}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                            placeholder="Nhập mã lĩnh vực"
-                        />
+                        <label className="block text-gray-700" htmlFor={'knowledgeDomainID'}>Khối kiến thức:</label>
+                        <select className={'w-full px-4 py-2 border rounded'} name={'knowledgeDomainID'}
+                                id={'knowledgeDomainID'}
+                                onChange={(e) => setSelectedDomain(e.target.value)}>
+                            {domainOptions.length > 0 && domainOptions.map((item) => (
+                                <option key={item.id}
+                                        value={item.id}>{item.name}</option>
+                            ))}
+                        </select>
                     </div>
+
+                    {/* Knowledge Field ID */}
+                    {selectedDomain && (<div>
+                            <label className="block text-gray-700" htmlFor={'knowledgeFieldID'}>Chuyên ngành:</label>
+                            <select className={'w-full px-4 py-2 border rounded'} name={'knowledgeFieldID'}
+                                    id={'knowledgeFieldID'}
+                                    value={formData.knowledgeFieldID}
+                                    onChange={handleChange}>
+                                {fieldOptions.length > 0 && fieldOptions.map((item) => (
+                                    <option key={item.id}
+                                            value={item.id}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
                     {/* Major ID */}
                     <div>
-                        <label className="block text-gray-700">Mã chuyên ngành:</label>
-                        <input
-                            type="number"
-                            name="majorID"
-                            value={formData.majorID}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded"
-                            placeholder="Nhập mã chuyên ngành"
-                        />
+                        <label className="block text-gray-700" htmlFor={'majorID'}>Chuyên ngành:</label>
+                        <select className={'w-full px-4 py-2 border rounded'} name={'majorID'} id={'majorID'}
+                                value={formData.majorID}
+                                onChange={handleChange}>
+                            {majorOptions.length > 0 && majorOptions.map((major) => (
+                                <option key={major.id}
+                                        value={major.id}>{major.majorName}</option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Image upload */}
@@ -196,7 +239,8 @@ function AddSubject({ onClose, onAddedSubject }) {
                             className="w-full px-4 py-2 border rounded bg-white"
                         />
                         <p className="text-sm text-red-600 mt-1">
-                            ⚠️ <strong>Lưu ý:</strong> Tên file ảnh <span className="font-semibold">không nên chứa khoảng trắng</span>. Ví dụ: <code>SyllabusProfile.png</code>
+                            ⚠️ <strong>Lưu ý:</strong> Tên file ảnh <span className="font-semibold">không nên chứa khoảng trắng</span>.
+                            Ví dụ: <code>SyllabusProfile.png</code>
                         </p>
                         {preview && (
                             <img
