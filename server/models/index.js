@@ -540,8 +540,7 @@ const subjects = [
     description:
       "Môn học hướng dẫn lập trình trên Windows, bao gồm tạo ứng dụng, xử lý thông điệp, giao diện điều khiển, quản lý bộ nhớ, thư viện động và lập trình đa nhiệm.",
     majorID: 6,
-    image:
-      "https://drive.google.com/file/d/1gVo0lKuMpd5GKcfKBp7hs7cPA9LM_CAY/view?usp=sharing",
+    image: 'images/subject/10012023_IT008-Lập_trình_trực_quan_2022.pdf',
     knowledgeFieldID: 5,
   },
   {
@@ -551,8 +550,7 @@ const subjects = [
     description:
       "Môn học dạy lập trình hướng đối tượng, thừa kế, đa hình, interface và giao tiếp giữa các đối tượng",
     majorID: 6,
-    subjectSyllabusUrl:
-      "https://drive.google.com/file/d/1EtWZXW0ZolUtGYPeQyTHsRPFcnPIcvTz/view?usp=sharing",
+    image: 'images/subject/11092023_IT002-Lap_trinh_huong_doi_tuong_2022.pdf',
     knowledgeFieldID: 5,
   },
   {
@@ -562,8 +560,7 @@ const subjects = [
     description:
       "Môn học dạy phát triển phần mềm hướng đối tượng, tập trung vào phân tích, thiết kế hệ thống và nâng cao kỹ năng làm việc nhóm.",
     majorID: 6,
-    subjectSyllabusUrl:
-      "https://drive.google.com/file/d/1PurEyGaz2T1MMFgCRxvq-0A2GhEbroCn/view?usp=sharing",
+    image: 'images/subject/11092023_SE100_Phương_pháp_phát_triển_phần_mềm_hướng_đối_tượng.pdf',
     knowledgeFieldID: 5,
   },
 ];

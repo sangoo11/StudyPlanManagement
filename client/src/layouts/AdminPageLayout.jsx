@@ -1,25 +1,9 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Navigate, Outlet } from 'react-router';
 import UserLogo from '../assets/images/userlogo.png';
 
 function AdminPageLayout(props) {
-
-    const appName = 'EduOrganizer';
-    const appMail = 'eduorganizer@gmail.com';
-    const studentName = 'Admin Name';
-    const title1 = 'Statistics';
-    const title2 = 'Students';
-    const title3 = 'Teachers';
-    const title4 = 'Output Criteria';
-    const title5 = 'Subjects';
-    const title6 = 'Award Student';
-    const title7 = 'Active Teacher';
-    const title8 = 'Domain Knowledge';
-    const title9 = 'Domain Field';
-    const title10 = 'Certificate';
-
-
     const navLinkStyles = ({ isActive }) => {
         return {
             color: isActive ? "#1DA599" : "black",
@@ -30,6 +14,7 @@ function AdminPageLayout(props) {
         };
     };
 
+    const navigate = useNavigate();
 
     return (
         <div>
@@ -37,28 +22,26 @@ function AdminPageLayout(props) {
             <div className="fixed top-0 right-0 left-0 min-h-[8vh] bg-white items-center justify-center pt-4 border-b border-[#1DA599]">
                 <div className="flex justify-center items-center space-x-4">
                     <div className='fixed left-0'>
-                        <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{appName}</h1>
+                        <h1 className="text-3xl text-[#1DA599] font-bold pl-10">Edu Organizer</h1>
                     </div>
 
                     <NavLink style={navLinkStyles} to="/admin" end></NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/statistics" >{title1}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/students">{title2}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/teachers">{title3}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/activeteacher">{title7}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/outputcriteria">{title4}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/subjects">{title5}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/awardstudent">{title6}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/domainknowledge">{title8}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/domainfield">{title9}</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/certificate">{title10}</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/statistics">Statistics</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/students">Students</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/teachers">Teachers</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/activeteacher">Active Teachers</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/outputcriteria">Output Criteria</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/subjects">Subjects</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/awardstudent">Award Students</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/domainknowledge">Domain Knowledge</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/domainfield">Domain Field</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/certificate">Certificate</NavLink>
 
-
-
-                    <button className='fixed right-10 space-x-2'>
+                    <button className='fixed right-10 space-x-2' onClick={() => navigate('/admin/accountadmin')}>
                         <div className='fixed w-6 h-6 items-center justify-center'>
                             <img src={UserLogo} />
                         </div>
-                        <h1 className="text-[#1DA599] pl-10">{studentName}</h1>
+                        <h1 className="text-[#1DA599] pl-6 cursor-pointer">Admin</h1>
                     </button>
                 </div>
             </div>

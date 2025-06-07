@@ -17,7 +17,7 @@ class ScoreController {
     getStudentScoreByID = async (req, res, next) => {
         new CREATED({
             message: "GET Student Score By ID OK",
-            metadata: await ScoreService.getStudentScoreByID(req.params.studentID, req.body),
+            metadata: await ScoreService.getStudentScoreByID(req.params, req.body),
             options: {
                 limit: 10,
             }
