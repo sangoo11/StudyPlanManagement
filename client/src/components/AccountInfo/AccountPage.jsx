@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import AccountInfo from "./AccountInfo";
+import AccountInfo from "./AccountInfo.jsx";
 
 function AccountPage() {
     const accountID = localStorage.getItem('accountID');

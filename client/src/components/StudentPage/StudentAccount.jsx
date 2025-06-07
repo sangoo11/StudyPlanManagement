@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useState, useEffect, useCallback} from "react";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import AccountInfo from "../AccountInfo";
+import AccountInfo from "../AccountInfo/AccountInfo.jsx";
 
 function StudentAccount() {
     const accountID = localStorage.getItem("accountID"); // Retrieve account ID from localStorage
@@ -75,7 +75,7 @@ function StudentAccount() {
 
     return (
         <div className="w-full min-h-screen bg-green-50 p-6">
-            <AccountInfo accountInfo={accountInfo} title="Thông tin cá nhân" />
+            <AccountInfo accountID={accountID} accountableType={"student"}/>
             <div className="mt-6 flex justify-between w-full max-w-md mx-auto">
                 <button
                     onClick={handleReturn}
