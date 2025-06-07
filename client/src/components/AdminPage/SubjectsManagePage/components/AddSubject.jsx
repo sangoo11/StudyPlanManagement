@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-
 import axios from "axios";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
-function AddSubject({onClose, onAddedSubject}) {
+function AddSubject({ onClose, onAddedSubject }) {
     const [formData, setFormData] = useState({
         subjectCode: "",
         subjectName: "",
@@ -13,34 +12,6 @@ function AddSubject({onClose, onAddedSubject}) {
         knowledgeFieldID: "",
         image: null,
     });
-
-    const [fieldOptions, setFieldOptions] = useState([]);
-    const [domainOptions, setDomainOptions] = useState([]);
-    const [selectedDomain, setSelectedDomain] = useState("");
-    const [majorOptions, setMajorOptions] = useState([]);
-
-    useEffect(() => {
-        const fetchMajorOptions = async () => {
-            const {data} = await axios.get(`http://localhost:8080/v1/api/major?fields=majorName`);
-            setMajorOptions(data.metadata);
-        }
-        const fetchDomainOptions = async () => {
-            const {data} = await axios.get(`http://localhost:8080/v1/api/knowledge-domain?fields=name`);
-            setDomainOptions(data.metadata);
-        }
-
-
-        fetchMajorOptions();
-        fetchDomainOptions();
-
-        if (selectedDomain) {
-            const fetchFieldOptions = async () => {
-                const {data} = await axios.get(`http://localhost:8080/v1/api/knowledge-field?fields=name&knowledgeDomainID=${selectedDomain}`);
-                setFieldOptions(data.metadata);
-            }
-            fetchFieldOptions();
-        }
-    }, [selectedDomain]);
 
     const [error, setError] = useState("");
     const [preview, setPreview] = useState(null);
@@ -63,7 +34,7 @@ function AddSubject({onClose, onAddedSubject}) {
 
         const fetchMajors = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/v1/api/major/get-all-major");
+                const res = await axios.get("http://localhost:8080/v1/api/major/");
                 if (res.status === 201) {
                     setMajors(res.data.metadata);
                 } else {
@@ -79,7 +50,7 @@ function AddSubject({onClose, onAddedSubject}) {
     }, []);
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -105,7 +76,6 @@ function AddSubject({onClose, onAddedSubject}) {
     const isFormValid = () => {
         const { subjectCode, subjectName, credit, majorID, description, knowledgeFieldID, image } = formData;
 
-
         if (!subjectCode || !subjectName || !credit || !majorID || !description || !knowledgeFieldID || !image) {
             setError("Vui lòng điền đầy đủ thông tin và chọn hình ảnh.");
             return false;
@@ -121,14 +91,13 @@ function AddSubject({onClose, onAddedSubject}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         if (!isFormValid()) return;
-
 
         try {
             const form = new FormData();
             Object.entries(formData).forEach(([key, value]) => form.append(key, value));
+
             const response = await axios.post(
                 `http://localhost:8080/v1/api/subject/create-new-subject/`,
                 form,
@@ -208,6 +177,7 @@ function AddSubject({onClose, onAddedSubject}) {
                             placeholder="Nhập mô tả môn học"
                         />
                     </div>
+
                     <div>
                         <label className="block text-gray-700">Lĩnh vực kiến thức:</label>
                         <select
@@ -221,11 +191,9 @@ function AddSubject({onClose, onAddedSubject}) {
                                 <option key={field.id} value={field.id}>
                                     {field.name}
                                 </option>
-
                             ))}
                         </select>
                     </div>
-
 
                     <div>
                         <label className="block text-gray-700">Chuyên ngành:</label>
@@ -240,7 +208,6 @@ function AddSubject({onClose, onAddedSubject}) {
                                 <option key={major.id} value={major.id}>
                                     {major.majorName}
                                 </option>
-
                             ))}
                         </select>
                     </div>
@@ -254,8 +221,7 @@ function AddSubject({onClose, onAddedSubject}) {
                             className="w-full px-4 py-2 border rounded bg-white"
                         />
                         <p className="text-sm text-red-600 mt-1">
-                            ⚠️ <strong>Lưu ý:</strong> Tên file ảnh <span className="font-semibold">không nên chứa khoảng trắng</span>.
-                            Ví dụ: <code>SyllabusProfile.png</code>
+                            ⚠️ <strong>Lưu ý:</strong> Tên file ảnh <span className="font-semibold">không nên chứa khoảng trắng</span>. Ví dụ: <code>SyllabusProfile.png</code>
                         </p>
                         {preview && (
                             <img
