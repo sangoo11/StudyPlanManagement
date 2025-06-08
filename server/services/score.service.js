@@ -386,6 +386,33 @@ class ScoreService {
         return studentScores;
     }
 
+    static getScore = async (studentID, { subjectID }) => {
+        const scores = await Enrollment.findAll({
+            where: {
+                studentID
+            },
+            include: [
+                {
+                    model: Score,
+                    attributes: ['scoreType', 'score']
+                },
+                {
+                    model: Course,
+                    required: true,
+                    include: [
+                        {
+                            model: Subject,
+                            required: true,
+                            where: subjectID ? { id: subjectID } : {}
+                        }
+                    ]
+                }
+            ]
+        });
+
+        return scores;
+    }
+
     // Helper function
     static compareLevel = (currentLevel, highestLevel) => {
         const currentLevelNumber = parseInt(currentLevel.match(/\d+/)[0]);

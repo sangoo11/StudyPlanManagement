@@ -238,6 +238,45 @@ class LearningOutcomeService {
 
         return subjectLearningOutcome;
     }
+
+    static createStudentScores = async (studentID) => {
+        try {
+            // Get all learning outcomes
+            const learningOutcomes = await LearningOutcome.findAll();
+
+            if (!learningOutcomes.length) {
+                throw new Error('No learning outcomes found');
+            }
+
+            // Create initial scores with specific levels based on learning outcome ID
+            const scores = learningOutcomes.map(outcome => {
+                let initialLevel = 'NT1'; // Default level
+
+                // Set specific levels based on learning outcome ID
+                if (outcome.id >= 3 && outcome.id <= 7) {
+                    initialLevel = 'KN1';
+                } else if (outcome.id === 8) {
+                    initialLevel = 'TD1';
+                }
+
+                return {
+                    studentID,
+                    learningOutcomeID: outcome.id,
+                    highestLevel: initialLevel
+                };
+            });
+
+            // Bulk create scores
+            await LearningOutcomeScore.bulkCreate(scores);
+
+            return {
+                message: 'Learning outcome scores created successfully',
+                count: scores.length
+            };
+        } catch (error) {
+            throw new Error(`Error creating learning outcome scores: ${error.message}`);
+        }
+    }
 }
 
 module.exports = LearningOutcomeService;

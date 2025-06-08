@@ -178,10 +178,22 @@ class AccessService {
       if (!newStudent) throw new Error("Cannot create student");
       newUserID = newStudent.id;
       const allLearningOutcomes = await LearningOutcome.findAll();
-      const scores = allLearningOutcomes.map((outcome) => ({
-        studentID: newStudent.id,
-        learningOutcomeID: outcome.id,
-      }));
+      const scores = allLearningOutcomes.map((outcome) => {
+        let initialLevel = 'NT1'; // Default level
+
+        // Set specific levels based on learning outcome ID
+        if (outcome.id >= 3 && outcome.id <= 7) {
+          initialLevel = 'KN1';
+        } else if (outcome.id === 8) {
+          initialLevel = 'TD1';
+        }
+
+        return {
+          studentID: newStudent.id,
+          learningOutcomeID: outcome.id,
+          highestLevel: initialLevel
+        };
+      });
       await LearningOutcomeScore.bulkCreate(scores);
     }
     if (accountableType === "teacher") {

@@ -32,7 +32,8 @@ const LearningOutcome = sequelize.define('LearningOutcome', {
     defaultValue: true
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  tableName: 'learningoutcomes'
 });
 
 module.exports = LearningOutcome; 

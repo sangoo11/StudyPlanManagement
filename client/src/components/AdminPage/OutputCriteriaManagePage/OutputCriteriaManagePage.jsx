@@ -18,7 +18,7 @@ function OutputCriteriaManagePage() {
   const [learningOutcomes, setLearningOutcomes] = useState([]);
   // State for subjects by learning outcome
   const [subjects, setSubjects] = useState({});
-  
+
   // States for modals
   const [isAddCriteriaVisible, setAddCriteriaVisible] = useState(false);
   const [isDeleteCriteriaVisible, setDeleteCriteriaVisible] = useState(false);
@@ -28,7 +28,7 @@ function OutputCriteriaManagePage() {
   const [isAddSubjectVisible, setAddSubjectVisible] = useState(false);
   const [isDeleteSubjectVisible, setDeleteSubjectVisible] = useState(false);
   const [isEditSubjectVisible, setEditSubjectVisible] = useState(false);
-  
+
   const fetchLearningOutcomes = async () => {
     try {
       const response = await axios.get(
@@ -40,6 +40,7 @@ function OutputCriteriaManagePage() {
       console.error("Error fetching learning outcomes:", error);
     }
   };
+
   useEffect(() => {
     fetchLearningOutcomes();
   }, []);
@@ -73,7 +74,7 @@ function OutputCriteriaManagePage() {
       console.error(`Error fetching subjects for learning outcome ${learningOutcomeID}:`, error);
     }
   }, []);
-  
+
   useEffect(() => {
     if (selectedLearningOutcomeId) {
       fetchSubjects(selectedLearningOutcomeId);
@@ -124,7 +125,7 @@ function OutputCriteriaManagePage() {
                   className="flex justify-center items-center w-11 h-full rounded-full hover:border-4 hover:border-yellow-400 transition border-4 border-white"
                   onClick={() => {
                     setSelectedLearningOutcomeId(outcome.id);
-                    setSelectedLearningOutcomeCode(outcome.learningOutcomeCode); 
+                    setSelectedLearningOutcomeCode(outcome.learningOutcomeCode);
                     setDeleteCriteriaVisible(true);
                   }}
                   aria-label="Delete Criteria"
@@ -159,39 +160,39 @@ function OutputCriteriaManagePage() {
                   <strong>Status:</strong> {outcome.active ? "Active" : "Inactive"}
                 </p>
                 <div className="flex justify-between">
-                    
-                    <button
-                      onClick={() => {
-                        setSelectedLearningOutcomeId(outcome.id);
-                        setAddSubjectVisible(true);
-                      }}
-                      className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
-                      aria-label="Add Subject"
-                    >
-                      Thêm môn học
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        setSelectedLearningOutcomeId(outcome.id);
-                        setEditSubjectVisible(true);
-                      }}
-                      className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
-                      aria-label="Edit Subject"
-                    >
-                      Chỉnh sửa môn học
-                    </button>
 
-                    <button
-                      onClick={() => {
-                        setSelectedLearningOutcomeId(outcome.id);
-                        setDeleteSubjectVisible(true);
-                      }}
-                      className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
-                      aria-label="Delete Subject"
-                    >
-                      Xóa môn học
-                    </button>
+                  <button
+                    onClick={() => {
+                      setSelectedLearningOutcomeId(outcome.id);
+                      setAddSubjectVisible(true);
+                    }}
+                    className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
+                    aria-label="Add Subject"
+                  >
+                    Thêm môn học
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSelectedLearningOutcomeId(outcome.id);
+                      setEditSubjectVisible(true);
+                    }}
+                    className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
+                    aria-label="Edit Subject"
+                  >
+                    Chỉnh sửa môn học
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSelectedLearningOutcomeId(outcome.id);
+                      setDeleteSubjectVisible(true);
+                    }}
+                    className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
+                    aria-label="Delete Subject"
+                  >
+                    Xóa môn học
+                  </button>
                 </div>
 
                 {/* Table */}
@@ -213,21 +214,21 @@ function OutputCriteriaManagePage() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>  
+                  </table>
                 )}
                 <div>
-                    <button
-                      onClick={() => {
-                        setSelectedLearningOutcomeId(outcome.id);
-                        setEditCriteriaVisible(true);
-                      }}
-                      className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
-                      aria-label="Add Criteria"
-                    >
-                      Chỉnh sửa tiêu chuẩn đầu ra
-                    </button>
+                  <button
+                    onClick={() => {
+                      setSelectedLearningOutcomeId(outcome.id);
+                      setEditCriteriaVisible(true);
+                    }}
+                    className="w-[20vw] h-10 bg-[#1DA599] font-bold text-white rounded hover:border-4 hover:border-yellow-400 flex items-center justify-center mt-[4vh]"
+                    aria-label="Add Criteria"
+                  >
+                    Chỉnh sửa tiêu chuẩn đầu ra
+                  </button>
                 </div>
-                
+
               </div>
             )}
           </div>
@@ -250,42 +251,42 @@ function OutputCriteriaManagePage() {
         <AddCriteria onClose={() => setAddCriteriaVisible(false)} onAddedCriteria={fetchLearningOutcomes} />
       )}
       {isEditCriteriaVisible && (
-        <EditCriteria 
-            onClose={() => setEditCriteriaVisible(false)} 
-            id={selectedLearningOutcomeId}
-            onEditedCriteria={fetchLearningOutcomes}
+        <EditCriteria
+          onClose={() => setEditCriteriaVisible(false)}
+          id={selectedLearningOutcomeId}
+          onEditedCriteria={fetchLearningOutcomes}
         />
       )}
       {isDeleteCriteriaVisible && (
-        <DeleteCriteria 
-            onClose={() => setDeleteCriteriaVisible(false)} 
-            id={selectedLearningOutcomeId}
-            lOID={selectedLearningOutcomeCode}
-            onDeletedCriteria={fetchLearningOutcomes}
+        <DeleteCriteria
+          onClose={() => setDeleteCriteriaVisible(false)}
+          id={selectedLearningOutcomeId}
+          lOID={selectedLearningOutcomeCode}
+          onDeletedCriteria={fetchLearningOutcomes}
         />
       )}
       {isDeleteSubjectVisible && (
         <DeleteSubject
-            onClose={() => setDeleteSubjectVisible(false)} 
-            lOID={selectedLearningOutcomeId}
-            onDeletedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
+          onClose={() => setDeleteSubjectVisible(false)}
+          lOID={selectedLearningOutcomeId}
+          onDeletedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
         />
       )}
       {isAddSubjectVisible && (
         <AddSubject
-            onClose={() => setAddSubjectVisible(false)} 
-            id={selectedLearningOutcomeId}
-            onAddedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
+          onClose={() => setAddSubjectVisible(false)}
+          id={selectedLearningOutcomeId}
+          onAddedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
         />
       )}
       {isEditSubjectVisible && (
         <EditSubject
-            onClose={() => setEditSubjectVisible(false)} 
-            lOID={selectedLearningOutcomeId}
-            onEditedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
+          onClose={() => setEditSubjectVisible(false)}
+          lOID={selectedLearningOutcomeId}
+          onEditedSubject={() => fetchSubjects(selectedLearningOutcomeId)}
         />
       )}
-      
+
     </div>
   );
 }

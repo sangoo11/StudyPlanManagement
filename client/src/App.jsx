@@ -1,4 +1,4 @@
-import {Navigate, Route, Routes} from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import 'react-toastify/dist/ReactToastify.css';
 import SignInPage from './components/SignInPage/SignInPage'
 import SignUpPage from './components/SignUpPage/SignUpPage'
@@ -12,7 +12,7 @@ import HomePageLayout from './layouts/HomePageLayout'
 import SignUpInLayout from './layouts/SignUpInLayout';
 import AdminPage from './components/AdminPage/AdminPage'
 import AccountPage from './components/AccountInfo/AccountPage.jsx'
-import {ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 // Layout
 import AdminPageLayout from './layouts/AdminPageLayout';
@@ -110,111 +110,111 @@ function App() {
         <>
             <Routes>
                 {/* Public Routes */}
-                <Route element={<HomePageLayout/>}>
-                    <Route path='' element={<HomePage/>}/>
-                    <Route path='home' element={<HomePage/>}/>
-                    <Route path='service' element={<ServicePage/>}/>
-                    <Route path='about' element={<AboutPage/>}/>
-                    <Route path='ourteams' element={<OurTeamsPage/>}/>
-                    <Route path='contact' element={<ContactPage/>}/>
+                <Route element={<HomePageLayout />}>
+                    <Route path='' element={<HomePage />} />
+                    <Route path='home' element={<HomePage />} />
+                    <Route path='service' element={<ServicePage />} />
+                    <Route path='about' element={<AboutPage />} />
+                    <Route path='ourteams' element={<OurTeamsPage />} />
+                    <Route path='contact' element={<ContactPage />} />
                 </Route>
 
-                <Route element={<SignUpInLayout/>}>
-                    <Route path='signin' element={<SignInPage/>}/>
-                    <Route path='verify-code' element={<CodeVerifyPage/>}/>
-                    <Route path='signup' element={<SignUpPage/>}/>
-                    <Route path='forgot-password' element={<ForgotPasswordPage/>}/>
+                <Route element={<SignUpInLayout />}>
+                    <Route path='signin' element={<SignInPage />} />
+                    <Route path='verify-code' element={<CodeVerifyPage />} />
+                    <Route path='signup' element={<SignUpPage />} />
+                    <Route path='forgot-password' element={<ForgotPasswordPage />} />
                 </Route>
 
                 {/* Protected Routes */}
-                <Route element={<StudentPageLayout/>}>
-                    <Route path='student' element={<StudentPage/>}></Route>
-                    <Route path='student/results' element={<LearningResults/>}/>
-                    <Route path='student/outcome' element={<StudentLearningOutcome/>}/>
-                    <Route path='student/award' element={<Award/>}/>
-                    <Route path='student/account/:accountID' element={<StudentAccount/>}/>
-                    <Route path='student/domainfield' element={<StudentDomainField/>}/>
-                    <Route path='student/certificate' element={<StudentCertificate/>}/>
+                <Route element={<StudentPageLayout />}>
+                    <Route path='student' element={<StudentPage />}></Route>
+                    <Route path='student/results' element={<LearningResults />} />
+                    <Route path='student/outcome' element={<StudentLearningOutcome />} />
+                    <Route path='student/award' element={<Award />} />
+                    <Route path='student/account/:accountID' element={<StudentAccount />} />
+                    <Route path='student/domainfield' element={<StudentDomainField />} />
+                    <Route path='student/certificate' element={<StudentCertificate />} />
                 </Route>
 
-                <Route element={<TeacherPageLayout/>}>
-                    <Route path='teacher' element={<TeacherPage/>}> </Route>
-                    <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail/>}/>
-                    <Route path='/teacher/statistics' element={<Statistics/>}/>
-                    <Route path='teacher/editpoint/:studentID' element={<EditPoint/>}/>
-                    <Route path='teacher/account/:accountID' element={<TeacherAccount/>}/>
+                <Route element={<TeacherPageLayout />}>
+                    <Route path='teacher' element={<TeacherPage />}> </Route>
+                    <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
+                    <Route path='/teacher/statistics' element={<Statistics />} />
+                    <Route path='teacher/editpoint/:studentID' element={<EditPoint />} />
+                    <Route path='teacher/account/:accountID' element={<TeacherAccount />} />
                 </Route>
 
-                <Route path='admin' element={<AdminPageLayout/>}>
-                    <Route path='statistics' element={<Statistics/>}/>
-                    <Route path='students' element={<StudentsManagePage/>}/>
-                    <Route path='teachers' element={<TeachersManagePage/>}/>
-                    <Route path='subjects' element={<SubjectsManagePage/>}/>
-                    <Route path='outputcriteria' element={<OutputCriteriaManagePage/>}/>
-                    <Route path='detailclassroom/:courseID' element={<DetailClassroom/>}/>
-                    <Route path='accountadmin' element={<AccountPage/>}/>
-                    <Route path='activeteacher' element={<ActiveTeacher/>}/>
-                    <Route path='awardstudent' element={<AwardStudent/>}/>
-                    <Route path='domainknowledge' element={<DomainKnowledge/>}/>
-                    <Route path='domainfield' element={<DomainField/>}/>
-                    <Route path='certificate' element={<Certificate/>}/>
-                    <Route path='cerapproval' element={<ApprovalCertificate/>}/>
-                    <Route path='cerexpired' element={<ExpiredCertificate/>}/>
+                <Route path='admin' element={<AdminPageLayout />}>
+                    <Route path='statistics' element={<Statistics />} />
+                    <Route path='students' element={<StudentsManagePage />} />
+                    <Route path='teachers' element={<TeachersManagePage />} />
+                    <Route path='subjects' element={<SubjectsManagePage />} />
+                    <Route path='learningoutcome' element={<OutputCriteriaManagePage />} />
+                    <Route path='detailclassroom/:courseID' element={<DetailClassroom />} />
+                    <Route path='accountadmin' element={<AccountPage />} />
+                    <Route path='activeteacher' element={<ActiveTeacher />} />
+                    <Route path='awardstudent' element={<AwardStudent />} />
+                    <Route path='domainknowledge' element={<DomainKnowledge />} />
+                    <Route path='domainfield' element={<DomainField />} />
+                    <Route path='certificate' element={<Certificate />} />
+                    <Route path='cerapproval' element={<ApprovalCertificate />} />
+                    <Route path='cerexpired' element={<ExpiredCertificate />} />
                 </Route>
 
                 {/* Student modals */}
-                <Route path='student/certificate/addcertificate' element={<StudentAddCertificate/>}/>
-                <Route path='student/certificate/editcertificate' element={<StudentEditCertificate/>}/>
+                <Route path='student/certificate/addcertificate' element={<StudentAddCertificate />} />
+                <Route path='student/certificate/editcertificate' element={<StudentEditCertificate />} />
 
 
                 {/* Admin modals */}
-                <Route path='admin/subjects/addclassroom' element={<AddClassroom/>}/>
-                <Route path='admin/subjects/deleteclassroom' element={<DeleteClassroom/>}/>
-                <Route path='admin/subjects/editclassroom' element={<EditClassroom/>}/>
+                <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />
+                <Route path='admin/subjects/deleteclassroom' element={<DeleteClassroom />} />
+                <Route path='admin/subjects/editclassroom' element={<EditClassroom />} />
 
-                <Route path='admin/students/addstudent' element={<AddStudentInManagePage/>}/>
+                <Route path='admin/students/addstudent' element={<AddStudentInManagePage />} />
 
-                <Route path='admin/activeteacher/setactive' element={<SetActive/>}/>
+                <Route path='admin/activeteacher/setactive' element={<SetActive />} />
 
-                <Route path='admin/awardstudent/addaward' element={<AddAward/>}/>
-                <Route path='admin/awardstudent/editaward' element={<EditAward/>}/>
-                <Route path='admin/awardstudent/deleteaward' element={<DeleteAward/>}/>
-                <Route path='admin/awardstudent/addstudent' element={<AddStudentToAward/>}/>
-                <Route path='admin/awardstudent/deletestudent' element={<DeleteStudentToAward/>}/>
+                <Route path='admin/awardstudent/addaward' element={<AddAward />} />
+                <Route path='admin/awardstudent/editaward' element={<EditAward />} />
+                <Route path='admin/awardstudent/deleteaward' element={<DeleteAward />} />
+                <Route path='admin/awardstudent/addstudent' element={<AddStudentToAward />} />
+                <Route path='admin/awardstudent/deletestudent' element={<DeleteStudentToAward />} />
 
-                <Route path='admin/teachers/addteacher' element={<AddTeacher/>}/>
-                <Route path='admin/teachers/editteacher' element={<EditTeacher/>}/>
-                <Route path='admin/teachers/deleteteacher' element={<DeleteTeacher/>}/>
+                <Route path='admin/teachers/addteacher' element={<AddTeacher />} />
+                <Route path='admin/teachers/editteacher' element={<EditTeacher />} />
+                <Route path='admin/teachers/deleteteacher' element={<DeleteTeacher />} />
 
-                <Route path='admin/subjects/addstudent' element={<AddStudent/>}/>
-                <Route path='admin/subjects/deletestudent' element={<DeleteStudent/>}/>
-                <Route path='admin/subjects/editstudent' element={<EditStudent/>}/>
+                <Route path='admin/subjects/addstudent' element={<AddStudent />} />
+                <Route path='admin/subjects/deletestudent' element={<DeleteStudent />} />
+                <Route path='admin/subjects/editstudent' element={<EditStudent />} />
 
-                <Route path='admin/subjects/addsubject' element={<AddSubject/>}/>
-                <Route path='admin/subjects/deletesubject' element={<DeleteSubject/>}/>
-                <Route path='admin/subjects/editsubject' element={<EditSubject/>}/>
-                <Route path='admin/subjects/editsubjectlevel' element={<EditSubjectLevelInLO/>}/>
+                <Route path='admin/subjects/addsubject' element={<AddSubject />} />
+                <Route path='admin/subjects/deletesubject' element={<DeleteSubject />} />
+                <Route path='admin/subjects/editsubject' element={<EditSubject />} />
+                <Route path='admin/subjects/editsubjectlevel' element={<EditSubjectLevelInLO />} />
 
-                <Route path='admin/outputcriteria/addcriteria' element={<AddSubject/>}/>
-                <Route path='admin/outputcriteria/deletecriteria' element={<DeleteCriteria/>}/>
-                <Route path='admin/outputcriteria/editcriteria' element={<EditCriteria/>}/>
-                <Route path='admin/outputcriteria/addsubject' element={<AddSubjectInCriteria/>}/>
-                <Route path='admin/outputcriteria/deletesubject' element={<DeleteSubjectInCriteria/>}/>
-                <Route path='admin/outputcriteria/editsubject' element={<EditSubjectInCriteria/>}/>
+                <Route path='admin/outputcriteria/addcriteria' element={<AddSubject />} />
+                <Route path='admin/outputcriteria/deletecriteria' element={<DeleteCriteria />} />
+                <Route path='admin/outputcriteria/editcriteria' element={<EditCriteria />} />
+                <Route path='admin/outputcriteria/addsubject' element={<AddSubjectInCriteria />} />
+                <Route path='admin/outputcriteria/deletesubject' element={<DeleteSubjectInCriteria />} />
+                <Route path='admin/outputcriteria/editsubject' element={<EditSubjectInCriteria />} />
 
-                <Route path='admin/domainknowledge/adddn' element={<AddKnowledge/>}/>
-                <Route path='admin/domainknowledge/editdn' element={<EditKnowledge/>}/>
-                <Route path='admin/domainknowledge/deletedn' element={<DeleteKnowledge/>}/>
+                <Route path='admin/domainknowledge/adddn' element={<AddKnowledge />} />
+                <Route path='admin/domainknowledge/editdn' element={<EditKnowledge />} />
+                <Route path='admin/domainknowledge/deletedn' element={<DeleteKnowledge />} />
 
-                <Route path='admin/domainfield/adddf' element={<AddDomainField/>}/>
-                <Route path='admin/domainfield/editdf' element={<EditDomainField/>}/>
-                <Route path='admin/domainfield/deletedf' element={<DeleteDomainField/>}/>
+                <Route path='admin/domainfield/adddf' element={<AddDomainField />} />
+                <Route path='admin/domainfield/editdf' element={<EditDomainField />} />
+                <Route path='admin/domainfield/deletedf' element={<DeleteDomainField />} />
 
-                <Route path='admin/certificate/addcertificate' element={<AddCertificate/>}/>
-                <Route path='admin/certificate/editcertificate' element={<EditCertificate/>}/>
+                <Route path='admin/certificate/addcertificate' element={<AddCertificate />} />
+                <Route path='admin/certificate/editcertificate' element={<EditCertificate />} />
 
                 {/* Catch-all route for undefined paths */}
-                <Route path='*' element={<ErrorPage/>}/>
+                <Route path='*' element={<ErrorPage />} />
             </Routes>
 
             <ToastContainer
