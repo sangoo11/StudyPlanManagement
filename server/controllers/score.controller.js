@@ -1,4 +1,4 @@
-const { CREATED } = require('../core/success.response');
+const { CREATED, OK } = require('../core/success.response');
 const ScoreService = require('../services/score.service')
 
 class ScoreController {
@@ -29,6 +29,16 @@ class ScoreController {
         new CREATED({
             message: "GET Student Score By Course OK",
             metadata: await ScoreService.getStudentScore(req.params.studentID, req.query),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
+
+    getScore = async (req, res, next) => {
+        new OK({
+            message: "GET Student Score  OK",
+            metadata: await ScoreService.getScore(req.params.studentID, req.query),
             options: {
                 limit: 10,
             }

@@ -12,6 +12,6 @@ router.post("/grade-score/:studentID", asyncHandler(ScoreController.gradeScore))
 router.post("/get-student-score-by-id/:studentID", asyncHandler(ScoreController.getStudentScoreByID));
 
 // handle get score
-router.get("/:studentID", asyncHandler(ScoreController.getStudentScoreByID));
+router.get("/:studentID", asyncHandler(ScoreController.getScore));
 
 module.exports = router;
