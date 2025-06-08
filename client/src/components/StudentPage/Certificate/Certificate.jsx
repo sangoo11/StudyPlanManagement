@@ -40,25 +40,6 @@ function Certificate() {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      if (window.confirm('Bạn có chắc chắn muốn xoá chứng chỉ này?')) {
-        await axios.delete(`http://localhost:8080/v1/api/certificate/${id}`);
-        toast.success('Xoá chứng chỉ thành công!');
-        await getStudentDataAndCertificates();
-      } else {
-        toast.info('Đã huỷ xoá chứng chỉ.');
-      }
-    } catch (error) {
-      console.error('Failed to delete certificate:', error);
-      toast.error('Xoá chứng chỉ thất bại!');
-    }
-  };
-
-  const handleEditClick = (id) => {
-    setSelectedId(id);
-    setShowEditModal(true);
-  };
 
   useEffect(() => {
     getStudentDataAndCertificates();
@@ -96,7 +77,7 @@ function Certificate() {
                   <th className="p-3 border">Ngày thi</th>
                   <th className="p-3 border">Ngày hết hạn</th>
                   <th className="p-3 border">Trạng thái</th>
-                  <th className="p-3 border">Hành động</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -109,32 +90,11 @@ function Certificate() {
                     <td className="p-3 border">{new Date(cert.takenAt).toLocaleDateString()}</td>
                     <td className="p-3 border">{new Date(cert.expiredAt).toLocaleDateString()}</td>
                     <td className="p-3 border">
-                      <span
-                        className={
-                          cert.status === 'pending'
-                            ? 'font-bold text-yellow-600'
-                            : cert.status === 'valid'
-                            ? 'font-bold text-green-600'
-                            : 'font-bold text-red-600'
-                        }
-                      >
-                        {cert.status}
+                      <span className={cert.status === 'pending' ? 'font-bold text-yellow-600' : cert.status === 'valid' ? 'font-bold text-green-600' : 'font-bold text-red-600'}>
+                        {cert.status.charAt(0).toUpperCase() + cert.status.slice(1)}
                       </span>
                     </td>
-                    <td className="p-3 border space-x-2">
-                      <button
-                        className="bg-yellow-500 text-white px-3 py-1 rounded"
-                        onClick={() => handleEditClick(cert.id)}
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded"
-                        onClick={() => handleDelete(cert.id)}
-                      >
-                        Xoá
-                      </button>
-                    </td>
+                  
                   </tr>
                 ))}
               </tbody>
@@ -148,13 +108,6 @@ function Certificate() {
         <AddCertificate
           onClose={() => setShowAddModal(false)}
           onAdded={() => getStudentDataAndCertificates()}
-        />
-      )}
-      {showEditModal && selectedId && (
-        <EditCertificate
-          id={selectedId}
-          onClose={() => setShowEditModal(false)}
-          onEdited={() => getStudentDataAndCertificates()}
         />
       )}
     </div>

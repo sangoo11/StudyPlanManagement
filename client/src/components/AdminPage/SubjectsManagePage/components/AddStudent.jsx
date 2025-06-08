@@ -1,57 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function AddStudent({ onClose, courseId }) {
     const [formData, setFormData] = useState({ studentID: "" });
-    const [studentData, setStudentData] = useState(null);
+    const [students, setStudents] = useState([]);
+    const [selectedStudent, setSelectedStudent] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Handle input change
+    // Fetch all students on mount
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/v1/api/student/get-all-student");
+                setStudents(response.data.metadata || []);
+            } catch (err) {
+                console.error("Error fetching students:", err);
+                setError("Failed to load student list.");
+            }
+        };
+        fetchStudents();
+    }, []);
+
+    // Handle dropdown change
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const selectedId = e.target.value;
+        setFormData({ studentID: selectedId });
+
+        const student = students.find(s => s.id.toString() === selectedId);
+        setSelectedStudent(student || null);
     };
 
-    // Fetch student data
-    const fetchStudentData = async () => {
-        if (!formData.studentID) {
-            setError("Student ID is required to fetch data.");
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await axios.get(
-                `http://localhost:8080/v1/api/student/get-student/${formData.studentID}`
-            );
-            setStudentData(response.data.metadata); // Adjust as per API response
-        } catch (err) {
-            setError(
-                err.response?.data?.message || "Unable to fetch student data. Please try again."
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Handle form submission
+    // Handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!formData.studentID) {
-            setError("Student ID is required.");
+            setError("Please select a student.");
             return;
         }
+
+        setLoading(true);
+        setError(null);
 
         const enrollmentPayload = {
             studentLists: [{ studentID: Number(formData.studentID) }],
         };
-
-        setLoading(true);
-        setError(null);
 
         try {
             await axios.post(
@@ -62,9 +56,7 @@ function AddStudent({ onClose, courseId }) {
             onClose();
             window.location.reload();
         } catch (err) {
-            setError(
-                err.response?.data?.message || "Failed to enroll student. Please try again."
-            );
+            setError(err.response?.data?.message || "Failed to enroll student.");
         } finally {
             setLoading(false);
         }
@@ -73,35 +65,32 @@ function AddStudent({ onClose, courseId }) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
             <div className="flex flex-col w-[50vw] h-[70vh] bg-gray-200 p-6 rounded">
-                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">
-                    Add New Student
-                </h2>
+                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Add New Student</h2>
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
                     <div>
-                        <label className="block text-gray-700">Student ID:</label>
-                        <input
-                            type="text"
+                        <label className="block text-gray-700">Select Student:</label>
+                        <select
                             name="studentID"
                             value={formData.studentID}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border rounded"
-                        />
-                        <button
-                            type="button"
-                            onClick={fetchStudentData}
-                            disabled={loading}
-                            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                         >
-                            {loading ? "Fetching..." : "Fetch Student Data"}
-                        </button>
+                            <option value="">-- Select a student --</option>
+                            {students.map((student) => (
+                                <option key={student.id} value={student.id}>
+                                    {student.fullName} (ID: {student.id})
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    {studentData && (
+                    {selectedStudent && (
                         <div className="mt-4 p-4 bg-gray-100 border rounded">
-                            <h3 className="font-bold">Student Details:</h3>
-                            <p>ID: {studentData.id}</p>
-                            <p>Full Name: {studentData.fullName}</p>
-                            <p>Major: {studentData.major}</p>
+                            <h3 className="font-bold mb-1">Student Details:</h3>
+                            <p><strong>ID:</strong> {selectedStudent.id}</p>
+                            <p><strong>Full Name:</strong> {selectedStudent.fullName}</p>
+                            <p><strong>Year:</strong> {selectedStudent.year}</p>
+                            <p><strong>Status:</strong> {selectedStudent.status}</p>
                         </div>
                     )}
 
