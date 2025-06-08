@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement } from "chart.js";
-import { Bar, Pie, Doughnut } from 'react-chartjs-2';
+import {Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement} from "chart.js";
+import {Bar, Pie, Doughnut} from 'react-chartjs-2';
 
 // Register the necessary Chart.js components
 ChartJS.register(
@@ -28,7 +28,7 @@ function Statistics() {
     useEffect(() => {
         const getLOIDList = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome`)
+                const {data} = await axios.get(`http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome`)
                 setLOIDList(data.metadata)
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -40,7 +40,7 @@ function Statistics() {
 
             try {
                 // Fetch data from API
-                const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-LO-score/${LOID}`);
+                const {data} = await axios.get(`http://localhost:8080/v1/api/subject/get-LO-score/${LOID}`);
                 // Process and set the chart data
                 setDoughnutData({
                     labels: Object.keys(getHighestScore(data.metadata.map((item) => item.highestLevel))),
@@ -85,14 +85,16 @@ function Statistics() {
     const getHighestScore = (arr) => {
         const counts = {};
 
-        arr.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+        arr.forEach(function (x) {
+            counts[x] = (counts[x] || 0) + 1;
+        });
         return counts;
     }
 
     useEffect(() => {
         const getStudentList = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
+                const {data} = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
                 setStudentList(data.metadata)
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -104,7 +106,7 @@ function Statistics() {
 
             try {
                 // Fetch data from API
-                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentID}`);
+                const {data} = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentID}`);
                 // Process and set the chart data
                 setBarData({
                     labels: data.metadata.map((item) => item.LearningOutcome.learningOutcomeCode),
@@ -139,7 +141,7 @@ function Statistics() {
 
         const getBarOption = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-subject-by-LO/${studentID}`);
+                const {data} = await axios.get(`http://localhost:8080/v1/api/subject/get-subject-by-LO/${studentID}`);
                 setBarOption({
                     responsive: true,
                     scales: {
@@ -192,10 +194,10 @@ function Statistics() {
     return (
         <>
             <div className='mx-[4vw] mt-[10vh] font-bold text-4xl text-center'>Thống kê</div>
-            <div className='mx-[4vw] mt-[8vh] grid grid-cols-2 space-x-10 max-h-screen'>
+            <div className='mx-[4vw] mt-[8vh] grid grid-cols-2 space-x-40 max-h-screen'>
 
                 <div>
-                    <h1 className="text-2xl font-bold text-center">Biểu đồ cột</h1>
+                    {/*<h1 className="text-2xl font-bold text-center">Biểu đồ cột</h1>*/}
                     <select
                         className="p-4 border rounded-md bg-white"
                         value={studentID}
@@ -214,7 +216,7 @@ function Statistics() {
                     />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold text-center">Biểu đồ tròn</h1>
+                    {/*<h1 className="text-2xl font-bold text-center">Biểu đồ tròn</h1>*/}
                     <select
                         className="p-4 border rounded-md bg-white"
                         value={LOID}
