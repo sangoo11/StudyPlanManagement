@@ -111,6 +111,16 @@ class LearningOutcomeController {
             }
         }).send(res)
     }
+
+    createStudentScores = async (req, res, next) => {
+        new CREATED({
+            message: "Create Learning Outcome Scores Success",
+            metadata: await LearningOutcomeService.createStudentScores(req.body.studentID),
+            options: {
+                limit: 10,
+            },
+        }).send(res);
+    };
 };
 
 module.exports = new LearningOutcomeController();

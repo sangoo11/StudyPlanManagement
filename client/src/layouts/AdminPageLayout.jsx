@@ -30,7 +30,7 @@ function AdminPageLayout(props) {
                     <NavLink style={navLinkStyles} to="/admin/students">Students</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/teachers">Teachers</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/activeteacher">Active Teachers</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/outputcriteria">Output Criteria</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/learningoutcome">Learning Outcome</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/subjects">Subjects</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/awardstudent">Award Students</NavLink>
                     <NavLink style={navLinkStyles} to="/admin/domainknowledge">Domain Knowledge</NavLink>

@@ -8,21 +8,38 @@ function AddSubjectInCriteria({ onClose, id, onAddedSubject }) {
   const [success, setSuccess] = useState(false);
   const [subjects, setSubjects] = useState([]); // To store the subjects from the API
   const [level, setLevel] = useState('');
+  const [levelOptions, setLevelOptions] = useState([])
   // Fetch the subjects when the component mounts
-  const fetchSubjects = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/v1/api/subject/get-all-subject"
-      );
-      if (response.status === 201) {
-        setSubjects(response.data.metadata); // Set the fetched subjects
-      }
-    } catch (err) {
-      setError("Failed to fetch subjects");
-      console.error("Error fetching subjects:", err);
-    }
-  };
+
+
   useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/v1/api/subject/get-all-subject"
+        );
+        if (response.status === 201) {
+          setSubjects(response.data.metadata); // Set the fetched subjects
+        }
+      } catch (err) {
+        setError("Failed to fetch subjects");
+        console.error("Error fetching subjects:", err);
+      }
+    };
+
+    const fetchLevelOptions = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8080/v1/api/learning-outcome-level/?learningOutcomeID=${id}`
+        );
+        setLevelOptions(data.metadata); // Set the fetched subjects
+      } catch (err) {
+        setError("Failed to fetch subjects");
+        console.error("Error fetching subjects:", err);
+      }
+    }
+    fetchLevelOptions();
+
     fetchSubjects();
   }, []);
 
@@ -55,7 +72,7 @@ function AddSubjectInCriteria({ onClose, id, onAddedSubject }) {
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="flex flex-col w-[50vw] h-[70vh] bg-white shadow-lg rounded-lg p-6">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Thêm môn học mới 
+          Thêm môn học mới
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -83,13 +100,20 @@ function AddSubjectInCriteria({ onClose, id, onAddedSubject }) {
             <label className="text-gray-700 text-lg font-medium mb-2 block">
               Mã mức độ:
             </label>
-            <input
-              type="text"
+            <select
               value={level}
               onChange={(e) => setLevel(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            />
+            >
+              <option value="" disabled>Select a level</option>
+              {Array.isArray(levelOptions) &&
+                levelOptions.map((item) => (
+                  <option key={item.level} value={item.level}>
+                    {item.level}
+                  </option>
+                ))}
+            </select>
           </div>
 
           {/* Submit Button */}

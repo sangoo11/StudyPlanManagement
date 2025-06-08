@@ -4,6 +4,7 @@ import CodeVerifyPicture from '../../assets/images/verify-code-hero-img.jpg';
 import VeriForm from './VeriForm';
 import { createAccount, verifyCode } from '../../services/auth';
 import { jwtDecode } from "jwt-decode";
+import axios from '../../configs/axios';
 
 const CodeVerifyPage = () => {
     const navigate = useNavigate();
@@ -45,7 +46,8 @@ const CodeVerifyPage = () => {
 
                     // Navigate based on user type
                     if (decoded.accountableType === 'teacher') {
-                        navigate('/teacher');
+                        alert('Your account need to be active by an admin')
+                        navigate('/signin');
                     } else if (decoded.accountableType === 'admin') {
                         navigate('/admin');
                     } else {

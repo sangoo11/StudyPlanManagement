@@ -18,8 +18,7 @@ router.put('/edit-subject-learning-outcome/:LOID', asyncHandler(LearningOutcomeC
 router.get('/get-all-subject/:LOID', asyncHandler(LearningOutcomeController.getAllSubjectByLOID));
 router.get('/get-all-learning-outcome/:subjectID', asyncHandler(LearningOutcomeController.getAllLearningOutcomeBySubjectID));
 
-
-
-
+// Create learning outcome scores for new student
+router.post('/create-scores', asyncHandler(LearningOutcomeController.createStudentScores));
 
 module.exports = router;

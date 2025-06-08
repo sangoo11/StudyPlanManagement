@@ -37,7 +37,7 @@ function AwardStudent() {
 
     useEffect(() => {
         fetchAwards();
-    }, [awards]);
+    }, []);
 
     const toggleAwardVisibility = (awardId) => {
         setVisibleAwards((prev) => ({
@@ -169,9 +169,8 @@ function AwardStudent() {
                                                         {studentsData[award.id].map((student, index) => (
                                                             <tr
                                                                 key={student.Student.id}
-                                                                className={`${
-                                                                    index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                                                                }`}
+                                                                className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                                                                    }`}
                                                             >
                                                                 <td className="py-3 px-6 text-sm text-gray-600">
                                                                     {student.Student.id}
@@ -186,7 +185,7 @@ function AwardStudent() {
                                                         ))}
                                                     </tbody>
                                                 </table>
-                                                
+
                                             </div>
                                         ) : (
                                             <p className="text-sm text-gray-500">Loading students...</p>

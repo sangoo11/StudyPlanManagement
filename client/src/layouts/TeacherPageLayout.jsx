@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {Link, NavLink} from 'react-router-dom';
-import {Navigate, Outlet, useNavigate} from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router';
 import UserLogo from '../assets/images/userlogo.png';
 
 function TeacherPageLayout(props) {
@@ -16,7 +16,7 @@ function TeacherPageLayout(props) {
 
     const navigate = useNavigate();
 
-    const navLinkStyles = ({isActive}) => {
+    const navLinkStyles = ({ isActive }) => {
         return {
             color: isActive ? "#1DA599" : "black",
             fontWeight: 400,
@@ -54,7 +54,6 @@ function TeacherPageLayout(props) {
                     </div>
 
                     <NavLink style={navLinkStyles} to="/teacher" end>{title1}</NavLink>
-                    <NavLink style={navLinkStyles} to="/teacher/outcome" end>Out come</NavLink>
                     <NavLink style={navLinkStyles} to="/teacher/statistics">{title2}</NavLink>
 
                     <button
@@ -62,7 +61,7 @@ function TeacherPageLayout(props) {
                         onClick={() => navigate(`/teacher/account/${teacherID}`)}
                     >
                         <div className='fixed w-6 h-6 items-center justify-center'>
-                            <img src={UserLogo}/>
+                            <img src={UserLogo} />
                         </div>
                         <h1 className="text-[#1DA599]">{teacher}</h1>
                     </button>
@@ -70,7 +69,7 @@ function TeacherPageLayout(props) {
             </div>
 
             {/* Content */}
-            <Outlet/>
+            <Outlet />
 
             {/* Footer
             <div className='absolute flex-reverse bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>

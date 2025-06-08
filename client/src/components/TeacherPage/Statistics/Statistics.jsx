@@ -24,6 +24,7 @@ function Statistics() {
     const [LOID, setLOID] = useState(2);
     const [LOIDList, setLOIDList] = useState({})
 
+
     useEffect(() => {
         const getLOIDList = async () => {
             try {
@@ -40,7 +41,6 @@ function Statistics() {
             try {
                 // Fetch data from API
                 const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-LO-score/${LOID}`);
-                console.log(parseFloat(Object.values(getHighestScore(data.metadata.map((item) => item.highestLevel)))))
                 // Process and set the chart data
                 setDoughnutData({
                     labels: Object.keys(getHighestScore(data.metadata.map((item) => item.highestLevel))),
@@ -78,7 +78,7 @@ function Statistics() {
 
     const extractNumbers = (str) => {
         if (!str) return 0; // Return 0 or another default value if str is null/undefined
-        const matches = str.match(/\d+/g); 
+        const matches = str.match(/\d+/g);
         return matches ? parseInt(matches[0], 10) : 0; // Return the first matched number or 0 if none found
     };
 

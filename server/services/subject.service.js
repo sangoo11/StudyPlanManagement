@@ -81,6 +81,7 @@ class SubjectService {
         throw new Error("Subject not created");
       }
 
+
       return subject;
     } catch (error) {
       // If any error occurs during subject creation, delete the uploaded image
