@@ -1,86 +1,71 @@
-const { CREATED } = require("../core/success.response");
 const AwardService = require('../services/award.service');
+const { CREATED, OK } = require('../core/success.response');
 
-class AwardController {
-    getAllAward = async (req, res, next) => {
-        new CREATED({
-            message: "Get All Awards Success",
-            metadata: await AwardService.getAllAward(),
-            options: { limit: 10 }
-        }).send(res);
-    }
+module.exports = {
+    // Get all awards
+    async getAll(req, res) {
+        try {
+            const awards = await AwardService.getAll(req.body);
+            new OK({
+                message: 'Get all awards success',
+                metadata: awards
+            }).send(res);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 
-    getAwardById = async (req, res, next) => {
-        new CREATED({
-            message: "Get Award Success",
-            metadata: await AwardService.getAwardById(req.params.awardID),
-            options: { limit: 10 }
-        }).send(res);
-    }
+    // Get award by ID
+    async getById(req, res) {
+        try {
+            const award = await AwardService.getById(req.params.id);
+            if (!award) return res.status(404).json({ error: 'Award not found' });
+            new OK({
+                message: 'Get award by id success',
+                metadata: award
+            }).send(res);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 
-    getStudentByAwardId = async (req, res, next) => {
-        new CREATED({
-            message: "Get Student By Award Success",
-            metadata: await AwardService.getStudentByAwardId(req.params.awardID),
-            options: { limit: 10 }
-        }).send(res);
-    }
+    // Create award
+    async create(req, res) {
+        try {
+            new CREATED({
+                message: 'Create award success',
+                metadata: await AwardService.create(req.body, req.file)
+            }).send(res);
+        } catch (err) {
+            res.status(400).json({ error: err.message });
+        }
+    },
 
-    createAward = async (req, res, next) => {
-        new CREATED({
-            message: "Create Award Success",
-            metadata: await AwardService.createAward(req.body),
-            options: { limit: 10 }
-        }).send(res);
-    }
+    // Update award (PATCH)
+    async update(req, res) {
+        try {
+            const award = await AwardService.update(req.params.id, req.body);
+            if (!award) return res.status(404).json({ error: 'Award not found' });
+            new OK({
+                message: 'Update award success',
+                metadata: award
+            }).send(res);
+        } catch (err) {
+            res.status(400).json({ error: err.message });
+        }
+    },
 
-    updateAward = async (req, res, next) => {
-        new CREATED({
-            message: "Edit Award Success",
-            metadata: await AwardService.updateAward(req.params.awardID, req.body),
-            options: { limit: 10 }
-        }).send(res);
-    }
-
-    deleteAward = async (req, res, next) => {
-        new CREATED({
-            message: "Delete Award Success",
-            metadata: await AwardService.deleteAward(req.params.awardID),
-            options: { limit: 10 }
-        }).send(res);
-    }
-
-    getAllAwardByStudent = async (req, res, next) => {
-        new CREATED({
-            message: "Get All Awards By Student Success",
-            metadata: await AwardService.getAllAwardByStudent(req.params.studentID),
-            options: { limit: 10 }
-        }).send(res);
-    }
-
-    addAwardForStudent = async (req, res, next) => {
-        new CREATED({
-            message: "Add Award For Student Success",
-            metadata: await AwardService.addAwardForStudent(req.params.awardID, req.body),
-            options: { limit: 10 }
-        }).send(res);
-    }
-
-    deleteAwardForStudent = async (req, res, next) => {
-        new CREATED({
-            message: "Delete Award For Student Success",
-            metadata: await AwardService.deleteAwardForStudent(req.params.awardID, req.body),
-            options: { limit: 10 }
-        }).send(res);
-    }
-
-    getNumberAward = async (req, res, next) => {
-        new CREATED({
-            message: "Get Number Award Success",
-            metadata: await AwardService.getNumberAward(req.params.accountID),
-            options: { limit: 10 }
-        }).send(res);
-    }
-}
-
-module.exports = new AwardController();
+    // Delete award
+    async delete(req, res) {
+        try {
+            const award = await AwardService.remove(req.params.id);
+            if (!award) return res.status(404).json({ error: 'Award not found' });
+            new OK({
+                message: 'Delete award success',
+                metadata: award
+            }).send(res);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+};

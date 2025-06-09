@@ -1,40 +1,42 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/sequelize");
 
+
 const Award = sequelize.define("Award", {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    awardName: {
+    awardNumber: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
     },
-    awardType: {
-        type: DataTypes.ENUM('university', 'city', 'country'),
-        allowNull: false,
-        validate: {
-            isIn: [['university', 'city', 'country']]
-        }
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     description: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    receivedAt: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.ENUM('valid', 'invalid', 'pending'),
+        allowNull: false,
+        defaultValue: 'pending',
+    },
+    invalidReason: {
         type: DataTypes.STRING,
         allowNull: true,
+        comment: "Explanation of why the award is marked as invalid"
     },
-    criteria: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    year: {
+    studentID: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: new Date().getFullYear(),
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
     }
 }, {
     timestamps: false,

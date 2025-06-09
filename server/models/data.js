@@ -652,35 +652,57 @@ const subjectLearningOutcomes = [
 
 const awards = [
     {
-        awardName: "Top Performer of the Semester",
-        awardType: "university", // Can be university-wide recognition
-        description: "Awarded to the student with the highest GPA in the semester.",
-        criteria: "Highest GPA in the semester across all subjects.",
+        awardNumber: "AWD-001",
+        type: "Academic Excellence",
+        description: "Awarded for achieving the highest GPA in the semester.",
+        receivedAt: new Date("2024-06-15"),
+        image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        status: "valid",
+        invalidReason: null,
+        studentID: 1
     },
     {
-        awardName: "Best Project Award",
-        awardType: "university", // This can be an award given by the university
-        description:
-            "Awarded to the student with the most innovative and impactful project.",
-        criteria: "Innovative project with real-world applications.",
+        awardNumber: "AWD-002",
+        type: "Community Service",
+        description: "Recognized for volunteering over 100 hours.",
+        receivedAt: new Date("2023-12-01"),
+        image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        status: "pending",
+        invalidReason: null,
+        studentID: 1
     },
     {
-        awardName: "Leadership Excellence Award",
-        awardType: "city", // City-wide recognition or university-based recognition
-        description:
-            "Awarded to the student who has shown exceptional leadership skills.",
-        criteria:
-            "Student who has taken leadership roles in extracurricular activities.",
+        awardNumber: "AWD-003",
+        type: "Leadership",
+        description: "Awarded for leading the student council effectively.",
+        receivedAt: new Date("2024-03-10"),
+        image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        status: "invalid",
+        invalidReason: "Insufficient documentation submitted.",
+        studentID: 1
     },
     {
-        awardName: "Community Service Award",
-        awardType: "country", // Could be country-wide recognition or broader impact
-        description:
-            "Awarded to the student with the most impactful community service.",
-        criteria:
-            "Student who has volunteered extensively and made a positive impact in the community.",
+        awardNumber: "AWD-004",
+        type: "Innovation Award",
+        description: "Developed a unique solution for school waste management.",
+        receivedAt: new Date("2024-05-05"),
+        image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        status: "valid",
+        invalidReason: null,
+        studentID: 1
     },
+    {
+        awardNumber: "AWD-005",
+        type: "Best Attendance",
+        description: "Attended 100% of the classes during the academic year.",
+        receivedAt: new Date("2023-11-20"),
+        image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        status: "valid",
+        invalidReason: null,
+        studentID: 1
+    }
 ];
+
 
 const learningOutcomeLevels = [
     // NT levels for LO1 and LO2

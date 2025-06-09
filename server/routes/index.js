@@ -18,7 +18,7 @@ router.use("/v1/api/enrollment", require("./enrollment.route"));
 router.use("/v1/api/subject", require("./subject.route"));
 router.use("/v1/api/major", require("./major.route"));
 router.use("/v1/api/score", require("./score.route"));
-router.use("/v1/api/award", require("./award.route"));
+router.use("/v1/api/award", require("./award.routes"));
 router.use("/v1/api/knowledge-field", require("./knowledgeField.route"));
 router.use("/v1/api/knowledge-domain", require("./knowledgeDomain.route"));
 router.use("/v1/api/certificate", require("./certificate.route"));
