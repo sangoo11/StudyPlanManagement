@@ -10,47 +10,63 @@ import EditPoint from './EditPoint';
 
 function CourseDetail() {
     const { courseID } = useParams();
-
-    const [courseData, setCourseData] = React.useState({});
-
     const navigate = useNavigate();
+
+    const [courseData, setCourseData] = useState({});
+    const [studentArray, setStudentArray] = useState([]);
+    const [studentScores, setStudentScores] = useState({});
 
     const [modals, setModals] = useState({
         editClassroom: { visible: false, courseId: null },
         editPoint: { visible: false, studentId: null },
     });
 
-    const toggleClassesVisibility = useCallback((courseId) => {
-        setModals((prev) => ({
-            ...prev,
-            [courseId]: !prev[courseId],
-        }));
-    }, []);
-
-    React.useEffect(() => {
+    // Fetch course details
+    useEffect(() => {
         const getCourseById = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/v1/api/course/get-course/${courseID}`);
                 setCourseData(response.data.metadata);
             } catch (error) {
-                console.error(error.response.data.message);
+                console.error(error.response?.data?.message || error.message);
             }
-        }
+        };
         getCourseById();
     }, [courseID]);
 
-    const [studentArray, setStudentArray] = useState([]);
-    React.useEffect(() => {
+    // Fetch students by course
+    useEffect(() => {
         const getStudentByCourse = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/v1/api/course/get-student-course/${courseID}`);
                 setStudentArray(response.data.metadata);
             } catch (error) {
-                console.error(error.response.data.message);
+                console.error(error.response?.data?.message || error.message);
             }
-        }
+        };
         getStudentByCourse();
     }, [courseID]);
+
+    // Fetch scores for each student
+    useEffect(() => {
+        const fetchStudentScores = async () => {
+            const updatedScores = {};
+            for (const student of studentArray) {
+                try {
+                    const response = await axios.get(`http://localhost:8080/v1/api/score/${student.id}`);
+                    updatedScores[student.id] = response.data.metadata;
+                } catch (error) {
+                    console.error(`Error fetching score for student ${student.id}`, error.message);
+                    updatedScores[student.id] = null;
+                }
+            }
+            setStudentScores(updatedScores);
+        };
+        if (studentArray.length > 0) {
+            fetchStudentScores();
+        }
+    }, [studentArray]);
+
     return (
         <div className="min-h-screen bg-gray-50 p-6 mt-[6vh]">
             <div className='flex flex-col'>
@@ -62,54 +78,19 @@ function CourseDetail() {
                 </div>
 
                 <div className="flex flex-col mb-2 mt-[2vh]">
-                    <div className="flex mb-[1vh] items-center ml-[2vw]">
-                        <label className="text-gray-700 font-medium">Năm học:</label>
-                        <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                            <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded'>
-                                <p className='ml-2'> {courseData.year} </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex mb-[1vh] items-center ml-[2vw]">
-                        <label className="text-gray-700 font-medium mr-4">Học kì:</label>
-                        <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                            <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded ml-1'>
-                                <p className='ml-2'> {courseData.semester} </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex mb-[1vh] items-center ml-[2vw]">
-                        <label className="text-gray-700 font-medium mr-4">Mã lớp:</label>
-                        <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
-                            <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded'>
-                                <p className='ml-2'> {courseData.courseCode} </p>
-                            </div>
-                        </div>
-                        {/* <div className='flex ml-[2vw]'>
-                            <button 
-                                onClick={() => 
-                                    setModals((prev) => ({
-                                        ...prev,
-                                        editClassroom: { visible: true, courseId: courseData?.id },
-                                    }))
-                                }
-                            >
-                                <h1 className='text-0.5xl text-[#1DA599] font-bold hover:text-yellow-400'>Chỉnh sửa thông tin lớp học</h1>
-                            </button>
-                        </div> */}
-                    </div>
+                    <InfoRow label="Năm học:" value={courseData.year} />
+                    <InfoRow label="Học kỳ:" value={courseData.semester} />
+                    <InfoRow label="Mã lớp:" value={courseData.courseCode} />
                 </div>
 
                 <div className='border-t border-[1px] border-gray-200'></div>
 
-                <div className='flex justify-center mt-[2vh]  mb-[2vh]'>
+                <div className='flex justify-center mt-[2vh] mb-[2vh]'>
                     <div className='relative w-[30vw]'>
                         <input
                             type="text"
                             placeholder='Search'
-                            className='border border-gray-300 rounded-md p-2 pr-10 pr-4 w-full'
+                            className='border border-gray-300 rounded-md p-2 pr-10 w-full'
                         />
                         <button className='absolute right-2 top-1/2 transform -translate-y-1/2'>
                             <img src={SearchIcon} alt="Search" className='w-5 h-5' />
@@ -118,24 +99,50 @@ function CourseDetail() {
                 </div>
 
                 <div className="flex flex-col gap-5 w-full h-full px-4 py-4 bg-white rounded-md">
-                    {studentArray.map((student) => (
-                        <div key={student.id} className="flex justify-between">
-                            <div className='flex items-center gap-4'>
-                                <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
-                                    <span className="text-gray-500">👤</span>
-                                </div>
-                                <div className="flex flex-col items-start">
-                                    <p className="text-sm font-medium text-gray-700">Mã số sinh viên: {student.id}</p>
-                                    <p className="text-sm text-gray-700">Họ tên: {student.fullName}</p>
-                                    <p className="text-sm text-gray-700">Tình trạng: {student.status}</p>
-                                </div>
-                            </div>
+                    {studentArray.map((student) => {
+                        const scores = studentScores[student.id];
+                        const courseScore = scores?.find(item => item.courseID === parseInt(courseID));
+                        return (
+                            <div key={student.id} className="flex justify-between border-b pb-4">
+                                <div className='flex items-center gap-4'>
+                                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-full">
+                                        <span className="text-gray-500">👤</span>
+                                    </div>
+                                    <div className="flex flex-col items-start">
+                                        <p className="text-sm font-medium text-gray-700">MSSV: {student.id}</p>
+                                        <p className="text-sm text-gray-700">Họ tên: {student.fullName}</p>
+                                        <p className={`text-sm font-bold ${student.status.toLowerCase() === 'active' ? 'text-green-600' : 'text-gray-700'}`}>
+                                            {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
+                                        </p>
 
-                            <div className='flex gap-4'>
-                                {/* Edit button */}
-                                <div className="flex items-center h-full rounded-md">
+                                        {courseScore && (
+                                            <>
+                                                <p className="text-sm text-green-600 mt-2 font-semibold">
+                                                    Final Grade: {courseScore.finalGrade}
+                                                </p>
+                                                <div className="text-sm text-gray-600">
+                                                    {courseScore.scores.map((score, idx) => {
+                                                        const labelMap = {
+                                                            final: 'Điểm cuối kì',
+                                                            midterm: 'Điểm giữa kì',
+                                                            progress: 'Điểm thường kì',
+                                                        };
+                                                    
+                                                        return (
+                                                            <p key={idx}>
+                                                                {labelMap[score.scoreType] || score.scoreType}: {score.score}
+                                                            </p>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className='flex items-center'>
                                     <button
-                                        className="flex w-auto h-auto p-2 font-bold text-white rounded-lg bg-[#1DA599] border-4 border-white hover:border-4 hover:border-yellow-400"
+                                        className="flex w-auto h-auto p-2 font-bold text-white rounded-lg bg-[#1DA599] border-4 border-white hover:border-yellow-400"
                                         onClick={() =>
                                             setModals((prev) => ({
                                                 ...prev,
@@ -146,31 +153,43 @@ function CourseDetail() {
                                         Thêm điểm
                                     </button>
                                 </div>
-
                             </div>
-                        </div>
-
-                    ))}
+                        );
+                    })}
                 </div>
-
             </div>
 
             {courseData && modals.editClassroom.visible && (
                 <EditClassroom
                     courseId={courseData.id}
-                    onClose={() => setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))}
+                    onClose={() =>
+                        setModals(prev => ({ ...prev, editClassroom: { visible: false, courseId: null } }))
+                    }
                 />
             )}
+
             {modals.editPoint.visible && (
                 <EditPoint
                     studentId={modals.editPoint.studentId}
-                    onClose={() => setModals(prev => ({ ...prev, editPoint: { visible: false, studentId: null } }))}
+                    onClose={() =>
+                        setModals(prev => ({ ...prev, editPoint: { visible: false, studentId: null } }))
+                    }
                 />
             )}
         </div>
-
-
     );
 }
+
+    // Helper Component for displaying info rows
+    const InfoRow = ({ label, value }) => (
+        <div className="flex mb-[1vh] items-center ml-[2vw]">
+            <label className="text-gray-700 font-medium mr-4">{label}</label>
+            <div className='flex w-auto border-none bg-transparent p-2 rounded-md ml-[3vw]'>
+                <div className='flex border-2 border-[#1DA599] p-1 bg-white w-[8vw] rounded'>
+                    <p className='ml-2'>{value}</p>
+                </div>
+            </div>
+        </div>
+    );
 
 export default CourseDetail;

@@ -27,7 +27,7 @@ function AwardStudent() {
 
     const fetchAwards = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/v1/api/award/get-all-award');
+            const response = await axios.get('http://localhost:8080/v1/api/award/');
             setAwards(response.data.metadata || []);
         } catch (err) {
             console.error('Error fetching awards:', err);
@@ -103,9 +103,9 @@ function AwardStudent() {
                                     />
                                 </button>
 
-                                <h2 className="text-lg font-semibold text-gray-800">{award.awardName}</h2>
+                                <h2 className="text-lg font-semibold text-gray-800">{award.awardNumber}</h2>
                                 <p className="text-sm text-gray-500">
-                                    <strong>Loại:</strong> {award.awardType}
+                                    <strong>Loại:</strong> {award.type}
                                 </p>
                                 <p className="text-sm text-gray-500">
                                     <strong>Năm:</strong> {award.year}
