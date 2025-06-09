@@ -166,14 +166,6 @@ function DetailClassroom() {
                                         <p><strong>Ngành:</strong> {student.major}</p>
                                         <p><strong>Trạng thái:</strong> {student.status}</p>
                                     </div>
-                                    <div className="flex w-auto h-full items-center justify-end mr-[4vw] rounded-md border-[3px] border-[#1DA599] hover:border-4 hover:border-yellow-400 ml-[60vw]">
-                                        <button
-                                            className="w-20 h-8 text-black bg-transparent"
-                                            //onClick={() => setEditStudentVisible(true)}
-                                        >
-                                            Chỉnh sửa 
-                                        </button>
-                                    </div>
                                             
                                     {/* Delete button */}
                                     <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">

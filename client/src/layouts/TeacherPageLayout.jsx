@@ -13,6 +13,7 @@ function TeacherPageLayout(props) {
     const title2 = 'Statistics';
     const accountID = localStorage.getItem('accountID');
     const [teacherID, setTeacherID] = useState(null);
+    const [teacherData, setTeacherData] = useState(null);
 
     const navigate = useNavigate();
 
@@ -34,7 +35,13 @@ function TeacherPageLayout(props) {
             const response = await axios.get(
                 `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
             );
-            setTeacherID(response.data.metadata.teacherID); // Make sure this is correct
+
+            const tid = response.data.metadata.teacherID;
+            setTeacherID(tid);;  // still store it in state
+            const responseTeacher = await axios.get(
+                `http://localhost:8080/v1/api/teacher/get-teacher/${tid}`
+            );
+            setTeacherData(responseTeacher.data.metadata);
         } catch (error) {
             console.error(error.response?.data?.message || "Error fetching teacherID");
         }
@@ -63,7 +70,8 @@ function TeacherPageLayout(props) {
                         <div className='fixed w-6 h-6 items-center justify-center'>
                             <img src={UserLogo} />
                         </div>
-                        <h1 className="text-[#1DA599]">{teacher}</h1>
+                        <h1 className="text-[#1DA599] pl-10">{teacherData?.fullName || 'Loading...'}</h1>
+
                     </button>
                 </div>
             </div>

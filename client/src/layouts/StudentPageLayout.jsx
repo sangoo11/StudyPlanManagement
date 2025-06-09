@@ -19,6 +19,7 @@ function StudentPageLayout(props) {
 
     const accountID = localStorage.getItem('accountID');
     const [studentID, setStudentID] = useState(null);
+    const [studentData, setStudentData] = useState(null);
 
     const navigate = useNavigate();
 
@@ -38,9 +39,13 @@ function StudentPageLayout(props) {
             const response = await axios.get(
                 `http://localhost:8080/v1/api/account/get-user-id/${accountID}`
             );
-            console.log(response);
 
-            setStudentID(response.data.metadata.studentID); // Make sure this is correct
+            const sid = response.data.metadata.studentID;
+            setStudentID(sid);  // still store it in state
+            const responseStudent = await axios.get(
+                `http://localhost:8080/v1/api/student/get-student/${sid}`
+            );
+            setStudentData(responseStudent.data.metadata);
         } catch (error) {
             console.error(error.response?.data?.message || "Error fetching studentID");
         }
@@ -71,7 +76,7 @@ function StudentPageLayout(props) {
                         <div className='fixed w-6 h-6 items-center justify-center'>
                             <img src={UserLogo}/>
                         </div>
-                        <h1 className="text-[#1DA599] pl-10">{student}</h1>
+                        <h1 className="text-[#1DA599] pl-10">{studentData?.fullName || 'Loading...'}</h1>
                     </button>
                 </div>
             </div>
