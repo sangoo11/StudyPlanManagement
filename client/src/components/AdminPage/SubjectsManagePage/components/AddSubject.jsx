@@ -213,7 +213,7 @@ function AddSubject({ onClose, onAddedSubject }) {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700">Hình ảnh:</label>
+                        <label className="block text-gray-700">Giới thiệu môn học:</label>
                         <input
                             type="file"
                             accept="image/*"
