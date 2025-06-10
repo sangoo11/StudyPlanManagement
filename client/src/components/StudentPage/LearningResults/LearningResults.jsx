@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import DetailPoint from './DetailPoint';
+import LearningOutcomeSubjectsModal from './DetailLO'; 
+
 
 const StudentLearningResults = () => {
-    const [visibleSemesters, setVisibleSemesters] = useState({});
     const [student, setStudentData] = useState({});
     const [learningOutcomes, setLearningOutcomes] = useState([]);
     const [scoreTable, setScoreTable] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedSubjectCourses, setSelectedSubjectCourses] = useState([]);
+    const [loModalOpen, setLoModalOpen] = useState(false);
+    const [loSubjects, setLoSubjects] = useState([]);
+    const [loModalTitle, setLoModalTitle] = useState('');
 
     useEffect(() => {
         const getStudentData = async () => {
@@ -40,6 +47,62 @@ const StudentLearningResults = () => {
         const scoreObj = scores.find((s) => s.scoreType === type);
         return scoreObj ? scoreObj.score : 'N/A';
     };
+    const getUniqueCourses = (courses) => {
+        const map = new Map();
+        courses.forEach((item) => {
+            const subjectId = item.Course?.Subject?.id;
+            if (!subjectId) return;
+            const prev = map.get(subjectId);
+            // Parse finalGrade as float, treat null as -Infinity
+            const grade = parseFloat(item.finalGrade) || -Infinity;
+            const prevGrade = prev ? (parseFloat(prev.finalGrade) || -Infinity) : -Infinity;
+            if (!prev || grade > prevGrade) {
+                map.set(subjectId, item);
+            }
+        });
+        return Array.from(map.values());
+    };
+
+    // Handler to open modal with all courses of a subject
+    const handleRowClick = (subjectId) => {
+        const courses = scoreTable.filter(
+            (item) => item.Course?.Subject?.id === subjectId
+        );
+        setSelectedSubjectCourses(courses);
+        setModalOpen(true);
+    };
+
+    const handleLearningOutcomeClick = async (learningOutcome) => {
+        try {
+            // Get the correct learningOutcomeID to compare
+            const loId = learningOutcome.LearningOutcome?.id || learningOutcome.LearningOutcomeID || learningOutcome.id;
+            const subjectIds = [
+                ...new Set(scoreTable.map(item => item.Course?.Subject?.id).filter(Boolean))
+            ];
+            let matchedSubjects = [];
+            for (const subjectID of subjectIds) {
+                const { data } = await axios.get(
+                    `http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome/${subjectID}`
+                );
+                const los = data.metadata || [];
+                // Compare as numbers to avoid type mismatch
+                if (los.some(lo => Number(lo.learningOutcomeID) === Number(loId))) {
+                    const courses = scoreTable.filter(item => item.Course?.Subject?.id === subjectID);
+                    matchedSubjects.push({
+                        subject: courses[0]?.Course?.Subject,
+                        courses
+                    });
+                }
+            }
+            setLoSubjects(matchedSubjects);
+            setLoModalTitle(learningOutcome.LearningOutcome?.learningOutcomeCode || learningOutcome.learningOutcomeCode || '');
+            setLoModalOpen(true);
+        } catch (err) {
+            setLoSubjects([]);
+            setLoModalTitle('');
+            setLoModalOpen(true);
+        }
+    };
 
     return (
         <div className='min-h-screen flex flex-col items-center bg-gray-100 pt-[10vh] pb-[4vh]'>
@@ -54,7 +117,8 @@ const StudentLearningResults = () => {
                             <thead className='bg-[#1DA599] text-white'>
                                 <tr>
                                     <th className='px-4 py-3 text-left'>Môn học</th>
-                                    <th className='px-4 py-3 text-left'>Mã học phần</th>
+                                    <th className='px-4 py-3 text-left'>Mã môn học</th>
+                                    <th className='px-4 py-3 text-left'>Mã lớp</th>
                                     <th className='px-4 py-3 text-left'>Quá trình</th>
                                     <th className='px-4 py-3 text-left'>Giữa kỳ</th>
                                     <th className='px-4 py-3 text-left'>Cuối kỳ</th>
@@ -62,10 +126,17 @@ const StudentLearningResults = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {scoreTable.map((item) => (
-                                    <tr key={item.id} className='hover:bg-gray-50'>
+                                {getUniqueCourses(scoreTable).map((item) => (
+                                    <tr
+                                        key={item.id}
+                                        className='hover:bg-gray-50 cursor-pointer'
+                                        onClick={() => handleRowClick(item.Course?.Subject?.id)}
+                                    >
                                         <td className='px-4 py-3 border-b'>
                                             {item.Course?.Subject?.subjectName || 'N/A'}
+                                        </td>
+                                        <td className='px-4 py-3 border-b'>
+                                            {item.Course?.Subject?.subjectCode || 'N/A'}
                                         </td>
                                         <td className='px-4 py-3 border-b'>
                                             {item.Course?.courseCode || 'N/A'}
@@ -105,7 +176,11 @@ const StudentLearningResults = () => {
                             </thead>
                             <tbody>
                                 {learningOutcomes.map((outcome) => (
-                                    <tr key={outcome.id} className='hover:bg-gray-50'>
+                                    <tr
+                                        key={outcome.id}
+                                        className='hover:bg-gray-50 cursor-pointer'
+                                        onClick={() => handleLearningOutcomeClick(outcome)}
+                                    >
                                         <td className='px-6 py-4 border-b'>
                                             {outcome.LearningOutcome?.learningOutcomeCode || 'N/A'}
                                         </td>
@@ -120,6 +195,22 @@ const StudentLearningResults = () => {
                         <p className='text-center text-gray-500 mt-4'>No learning outcomes available.</p>
                     )}
                 </div>
+
+                {/* Modal for course details */}
+                {modalOpen && (
+                    <DetailPoint
+                        courses={selectedSubjectCourses}
+                        onClose={() => setModalOpen(false)}
+                    />
+                )}
+                {loModalOpen && (
+                    <LearningOutcomeSubjectsModal
+                        title={loModalTitle}
+                        subjects={loSubjects}
+                        onClose={() => setLoModalOpen(false)}
+                    />
+                )}
+
             </div>
         </div>
     );

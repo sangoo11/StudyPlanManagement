@@ -60,24 +60,35 @@ function EditCriteria({ onClose, studentId }) {
         if (!studentId || !courseId) return;
         const fetchStudentScores = async () => {
             try {
-                const response = await axios.post(
-                    `http://localhost:8080/v1/api/score/get-student-score-by-id/${studentId}`,
-                    { courseID: courseId }
+                const response = await axios.get(
+                    `http://localhost:8080/v1/api/score/${studentId}`,
+                    { params: { courseID: courseId } }
                 );
-
-
-                if (response.status === 201 && response.data.metadata) {
-                    const { scores, teacherID } = response.data.metadata;
-                    console.log("Lấy điểm thành công");
-
-                    setScores(
-                        scores.map((score) => ({
-                            ...score,
-                            score: parseFloat(score.score),
-                        }))
+                if (
+                    response.status === 200 &&
+                    Array.isArray(response.data.metadata) &&
+                    response.data.metadata.length > 0
+                ) {
+                    const studentScoreData = response.data.metadata.find(
+                        (item) => Number(item.courseID) === Number(courseId)
                     );
-
-                    if (teacherID) setTeacherID(teacherID);
+                    // Always show all 3 fields, fill in values from API if available
+                    const defaultScores = [
+                        { scoreType: "progress", score: "" },
+                        { scoreType: "midterm", score: "" },
+                        { scoreType: "final", score: "" }
+                    ];
+                    if (studentScoreData && Array.isArray(studentScoreData.scores)) {
+                        const mergedScores = defaultScores.map(def => {
+                            const found = studentScoreData.scores.find(s => s.scoreType === def.scoreType);
+                            return found
+                                ? { ...def, score: parseFloat(found.score) }
+                                : def;
+                        });
+                        setScores(mergedScores);
+                    } else {
+                        setScores(defaultScores);
+                    }
                 }
             } catch (error) {
                 console.error("Lỗi khi lấy điểm sinh viên:", error);
@@ -86,6 +97,7 @@ function EditCriteria({ onClose, studentId }) {
 
         fetchStudentScores();
     }, [studentId, courseId]);
+
 
 
 
@@ -116,12 +128,20 @@ function EditCriteria({ onClose, studentId }) {
 
     // Handle form submission
     const handleSubmit = async () => {
-        if (scores.some((score) => !isValidScore(score.score))) {
+        // Only validate and submit scores that are not empty
+        const filledScores = scores.filter(score => score.score !== "" && score.score !== null && score.score !== undefined);
+
+        if (filledScores.length === 0) {
+            alert("Vui lòng nhập ít nhất một loại điểm!");
+            return;
+        }
+
+        if (filledScores.some((score) => !isValidScore(score.score))) {
             alert("Vui lòng nhập điểm hợp lệ (từ 0-10)!");
             return;
         }
 
-        const formattedScores = scores.map((score) => ({
+        const formattedScores = filledScores.map((score) => ({
             scoreType: score.scoreType,
             score: parseFloat(score.score)
         }));
