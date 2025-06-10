@@ -99,8 +99,9 @@ function CertificateApproval() {
                   <td className="p-3 border">{cert.point}</td>
                   <td className="p-3 border">{new Date(cert.takenAt).toLocaleDateString()}</td>
                   <td className="p-3 border">{new Date(cert.expiredAt).toLocaleDateString()}</td>
-                  <td className="p-3 border font-bold text-yellow-600">{cert.status.charAt(0).toUpperCase() + cert.status.slice(1)}</td>
-                  <td className="flex w-full p-3 justify-center">
+                  <td className={cert.status === 'pending' ? 'p-3 font-bold text-yellow-600' : cert.status === 'valid' ? 'p-3 font-bold text-green-600' : 'p-3 font-bold text-red-600'}>
+                    {cert.status.charAt(0).toUpperCase() + cert.status.slice(1)}
+                  </td>                  <td className="flex w-full p-3 justify-center">
                     <button
                       className="flex w-[8vw] bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 item-center justify-center mr-2"
                       onClick={() => handleEditClick(cert.id)}
