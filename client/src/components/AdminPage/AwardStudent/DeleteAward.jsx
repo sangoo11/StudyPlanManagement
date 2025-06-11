@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function DeleteAward({ onClose, awardId }) {
-    const [awardName, setAwardName] = useState("");
+    const [awardTitle, setAwardTitle] = useState("");
     const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchAwardDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/v1/api/award/get-award/${awardId}`);
-                setAwardName(response.data.metadata.awardName);
+                const response = await axios.get(`http://localhost:8080/v1/api/award-type/${awardId}`);
+                setAwardTitle(response.data.metadata.title);
             } catch (err) {
                 console.error("Error fetching award details:", err);
                 setError("Failed to fetch award details.");
@@ -23,11 +23,11 @@ function DeleteAward({ onClose, awardId }) {
         e.preventDefault();
 
         try {
-            const response = await axios.put(
-                `http://localhost:8080/v1/api/award/delete-award/${awardId}`
+            const response = await axios.delete(
+                `http://localhost:8080/v1/api/award-type/${awardId}`
             );
 
-            if (response.status === 201) {
+            if (response.status === 200 || response.status === 204) {
                 alert("Xóa giải thưởng thành công");
                 onClose(); // Close the modal
             } else {
@@ -44,7 +44,7 @@ function DeleteAward({ onClose, awardId }) {
             <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
                 <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Xóa giải thưởng</h2>
                 <h2 className="flex w-full justify-center text-xl mb-4 text-red-500">
-                    Bạn có chắc muốn xóa giải thưởng <strong className="ml-1 text-green-500">{awardName}</strong>?
+                    Bạn có chắc muốn xóa giải thưởng <strong className="ml-1 text-green-500">{awardTitle}</strong>?
                 </h2>
                 {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 

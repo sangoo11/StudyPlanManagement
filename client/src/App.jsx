@@ -27,12 +27,15 @@ import OutputCriteriaManagePage from './components/AdminPage/OutputCriteriaManag
 import StatisticsPage from './components/AdminPage/StatisticsPage/StatisticsPage';
 import DetailClassroom from './components/AdminPage/SubjectsManagePage/components/DetailClassroom';
 import ActiveTeacher from './components/AdminPage/ActiveTeacher/ActiveTeacher';
-import AwardStudent from './components/AdminPage/AwardStudent/AwardStudent';
+
 import DomainKnowledge from './components/AdminPage/DomainKnowledge/DomainKnowledge';
 import DomainField from './components/AdminPage/DomainField/DomainField';
 import AdminAccountPage from './components/AdminPage/AdminAccount';
 import ApprovalCertificate from './components/AdminPage/Certificate/ApprovalCertificate';
 import ExpiredCertificate from './components/AdminPage/Certificate/ExpiredCertificate';
+
+import AwardStudent from './components/AdminPage/AwardStudent/AwardStudent';
+import ApprovalAward from './components/AdminPage/AwardStudent/Approval/ApprovalAward.jsx';
 
 //Modal
 import AddClassroom from './components/AdminPage/SubjectsManagePage/components/AddClassroom';
@@ -155,12 +158,14 @@ function App() {
                     <Route path='detailclassroom/:courseID' element={<DetailClassroom />} />
                     <Route path='accountadmin' element={<AccountPage />} />
                     <Route path='activeteacher' element={<ActiveTeacher />} />
-                    <Route path='awardstudent' element={<AwardStudent />} />
                     <Route path='domainknowledge' element={<DomainKnowledge />} />
                     <Route path='domainfield' element={<DomainField />} />
                     <Route path='certificate' element={<Certificate />} />
                     <Route path='cerapproval' element={<ApprovalCertificate />} />
                     <Route path='cerexpired' element={<ExpiredCertificate />} />
+
+                    <Route path='awardstudent' element={<AwardStudent />} />
+                    <Route path='awardstudent/approvalaward' element={<ApprovalAward />} />
                 </Route>
 
                 {/* Student modals */}
@@ -169,7 +174,7 @@ function App() {
 
 
                 {/* Admin modals */}
-                <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />
+                {/* <Route path='admin/subjects/addclassroom' element={<AddClassroom />} />
                 <Route path='admin/subjects/deleteclassroom' element={<DeleteClassroom />} />
                 <Route path='admin/subjects/editclassroom' element={<EditClassroom />} />
 
@@ -212,7 +217,7 @@ function App() {
                 <Route path='admin/domainfield/deletedf' element={<DeleteDomainField />} />
 
                 <Route path='admin/certificate/addcertificate' element={<AddCertificate />} />
-                <Route path='admin/certificate/editcertificate' element={<EditCertificate />} />
+                <Route path='admin/certificate/editcertificate' element={<EditCertificate />} /> */}
 
                 {/* Catch-all route for undefined paths */}
                 <Route path='*' element={<ErrorPage />} />
