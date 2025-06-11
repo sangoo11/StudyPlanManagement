@@ -5,7 +5,7 @@ module.exports = {
     // Get all awards
     async getAll(req, res) {
         try {
-            const awards = await AwardService.getAll(req.body);
+            const awards = await AwardService.getAll(req.query);
             new OK({
                 message: 'Get all awards success',
                 metadata: awards

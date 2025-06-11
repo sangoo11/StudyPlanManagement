@@ -654,7 +654,7 @@ const subjectLearningOutcomes = [
 const awards = [
     {
         awardNumber: "AWD-001",
-        type: "Academic Excellence",
+        awardTypeID: 1,
         description: "Awarded for achieving the highest GPA in the semester.",
         receivedAt: new Date("2024-06-15"),
         image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -664,7 +664,7 @@ const awards = [
     },
     {
         awardNumber: "AWD-002",
-        type: "Community Service",
+        awardTypeID: 2,
         description: "Recognized for volunteering over 100 hours.",
         receivedAt: new Date("2023-12-01"),
         image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -674,7 +674,7 @@ const awards = [
     },
     {
         awardNumber: "AWD-003",
-        type: "Leadership",
+        awardTypeID: 3,
         description: "Awarded for leading the student council effectively.",
         receivedAt: new Date("2024-03-10"),
         image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -684,7 +684,7 @@ const awards = [
     },
     {
         awardNumber: "AWD-004",
-        type: "Innovation Award",
+        awardTypeID: 4,
         description: "Developed a unique solution for school waste management.",
         receivedAt: new Date("2024-05-05"),
         image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -694,7 +694,7 @@ const awards = [
     },
     {
         awardNumber: "AWD-005",
-        type: "Best Attendance",
+        awardTypeID: 5,
         description: "Attended 100% of the classes during the academic year.",
         receivedAt: new Date("2023-11-20"),
         image: "https://images.pexels.com/photos/2530131/pexels-photo-2530131.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -703,6 +703,7 @@ const awards = [
         studentID: 1
     }
 ];
+
 
 const awardTypes = [
     {
@@ -853,9 +854,9 @@ const createData = async () => {
     await SubjectLearningOutcome.bulkCreate(subjectLearningOutcomes);
 
     // Create Awards
+    await AwardType.bulkCreate(awardTypes)
     await Award.bulkCreate(awards);
 
-    await AwardType.bulkCreate(awardTypes)
 
     await LearningOutcomeLevel.bulkCreate(learningOutcomeLevels)
 };
