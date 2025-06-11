@@ -27,10 +27,9 @@ function AwardStudent() {
 
     const fetchAwards = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/v1/api/award/');
+            const response = await axios.get('http://localhost:8080/v1/api/award-type/');
             setAwards(response.data.metadata || []);
         } catch (err) {
-            console.error('Error fetching awards:', err);
             setError('Failed to fetch awards. Please try again later.');
         }
     };
@@ -82,6 +81,14 @@ function AwardStudent() {
             <div className="flex items-center justify-center mt-[8vh]">
                 <h1 className="text-2xl font-bold text-[#1DA599]">Danh sách giải thưởng</h1>
             </div>
+            <div className="flex justify-end mt-6">
+                <button
+                    onClick={() => openModal('addAward')}
+                    className="w-10 h-10 flex items-center justify-center text-white rounded-full border-4 border-white hover:border-yellow-400"
+                >
+                    <img src={AddButton} alt="Add" />
+                </button>
+            </div>
 
             {error && <div className="mt-4 text-center text-red-500">{error}</div>}
 
@@ -103,18 +110,18 @@ function AwardStudent() {
                                     />
                                 </button>
 
-                                <h2 className="text-lg font-semibold text-gray-800">{award.awardNumber}</h2>
+                                <h2 className="text-lg font-semibold text-gray-800">{award.title}</h2>
                                 <p className="text-sm text-gray-500">
                                     <strong>Loại:</strong> {award.type}
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                    <strong>Năm:</strong> {award.year}
+                                    <strong>Cấp:</strong> {award.level}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    <strong>Ngày trao:</strong> {award.date_awarded ? new Date(award.date_awarded).toLocaleDateString() : ''}
                                 </p>
                                 <p className="text-sm text-gray-500">
                                     <strong>Mô tả:</strong> {award.description}
-                                </p>
-                                <p className={`text-sm mt-2 ${award.active ? 'text-green-600' : 'text-red-600'}`}>
-                                    <strong>Tình trạng:</strong> {award.active ? 'Active' : 'Inactive'}
                                 </p>
                                 <div className="flex w-full right-0 bottom-0 space-x-4 mt-4 justify-between">
                                     {/* Edit Button */}
@@ -200,19 +207,36 @@ function AwardStudent() {
                 )}
             </div>
 
-            <div className="flex justify-end mt-6">
-                <button
-                    onClick={() => openModal('addAward')}
-                    className="w-10 h-10 flex items-center justify-center text-white rounded-full border-4 border-white hover:border-yellow-400"
-                >
-                    <img src={AddButton} alt="Add" />
-                </button>
-            </div>
+            
 
             {/* Modal Components */}
-            {modals.addAward.visible && <AddAward onClose={() => closeModal('addAward')} />}
-            {modals.editAward.visible && <EditAward awardId={modals.editAward.awardId} onClose={() => closeModal('editAward')} />}
-            {modals.deleteAward.visible && <DeleteAward awardId={modals.deleteAward.awardId} onClose={() => closeModal('deleteAward')} />}
+            {modals.addAward.visible && (
+                <AddAward
+                    onClose={() => {
+                        closeModal('addAward');
+                        fetchAwards();
+                    }}
+                />
+            )}
+            {modals.editAward.visible && (
+                <EditAward
+                    awardId={modals.editAward.awardId}
+                    onClose={() => {
+                        closeModal('editAward');
+                        fetchAwards();
+                    }}
+                />
+            )}
+            {modals.deleteAward.visible && (
+                <DeleteAward
+                    awardId={modals.deleteAward.awardId}
+                    onClose={() => {
+                        closeModal('deleteAward');
+                        fetchAwards();
+                    }}
+                />
+            )}
+            
             {modals.addStudent.visible && (
                 <AddStudent awardId={modals.addStudent.awardId} onClose={() => closeModal('addStudent')} />
             )}
