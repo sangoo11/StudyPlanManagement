@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 const StudentLearningResults = () => {
@@ -11,7 +11,7 @@ const StudentLearningResults = () => {
         const getStudentData = async () => {
             const accountID = localStorage.getItem('accountID');
             try {
-                const { data } = await axios.get(
+                const {data} = await axios.get(
                     `http://localhost:8080/v1/api/account/get-user-data/${accountID}`
                 );
                 const studentData = data.metadata;
@@ -52,38 +52,38 @@ const StudentLearningResults = () => {
                     {scoreTable.length > 0 ? (
                         <table className='table-auto w-full border border-gray-200'>
                             <thead className='bg-[#1DA599] text-white'>
-                                <tr>
-                                    <th className='px-4 py-3 text-left'>Môn học</th>
-                                    <th className='px-4 py-3 text-left'>Mã học phần</th>
-                                    <th className='px-4 py-3 text-left'>Quá trình</th>
-                                    <th className='px-4 py-3 text-left'>Giữa kỳ</th>
-                                    <th className='px-4 py-3 text-left'>Cuối kỳ</th>
-                                    <th className='px-4 py-3 text-left'>Tổng kết</th>
-                                </tr>
+                            <tr>
+                                <th className='px-4 py-3 text-left'>Môn học</th>
+                                <th className='px-4 py-3 text-left'>Mã học phần</th>
+                                <th className='px-4 py-3 text-left'>Quá trình</th>
+                                <th className='px-4 py-3 text-left'>Giữa kỳ</th>
+                                <th className='px-4 py-3 text-left'>Cuối kỳ</th>
+                                <th className='px-4 py-3 text-left'>Tổng kết</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {scoreTable.map((item) => (
-                                    <tr key={item.id} className='hover:bg-gray-50'>
-                                        <td className='px-4 py-3 border-b'>
-                                            {item.Course?.Subject?.subjectName || 'N/A'}
-                                        </td>
-                                        <td className='px-4 py-3 border-b'>
-                                            {item.Course?.courseCode || 'N/A'}
-                                        </td>
-                                        <td className='px-4 py-3 border-b'>
-                                            {getScoreByType(item.scores, 'progress')}
-                                        </td>
-                                        <td className='px-4 py-3 border-b'>
-                                            {getScoreByType(item.scores, 'midterm')}
-                                        </td>
-                                        <td className='px-4 py-3 border-b'>
-                                            {getScoreByType(item.scores, 'final')}
-                                        </td>
-                                        <td className='px-4 py-3 border-b'>
-                                            {item.finalGrade || 'N/A'}
-                                        </td>
-                                    </tr>
-                                ))}
+                            {scoreTable.map((item) => (
+                                <tr key={item.id} id={item.id} className='hover:bg-gray-50'>
+                                    <td className='px-4 py-3 border-b'>
+                                        {item.Course?.Subject?.subjectName || 'N/A'}
+                                    </td>
+                                    <td className='px-4 py-3 border-b'>
+                                        {item.Course?.courseCode || 'N/A'}
+                                    </td>
+                                    <td className='px-4 py-3 border-b'>
+                                        {getScoreByType(item.scores, 'progress')}
+                                    </td>
+                                    <td className='px-4 py-3 border-b'>
+                                        {getScoreByType(item.scores, 'midterm')}
+                                    </td>
+                                    <td className='px-4 py-3 border-b'>
+                                        {getScoreByType(item.scores, 'final')}
+                                    </td>
+                                    <td className='px-4 py-3 border-b'>
+                                        {item.finalGrade || 'N/A'}
+                                    </td>
+                                </tr>
+                            ))}
                             </tbody>
                         </table>
                     ) : (
@@ -98,22 +98,22 @@ const StudentLearningResults = () => {
                     {learningOutcomes.length > 0 ? (
                         <table className='table-auto w-full border border-gray-200'>
                             <thead className='bg-[#1DA599] text-white'>
-                                <tr>
-                                    <th className='px-6 py-4 text-left'>Mã tiêu chuẩn</th>
-                                    <th className='px-6 py-4 text-left'>Mức độ cao nhất</th>
-                                </tr>
+                            <tr>
+                                <th className='px-6 py-4 text-left'>Mã tiêu chuẩn</th>
+                                <th className='px-6 py-4 text-left'>Mức độ cao nhất</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {learningOutcomes.map((outcome) => (
-                                    <tr key={outcome.id} className='hover:bg-gray-50'>
-                                        <td className='px-6 py-4 border-b'>
-                                            {outcome.LearningOutcome?.learningOutcomeCode || 'N/A'}
-                                        </td>
-                                        <td className='px-6 py-4 border-b'>
-                                            {outcome.highestLevel || 'N/A'}
-                                        </td>
-                                    </tr>
-                                ))}
+                            {learningOutcomes.map((outcome) => (
+                                <tr key={outcome.id} className='hover:bg-gray-50'>
+                                    <td className='px-6 py-4 border-b'>
+                                        {outcome.LearningOutcome?.learningOutcomeCode || 'N/A'}
+                                    </td>
+                                    <td className='px-6 py-4 border-b'>
+                                        {outcome.highestLevel || 'N/A'}
+                                    </td>
+                                </tr>
+                            ))}
                             </tbody>
                         </table>
                     ) : (

@@ -24,6 +24,8 @@ function AdminPageLayout(props) {
 
     const currentNav = null;
 
+    console.log(location.pathname)
+
 
     return (
         <div>

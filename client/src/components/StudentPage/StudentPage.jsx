@@ -1,15 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-
-import stage_1 from '../../assets/images/stage_1.jpg';
-import Image1 from '../../assets/images/1.jpg';
-import Image1_1 from '../../assets/images/1.1.jpg';
-import Image1_2 from '../../assets/images/1.2.jpg';
-import Image1_3 from '../../assets/images/1.3.jpg';
-import Image2 from '../../assets/images/2.jpg';
-import Image2_1 from '../../assets/images/2.1.jpg';
-import Image2_2 from '../../assets/images/2.2.jpg';
-import Image2_3 from '../../assets/images/2.3.jpg';
 import DynamicTree from "./Tree/DynamicTree.js.jsx";
 
 
@@ -66,18 +56,18 @@ function StudentPage(props) {
             {/* Right Side */}
             <div className="flex flex-col text-black w-1/2 h-auto items-center justify-center">
                 {/*<h1 className="text-3xl font-bold pb-[2vh]">{titleRightHandSide}</h1>*/}
-                <div className='flex flex-col left-0 top-0 w-[40vw] h-auto pb-[4vh]'>
+                <div className='flex flex-col h-auto'>
                     {error ? (
                         <h2 className="text-2xl text-red-500">Error: {error}</h2>
                     ) : (
                         <div>
-                            <h2 className="text-2xl pb-[2vh]">
+                            <h2 className="mb-4">
                                 Số tín chỉ đăng ký: {creditLearned !== null ? creditLearned : 'Loading...'}
                             </h2>
-                            <h2 className="text-2xl pb-[2vh]">
+                            <h2 className="mb-4">
                                 Số giải thưởng đạt được: {awardCount !== null ? awardCount : 'Loading...'}
                             </h2>
-                            <h2 className="text-2xl pb-[2vh]">
+                            <h2 className="mb-4">
                                 Số điểm hiện tại của bạn: {score !== null ? score : 'Loading...'}
                             </h2>
                         </div>
