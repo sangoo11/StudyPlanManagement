@@ -20,8 +20,8 @@ const getById = async (id) => {
     return await Award.findByPk(id);
 };
 
-const create = async ({ awardNumber, type, description, receivedAt, studentID, status, invalidReason }, image) => {
-    if (!awardNumber || !type || !receivedAt || !studentID || !image) {
+const create = async ({ awardNumber, awardTypeID, description, receivedAt, studentID, status, invalidReason }, image) => {
+    if (!awardNumber || !awardTypeID || !receivedAt || !studentID || !image) {
         throw new Error('Please provide all required fields');
     }
 
@@ -31,7 +31,7 @@ const create = async ({ awardNumber, type, description, receivedAt, studentID, s
     try {
         award = await Award.create({
             awardNumber,
-            type,
+            awardTypeID,
             description,
             receivedAt,
             studentID,

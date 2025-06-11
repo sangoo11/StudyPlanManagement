@@ -18,6 +18,7 @@ const KnowledgeField = require("./knowledgeField.model");
 const Certificate = require("./certificate.model");
 const VerificationLogs = require("./verificationLogs.model");
 const LearningOutcomeLevel = require("./learningOutcomeLevel.model");
+const AwardType = require("./awardType.model");
 
 
 // Create data
@@ -703,6 +704,80 @@ const awards = [
     }
 ];
 
+const awardTypes = [
+    {
+        title: "Student of the Month",
+        description: "Awarded for outstanding academic performance and behavior.",
+        type: "Academic",
+        level: "School",
+        date_awarded: new Date("2025-05-01")
+    },
+    {
+        title: "Community Leadership Award",
+        description: "Recognizes students who demonstrate exceptional leadership in the community.",
+        type: "Leadership",
+        level: "City",
+        date_awarded: new Date("2025-03-15")
+    },
+    {
+        title: "Innovation in Science",
+        description: "Awarded for groundbreaking research in environmental science.",
+        type: "Science",
+        level: "Country",
+        date_awarded: new Date("2024-12-10")
+    },
+    {
+        title: "Perfect Attendance",
+        description: "Given to students who have perfect attendance throughout the semester.",
+        type: "Attendance",
+        level: "School",
+        date_awarded: new Date("2025-01-30")
+    },
+    {
+        title: "Best Art Portfolio",
+        description: "Awarded to the student with the most creative and expressive art submissions.",
+        type: "Arts",
+        level: "School",
+        date_awarded: new Date("2025-04-21")
+    },
+    {
+        title: "Top Math Performer",
+        description: "Recognizes excellence in mathematics competitions.",
+        type: "Academic",
+        level: "City",
+        date_awarded: new Date("2025-02-14")
+    },
+    {
+        title: "Sportsmanship Award",
+        description: "For showing great respect and fairness in all athletic activities.",
+        type: "Sports",
+        level: "School",
+        date_awarded: new Date("2025-05-20")
+    },
+    {
+        title: "Environmental Hero",
+        description: "Awarded to students with impactful sustainability projects.",
+        type: "Environment",
+        level: "City",
+        date_awarded: new Date("2025-03-22")
+    },
+    {
+        title: "National Science Fair Winner",
+        description: "1st place in the national science fair competition.",
+        type: "Science",
+        level: "Country",
+        date_awarded: new Date("2025-06-01")
+    },
+    {
+        title: "Cultural Ambassador",
+        description: "For promoting cultural awareness and diversity in school.",
+        type: "Community",
+        level: "School",
+        date_awarded: new Date("2025-02-05")
+    }
+];
+
+
 
 const learningOutcomeLevels = [
     // NT levels for LO1 and LO2
@@ -779,6 +854,8 @@ const createData = async () => {
 
     // Create Awards
     await Award.bulkCreate(awards);
+
+    await AwardType.bulkCreate(awardTypes)
 
     await LearningOutcomeLevel.bulkCreate(learningOutcomeLevels)
 };
