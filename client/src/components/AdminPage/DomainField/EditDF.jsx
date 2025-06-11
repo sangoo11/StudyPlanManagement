@@ -75,7 +75,7 @@ function EditDomainField({ id ,onClose, onEditedDF }) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
             <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
-                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Chỉnh sửa khối kiến thức</h2>
+                <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Chỉnh sửa lĩnh vực kiến thức</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input

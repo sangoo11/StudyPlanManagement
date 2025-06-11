@@ -111,7 +111,7 @@ function ExpiredCertificate() {
                   <td className="p-3 border text-[#E12D2D] font-bold">
                     {cert.remainingDays} ngày
                   </td>
-                  <td className="p-3 border font-bold text-yellow-600">
+                  <td className={cert.status === 'pending' ? 'p-3 font-bold text-yellow-600' : cert.status === 'valid' ? 'p-3 font-bold text-green-600' : 'p-3 font-bold text-red-600'}>
                     {cert.status.charAt(0).toUpperCase() + cert.status.slice(1)}
                   </td>
                   <td className="flex w-full p-3 justify-center">
