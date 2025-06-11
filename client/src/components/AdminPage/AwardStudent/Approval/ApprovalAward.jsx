@@ -82,10 +82,21 @@ const ApprovalAward = () => {
                 <td className="py-2 px-4 border-b">{award.description}</td>
                 <td className="py-2 px-4 border-b">
                   <img
-                    src={award.image}
+                    crossOrigin="anonymous"
+                    src={
+                      award.image?.startsWith('http')
+                        ? award.image
+                        : `http://localhost:8080/images/award/${encodeURIComponent(award.image?.split('/').pop())}`
+                    }
                     alt=""
                     className="w-20 h-12 object-cover rounded cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => handleImageClick(award.image)}
+                    onClick={() =>
+                      handleImageClick(
+                        award.image?.startsWith('http')
+                          ? award.image
+                          : `http://localhost:8080/images/award/${encodeURIComponent(award.image?.split('/').pop())}`
+                      )
+                    }
                   />
                 </td>
                 <td className="py-2 px-4 border-b">
@@ -150,6 +161,7 @@ const ApprovalAward = () => {
               x
             </button>
             <img
+              crossOrigin="anonymous"
               src={imageModal.src}
               alt="award"
               className="max-w-[80vw] max-h-[70vh] rounded object-contain"

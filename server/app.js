@@ -8,7 +8,11 @@ const path = require("path");
 
 const app = express();
 
-app.use("/images", express.static(path.join(__dirname, "../public/images")));
+app.use("/images", (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+}, express.static(path.join(__dirname, "../public/images")));
 
 app.use(morgan("dev"));
 app.use(helmet());
