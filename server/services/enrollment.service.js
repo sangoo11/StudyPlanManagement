@@ -5,7 +5,7 @@ const Student = require('../models/student.model');
 const Teacher = require('../models/teacher.model');
 const Subject = require('../models/subject.model');
 const sequelize = require('../configs/sequelize');
-const { ROLE } = require('./access.service');
+const {ROLE} = require('./access.service');
 
 class EnrollmentService {
     static getIncompleteEnrollment = async (studentID) => {
@@ -117,10 +117,6 @@ class EnrollmentService {
                     enrolledDate: new Date(),
                 });
 
-                await currentStudent.update({
-                    credit: currentStudent.credit + subjectCredit,
-                });
-
                 await currentCourse.update({
                     studentCount: currentCourse.studentCount + 1,
                 });
@@ -138,7 +134,7 @@ class EnrollmentService {
         }
     }
 
-    static enrollTeacherInCourse = async ({ teacherID }, courseID) => {
+    static enrollTeacherInCourse = async ({teacherID}, courseID) => {
         if (!teacherID || !courseID) throw new Error('Teacher ID and Course ID are required');
 
         const course = await Course.findByPk(courseID);
@@ -160,7 +156,7 @@ class EnrollmentService {
         }
     }
 
-    static deleteStudentFromCourse = async (courseID, { studentID }) => {
+    static deleteStudentFromCourse = async (courseID, {studentID}) => {
         if (!studentID || !courseID) throw new Error('Student ID and Course ID are required');
 
         const course = await Course.findByPk(courseID);
@@ -201,4 +197,5 @@ class EnrollmentService {
     }
 
 }
+
 module.exports = EnrollmentService;

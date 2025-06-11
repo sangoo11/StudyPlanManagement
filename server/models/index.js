@@ -21,6 +21,7 @@ const KnowledgeField = require("./knowledgeField.model");
 const Certificate = require("./certificate.model");
 const VerificationLogs = require("./verificationLogs.model");
 const LearningOutcomeLevel = require("./learningOutcomeLevel.model");
+const AwardType = require("./awardType.model");
 
 // User - Account relationships
 Student.belongsTo(Account, {
@@ -174,6 +175,9 @@ VerificationLogs.belongsTo(Account, { foreignKey: "verifiedBy", as: "verifier" }
 
 // Learningoutcome - Learningoutcome level
 LearningOutcome.hasMany(LearningOutcomeLevel, { foreignKey: "learningOutcomeID" })
+
+// Award - AwardType
+AwardType.hasMany(Award, { foreignKey: "awardTypeID" })
 
 // Sync all models with database
 sequelize

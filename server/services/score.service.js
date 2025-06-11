@@ -1,7 +1,7 @@
 const Account = require('../models/account.model');
 const Subject = require('../models/subject.model');
 const Enrollment = require('../models/enrollment.model');
-const { sql, Op } = require('@sequelize/core');
+const {sql, Op} = require('@sequelize/core');
 const Student = require('../models/student.model');
 const sequelize = require('../configs/sequelize');
 const Course = require('../models/course.model');
@@ -12,7 +12,7 @@ const LearningOutcomeScore = require('../models/learningOutcomeScore.model');
 const Modification = require('../models/modification.model');
 const SubjectLearningOutcome = require('../models/subjectLearningOutcome.model');
 const axios = require('axios');
-const { QueryTypes, where } = require('sequelize');
+const {QueryTypes, where} = require('sequelize');
 
 class ScoreService {
     static gradeScore = async (studentID, {
@@ -99,8 +99,7 @@ class ScoreService {
                             scoreType: score[i].scoreType,
                         },
                     });
-                }
-                else {
+                } else {
                     await Score.create({
                         score: score[i].score,
                         scoreType: score[i].scoreType,
@@ -135,6 +134,10 @@ class ScoreService {
             if (existingScores.length === 3) {
                 await enrollment.update({
                     completed: true,
+                });
+
+                await student.update({
+                    credit: student.credit + subject.credit,
                 });
 
                 const finalScore = existingScores.reduce((acc, s) => {
@@ -258,7 +261,6 @@ class ScoreService {
                                 studentID,
                             }
                         });
-                        console.log(JSON.stringify(learningOutcomeScores));
 
                         const curentLevel = await SubjectLearningOutcome.findOne({
                             where: {
@@ -299,78 +301,78 @@ class ScoreService {
 
     }
 
-    static getStudentScoreByID = async ({ studentID }, { courseID }) => {
-        if (!studentID) {
-            throw new Error('Missing student ID');
-        }
-        const student = await Student.findByPk(studentID);
-        if (!student) {
-            throw new Error('Student not found');
-        }
-
-        // // Build the query conditions
-        // const whereConditions = {
-        //     studentID: studentID
-        // };
-
-        // if (courseID) {
-        //     const course = await Course.findByPk(courseID);
-        //     if (!course) {
-        //         throw new Error('Course not found');
-        //     }
-        //     whereConditions.courseID = courseID;
-        // }
-
-        const queryCondition = 'where studentID = ?'
-
-        if (courseID) {
-            const enrollments = await Enrollment.findAll({
-                where: {
-                    courseID
-                }
-            })
-            queryCondition += ' AND courseID'
-        }
-
-        // Get all enrollments for the student (filtered by courseID if provided)
-        const scores = await sequelize.query(`
-            SELECT * FROM SCORE
-            ${course}
-            `, {
-
-            type: QueryTypes.SELECT
-        })
-
-        return scores;
-
-        // if (enrollments.length === 0) {
-        //     throw new Error('No enrollments found');
-        // }
-
-        // // Get all scores for these enrollments
-        // const scores = await Score.findAll({
-        //     where: {
-        //         enrollmentID: {
-        //             [Op.in]: enrollments.map(e => e.id)
-        //         }
-        //     },
-        //     attributes: ['enrollmentID', 'scoreType', 'score']
-        // });
-
-        // // Format the response
-        // const result = enrollments.map(enrollment => ({
-        //     courseID: enrollment.courseID,
-        //     teacherID: enrollment.Course.teacherID,
-        //     scores: scores
-        //         .filter(s => s.enrollmentID === enrollment.id)
-        //         .map(s => ({
-        //             scoreType: s.scoreType,
-        //             score: s.score
-        //         }))
-        // }));
-
-        // return courseID ? result[0] : result;
-    }
+    // static getStudentScoreByID = async ({studentID}, {courseID}) => {
+    //     if (!studentID) {
+    //         throw new Error('Missing student ID');
+    //     }
+    //     const student = await Student.findByPk(studentID);
+    //     if (!student) {
+    //         throw new Error('Student not found');
+    //     }
+    //
+    //     // // Build the query conditions
+    //     // const whereConditions = {
+    //     //     studentID: studentID
+    //     // };
+    //
+    //     // if (courseID) {
+    //     //     const course = await Course.findByPk(courseID);
+    //     //     if (!course) {
+    //     //         throw new Error('Course not found');
+    //     //     }
+    //     //     whereConditions.courseID = courseID;
+    //     // }
+    //
+    //     let queryCondition = 'where studentID = ?'
+    //
+    //     if (courseID) {
+    //         const enrollments = await Enrollment.findAll({
+    //             where: {
+    //                 courseID
+    //             }
+    //         })
+    //         queryCondition += ' AND courseID'
+    //     }
+    //
+    //     // Get all enrollments for the student (filtered by courseID if provided)
+    //     const scores = await sequelize.query(`
+    //         SELECT *
+    //         FROM SCORE ${course}
+    //     `, {
+    //
+    //         type: QueryTypes.SELECT
+    //     })
+    //
+    //     return scores;
+    //
+    //     // if (enrollments.length === 0) {
+    //     //     throw new Error('No enrollments found');
+    //     // }
+    //
+    //     // // Get all scores for these enrollments
+    //     // const scores = await Score.findAll({
+    //     //     where: {
+    //     //         enrollmentID: {
+    //     //             [Op.in]: enrollments.map(e => e.id)
+    //     //         }
+    //     //     },
+    //     //     attributes: ['enrollmentID', 'scoreType', 'score']
+    //     // });
+    //
+    //     // // Format the response
+    //     // const result = enrollments.map(enrollment => ({
+    //     //     courseID: enrollment.courseID,
+    //     //     teacherID: enrollment.Course.teacherID,
+    //     //     scores: scores
+    //     //         .filter(s => s.enrollmentID === enrollment.id)
+    //     //         .map(s => ({
+    //     //             scoreType: s.scoreType,
+    //     //             score: s.score
+    //     //         }))
+    //     // }));
+    //
+    //     // return courseID ? result[0] : result;
+    // }
 
     static getStudentScore = async (studentID, query) => {
         if (!studentID) {
@@ -378,15 +380,16 @@ class ScoreService {
         }
 
         const [studentScores] = await sequelize.query(`
-            select * from enrollment 
-            where studentID = 1 
-            ${query.courseID ? `and courseID = ${query.courseID}` : ''}
+            select *
+            from enrollment
+            where studentID = 1
+                ${query.courseID ? `and courseID = ${query.courseID}` : ''}
         `)
 
         return studentScores;
     }
 
-    static getScore = async (studentID, { subjectID }) => {
+    static getScore = async (studentID, {subjectID}) => {
         const scores = await Enrollment.findAll({
             where: {
                 studentID
@@ -403,7 +406,7 @@ class ScoreService {
                         {
                             model: Subject,
                             required: true,
-                            where: subjectID ? { id: subjectID } : {}
+                            where: subjectID ? {id: subjectID} : {}
                         }
                     ]
                 }
