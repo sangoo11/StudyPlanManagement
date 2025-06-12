@@ -67,7 +67,7 @@ function AdminPageLayout(props) {
 
 
                     <NavLink style={navLinkStyles} to="/admin/awardstudent">Award Students</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/awardstudent/approvalaward">Award Students</NavLink>
+                    <NavLink style={navLinkStyles} to="/admin/awardstudent/approvalaward">Approval Award Students</NavLink>
 
 
                     <div>
