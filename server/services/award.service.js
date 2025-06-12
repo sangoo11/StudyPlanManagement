@@ -7,13 +7,20 @@ const AwardStudent = require('../models/awardStudent.model');
 const { normalizedPath } = require("../utils/utils");
 const fs = require('fs').promises;
 
-const getAll = async ({ studentID }) => {
+const getAll = async ({ studentID, awardTypeID }) => {
+    let whereContitions = {}
+
     if (studentID) {
-        return await Award.findAll({
-            where: { studentID }
-        });
+        whereContitions.studentID = studentID
     }
-    return await Award.findAll();
+
+    if (awardTypeID) {
+        whereContitions.awardTypeID = awardTypeID
+    }
+
+    return await Award.findAll({
+        where: whereContitions
+    })
 };
 
 const getById = async (id) => {
