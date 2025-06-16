@@ -12,5 +12,6 @@ router.get("/get-student/:studentID", asyncHandler(StudentController.getStudentB
 router.put("/update-student/:studentID", asyncHandler(StudentController.updateStudentByID))
 router.put("/delete-student/:studentID", asyncHandler(StudentController.deleteStudentByID))
 router.get("/get-student-learning-outcome-score/:studentID", asyncHandler(StudentController.getStudentLearningOutcomeScore))
+router.get("/:studentID/graduate", asyncHandler(StudentController.getStudentGraduate))
 
 module.exports = router;
