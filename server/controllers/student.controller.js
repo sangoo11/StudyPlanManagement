@@ -56,5 +56,15 @@ class StudentController {
             }
         }).send(res)
     }
+
+    getStudentGraduate = async (req, res, next) => {
+        new CREATED({
+            message: "Get Student Graduate OK",
+            metadata: await StudentService.getStudentGraduate(req.params.studentID),
+            options: {
+                limit: 10,
+            }
+        }).send(res)
+    }
 }
 module.exports = new StudentController();
