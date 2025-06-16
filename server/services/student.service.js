@@ -111,25 +111,26 @@ class StudentService {
     static getStudentGraduate = async (studentID) => {
         if (!studentID) throw new Error('Missing studentID');
 
+        const checklist = {
+            minCredit: false,
+            foreignLanguage: false,
+            GDANQPCertificate: false,
+            allCoursesCompleted: false,
+            allSubjectsPassed: false,
+        };
+
         const student = await Student.findOne({ where: { id: studentID } });
         if (!student) throw new Error('Student not found');
 
-        // 1. Credit check
-        if (student.credit < 130) {
-            return fail('Minimum credit is 130');
+        // 1. Credit
+        if (student.credit >= 130) {
+            checklist.minCredit = true;
         }
 
-        // 2. Certificate checks
+        // 2. Certificates
         const certificates = await Certificate.findAll({
-            where: {
-                studentID,
-                status: 'valid',
-            }
+            where: { studentID, status: 'valid' }
         });
-
-        if (certificates.length === 0) {
-            return fail('Student does not have any certificates');
-        }
 
         const requiredFLCertificates = [
             'Chứng chỉ TOEIC (Nghe-Đọc)',
@@ -144,29 +145,24 @@ class StudentService {
             'VPET',
         ];
 
-        const hasFLCertificate = certificates.some(cert => requiredFLCertificates.includes(cert.type));
-        if (!hasFLCertificate) {
-            return fail('Foreign language certificate is required');
-        }
+        const hasFLCertificate = certificates.some(cert =>
+            requiredFLCertificates.includes(cert.type)
+        );
+        const hasGDNQPCertificate = certificates.some(cert =>
+            cert.type === 'Chứng chỉ GDQP&AN'
+        );
 
-        const hasNFCertificate = certificates.some(cert => cert.type === 'Chứng chỉ GDQP&AN');
-        if (!hasNFCertificate) {
-            return fail('GDQP&AN certificate is required');
-        }
+        if (hasFLCertificate) checklist.foreignLanguage = true;
+        if (hasGDNQPCertificate) checklist.GDANQPCertificate = true;
 
-        // 3. Ongoing course check
+        // 3. No active (enrolled) course
         const enrollments = await Enrollment.findAll({
-            where: {
-                studentID,
-                status: 'enrolled'
-            }
+            where: { studentID, status: 'enrolled' }
         });
-        if (enrollments.length > 0) {
-            return fail('The student has not yet completed all the courses');
-        }
+        if (enrollments.length === 0) checklist.allCoursesCompleted = true;
 
-        // 4. Subject failure check
-        const result = await sequelize.query(
+        // 4. Subject pass/fail
+        const subjectResults = await sequelize.query(
             `SELECT s.id AS subjectId, e.status
              FROM enrollment AS e
              INNER JOIN course AS c ON e.courseID = c.id
@@ -178,24 +174,30 @@ class StudentService {
             }
         );
 
-        const unpassedSubjects = getUnpassedSubjects(result);
-        if (unpassedSubjects.length > 0) {
-            return fail('The student still has failed subject(s)', unpassedSubjects);
-        }
+        const unpassedSubjects = getUnpassedSubjects(subjectResults);
+        if (unpassedSubjects.length === 0) checklist.allSubjectsPassed = true;
 
-        // 5. Final result
-        return {
-            status: 'pass',
-            message: 'Student meets all graduation requirements'
-        };
+        // Final decision
+        const allPassed = Object.values(checklist).every(v => v === true);
+
+        return allPassed
+            ? {
+                status: 'pass',
+                result: checklist,
+                message: 'Student meets all graduation requirements'
+            }
+            : {
+                status: 'fail',
+                result: checklist,
+                reason: getFirstFailReason(checklist)
+            };
     };
 
 }
 
-// Helper: check subject pass/fail logic
+// Helper: Subject fail logic
 function getUnpassedSubjects(results) {
     const subjectStatusMap = new Map();
-
     for (const { subjectId, status } of results) {
         if (!subjectStatusMap.has(subjectId)) {
             subjectStatusMap.set(subjectId, []);
@@ -208,14 +210,14 @@ function getUnpassedSubjects(results) {
         .map(([subjectId]) => subjectId);
 }
 
-// Helper: fail response
-function fail(reason, data = null) {
-    const response = {
-        status: 'fail',
-        reason
-    };
-    if (data) response.data = data;
-    return response;
+// Helper: First failed reason message
+function getFirstFailReason(checklist) {
+    if (!checklist.minCredit) return 'Minimum credit is 130';
+    if (!checklist.foreignLanguage) return 'Foreign language certificate is required';
+    if (!checklist.GDANQPCertificate) return 'GDQP&AN certificate is required';
+    if (!checklist.allCoursesCompleted) return 'The student has not yet completed all the courses';
+    if (!checklist.allSubjectsPassed) return 'The student still has failed subject(s)';
+    return 'Unknown failure';
 }
 
 
