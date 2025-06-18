@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const AccountInfoInput = ({isEditing, children, name, value}) => {
-    let Tag = "span";
+const AccountInfoInput = ({ isEditing = false, children, name, value }) => {
+    let content = <span className='p-2' id={name}>{value}</span>
 
     if (isEditing) {
-        Tag = "input";
+        content = <input className='p-2 bg-orange-100 border border-orange-200 rounded-md' id={name} name={name} defaultValue={value} />
     }
 
     return (
         <div className={'flex items-center'}>
             <label className={'w-[15ch]'} htmlFor={name}>{children}</label>
-            <Tag id={name}>: {value}</Tag>
+            {content}
         </div>
     );
 };

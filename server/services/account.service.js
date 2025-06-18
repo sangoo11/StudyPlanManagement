@@ -165,23 +165,22 @@ class AccountService {
     }
   };
 
-  static editUserDataByAccountID = async (accountID, { fullName, major }) => {
+  static editUserDataByAccountID = async (accountID, data) => {
     if (!accountID) throw new Error("Missing account ID");
     const account = await Account.findByPk(accountID);
     if (!account) throw new Error("Account not found");
 
     const accountRole = account.accountableType;
+
     if (accountRole === "teacher") {
       const teacher = await Teacher.findOne({
         where: {
           accountID: accountID,
         },
       });
+
       if (!teacher) throw new Error("Teacher not found");
-      const updateTeacher = await teacher.update({
-        fullName,
-        major,
-      });
+      const updateTeacher = await teacher.update(data);
       if (!updateTeacher) throw new Error("Update teacher failed");
       return updateTeacher;
     } else if (accountRole === "student") {
@@ -191,10 +190,7 @@ class AccountService {
         },
       });
       if (!student) throw new Error("Student not found");
-      const updateStudent = await student.update({
-        fullName,
-        major,
-      });
+      const updateStudent = await student.update(data);
       if (!updateStudent) throw new Error("Update student failed");
       return updateStudent;
     }

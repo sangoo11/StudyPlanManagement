@@ -1,18 +1,16 @@
-import React, {useState} from 'react';
-import {NavLink, useLocation, useNavigate} from 'react-router-dom';
-import {Outlet} from 'react-router';
+import React, { useState } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import UserLogo from '../assets/images/userlogo.png';
-import {ChevronDown} from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 
 function AdminPageLayout(props) {
-    const navLinkStyles = ({isActive}) => {
+    const navLinkStyles = ({ isActive }) => {
         return {
             color: isActive ? "#1DA599" : "black",
             fontWeight: 400,
             textDecoration: "none",
-            // borderBottom: isActive ? "1px solid #1DA599" : "none",
-            // paddingBottom: isActive ? "5px" : "0",
         };
     };
 
@@ -20,12 +18,6 @@ function AdminPageLayout(props) {
 
 
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const currentNav = null;
-
-    console.log(location.pathname)
-
 
     return (
         <div>
@@ -50,13 +42,13 @@ function AdminPageLayout(props) {
                         >
                             <div className={'flex items-center'}>User Management
                                 <ChevronDown
-                                    color={`${nav === 'User Management' ? '#1DA599' : '#555'}`}/></div>
+                                    color={`${nav === 'User Management' ? '#1DA599' : '#555'}`} /></div>
                             {nav === 'User Management' &&
                                 (<div className='absolute bg-white z-10 shadow-md'>
                                     <NavLink className={'block p-2'} style={navLinkStyles}
-                                             to="/admin/students">Students</NavLink>
+                                        to="/admin/students">Students</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles}
-                                             to="/admin/teachers">Teachers</NavLink>
+                                        to="/admin/teachers">Teachers</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/activeteacher">Active
                                         Teachers</NavLink>
 
@@ -66,8 +58,27 @@ function AdminPageLayout(props) {
                     </div>
 
 
-                    <NavLink style={navLinkStyles} to="/admin/awardstudent">Award Students</NavLink>
-                    <NavLink style={navLinkStyles} to="/admin/awardstudent/approvalaward">Approval Award Students</NavLink>
+
+
+                    <div>
+                        <button
+                            className={`${nav === 'Award' ? 'text-[#1DA599] font-weight-400' : ''}`}
+                            onMouseEnter={() => {
+                                setNav(nav === 'Award' ? '' : 'Award')
+                            }}
+                            onMouseLeave={() => setNav('')}
+                        >
+                            <div className={'flex items-center'}>Award
+                                <ChevronDown
+                                    color={`${nav === 'Award' ? '#1DA599' : '#555'}`} /></div>
+                            {nav === 'Award' &&
+                                (<div className='absolute bg-white z-10  shadow-md'>
+                                    <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/awardstudent">Award Students</NavLink>
+                                    <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/awardstudent/approvalaward">Approval Award Students</NavLink>
+                                </div>)
+                            }
+                        </button>
+                    </div>
 
 
                     <div>
@@ -80,13 +91,13 @@ function AdminPageLayout(props) {
                         >
                             <div className={'flex items-center'}>Academic
                                 <ChevronDown
-                                    color={`${nav === 'Academic' ? '#1DA599' : '#555'}`}/></div>
+                                    color={`${nav === 'Academic' ? '#1DA599' : '#555'}`} /></div>
                             {nav === 'Academic' &&
                                 (<div className='absolute bg-white z-10  shadow-md'>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/learningoutcome">Learning
                                         Outcome</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles}
-                                             to="/admin/subjects">Subjects</NavLink>
+                                        to="/admin/subjects">Subjects</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/domainknowledge">Domain
                                         Knowledge</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/domainfield">Domain
@@ -105,12 +116,12 @@ function AdminPageLayout(props) {
                             onMouseLeave={() => setNav('')}
                         >
                             <div className={'flex items-center'}>Certificate Management
-                                <ChevronDown color={`${nav === 'Academic' ? '#1DA599' : '#555'}`}/>
+                                <ChevronDown color={`${nav === 'Academic' ? '#1DA599' : '#555'}`} />
                             </div>
                             {nav === 'Certificate Management' &&
                                 (<div className='absolute bg-white z-10  shadow-md'>
                                     <NavLink className={'block p-2'} style={navLinkStyles}
-                                             to="/admin/certificate">Certificate</NavLink>
+                                        to="/admin/certificate">Certificate</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/cerapproval">Approval
                                         Certificate</NavLink>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/cerexpired">Expired
@@ -123,7 +134,7 @@ function AdminPageLayout(props) {
 
                     <button className='fixed right-10 space-x-2' onClick={() => navigate('/admin/accountadmin')}>
                         <div className='fixed w-6 h-6 items-center justify-center'>
-                            <img src={UserLogo}/>
+                            <img src={UserLogo} />
                         </div>
                         <h1 className="text-[#1DA599] pl-6 cursor-pointer">Admin</h1>
                     </button>
@@ -131,7 +142,7 @@ function AdminPageLayout(props) {
             </div>
 
             {/* Content */}
-            <Outlet/>
+            <Outlet />
 
             {/* <div className='fixed bottom-0 right-0 left-0 min-h-[10vh] bg-[#1DA599] px-10 py-6'>
                 <div className='grid grid-cols-[2fr_1fr_1fr_1fr_1fr] h-full min-h-[10vh] text-white'>

@@ -1,11 +1,13 @@
 import React from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AccountInfo from "./AccountInfo.jsx";
 
 function AccountPage() {
     const accountID = localStorage.getItem('accountID');
     const accountableType = localStorage.getItem('accountableType');
     const navigate = useNavigate();
+    const [isEdit, setIsEdit] = React.useState(false);
+
 
     if (!accountID) {
         return (
@@ -30,14 +32,28 @@ function AccountPage() {
 
     return (
         <div className='w-full min-h-screen bg-green-50 p-6'>
-            <AccountInfo accountableType={accountableType} accountID={accountID}/>
-            <div className='mt-6 flex justify-between w-full max-w-md mx-auto'>
-                <button
-                    onClick={handleReturn}
+            <AccountInfo accountableType={accountableType} accountID={accountID} isEdit={isEdit} onFinish={() => setIsEdit(false)} />
+            <div className='mt-6 flex justify-between w-96 max-w-full mx-auto'>
+                {isEdit ? <button
+                    onClick={() => setIsEdit(false)}
                     className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
                 >
-                    Return
-                </button>
+                    Cancel
+                </button> :
+                    <button
+                        onClick={handleReturn}
+                        className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+                    >
+                        Return
+                    </button>}
+                {(isEdit || accountableType === 'admin') ? null : (
+                    <button
+                        onClick={() => setIsEdit(true)}
+                        className='px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600'
+                    >
+                        Edit
+                    </button>
+                )}
                 <button
                     onClick={handleLogOut}
                     className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600'

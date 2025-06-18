@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DetailPoint from './DetailPoint';
-import LearningOutcomeSubjectsModal from './DetailLO'; 
+import LearningOutcomeSubjectsModal from './DetailLO';
 
 
 const StudentLearningResults = () => {
@@ -18,7 +18,7 @@ const StudentLearningResults = () => {
         const getStudentData = async () => {
             const accountID = localStorage.getItem('accountID');
             try {
-                const {data} = await axios.get(
+                const { data } = await axios.get(
                     `http://localhost:8080/v1/api/account/get-user-data/${accountID}`
                 );
                 const studentData = data.metadata;
@@ -26,7 +26,7 @@ const StudentLearningResults = () => {
 
                 // Fetch learning outcomes
                 const outcomesResponse = await axios.get(
-                    `http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentData.id}`
+                    `http://localhost:8080/v1/api/student/get-student-learning-outcome-score/?studentID=${studentData.id}`
                 );
                 setLearningOutcomes(outcomesResponse.data.metadata);
 
@@ -169,10 +169,10 @@ const StudentLearningResults = () => {
                     {learningOutcomes.length > 0 ? (
                         <table className='table-auto w-full border border-gray-200'>
                             <thead className='bg-[#1DA599] text-white'>
-                            <tr>
-                                <th className='px-6 py-4 text-left'>Mã tiêu chuẩn</th>
-                                <th className='px-6 py-4 text-left'>Mức độ cao nhất</th>
-                            </tr>
+                                <tr>
+                                    <th className='px-6 py-4 text-left'>Mã tiêu chuẩn</th>
+                                    <th className='px-6 py-4 text-left'>Mức độ cao nhất</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {learningOutcomes.map((outcome) => (

@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AccountInfo from "../AccountInfo/AccountInfo.jsx";
 
@@ -73,20 +73,20 @@ function TeacherAccount() {
 
     return (
         <div className="w-full min-h-screen bg-green-50 p-6">
-            <AccountInfo accountID={accountID} accountableType={accountableType}/>
-            <div className="mt-6 flex justify-between w-full max-w-md mx-auto">
+            <AccountInfo accountID={accountID} accountableType={accountableType} />
+            <div className="mt-6 flex justify-between w-96 max-w-full mx-auto">
                 <button
                     onClick={handleReturn}
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                 >
                     Return
                 </button>
-                {/*<button*/}
-                {/*    onClick={handleEdit}*/}
-                {/*    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"*/}
-                {/*>*/}
-                {/*    Edit*/}
-                {/*</button>*/}
+                <button
+                    onClick={handleEdit}
+                    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                >
+                    Edit
+                </button>
                 <button
                     onClick={handleLogOut}
                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

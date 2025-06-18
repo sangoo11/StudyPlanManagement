@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement} from "chart.js";
-import {Bar, Pie, Doughnut} from 'react-chartjs-2';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import { Bar, Pie, Doughnut } from 'react-chartjs-2';
+import ExportButton from './ExportButton';
 
 // Register the necessary Chart.js components
 ChartJS.register(
@@ -28,7 +29,7 @@ function Statistics() {
     useEffect(() => {
         const getLOIDList = async () => {
             try {
-                const {data} = await axios.get(`http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome`)
+                const { data } = await axios.get(`http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome`)
                 setLOIDList(data.metadata)
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -40,7 +41,8 @@ function Statistics() {
 
             try {
                 // Fetch data from API
-                const {data} = await axios.get(`http://localhost:8080/v1/api/subject/get-LO-score/${LOID}`);
+                const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-LO-score/${LOID}`);
+
                 // Process and set the chart data
                 setDoughnutData({
                     labels: Object.keys(getHighestScore(data.metadata.map((item) => item.highestLevel))),
@@ -94,7 +96,7 @@ function Statistics() {
     useEffect(() => {
         const getStudentList = async () => {
             try {
-                const {data} = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
+                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-all-student`)
                 setStudentList(data.metadata)
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -106,7 +108,8 @@ function Statistics() {
 
             try {
                 // Fetch data from API
-                const {data} = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/${studentID}`);
+                const { data } = await axios.get(`http://localhost:8080/v1/api/student/get-student-learning-outcome-score/?studentID=${studentID}`);
+
                 // Process and set the chart data
                 setBarData({
                     labels: data.metadata.map((item) => item.LearningOutcome.learningOutcomeCode),
@@ -141,7 +144,7 @@ function Statistics() {
 
         const getBarOption = async () => {
             try {
-                const {data} = await axios.get(`http://localhost:8080/v1/api/subject/get-subject-by-LO/${studentID}`);
+                const { data } = await axios.get(`http://localhost:8080/v1/api/subject/get-subject-by-LO/${studentID}`);
                 setBarOption({
                     responsive: true,
                     scales: {
@@ -193,9 +196,11 @@ function Statistics() {
 
     return (
         <>
-            <div className='mx-[4vw] mt-[10vh] font-bold text-4xl text-center'>Thống kê</div>
+            <div className='mt-[10vh] font-bold text-4xl text-center flex items-center gap-4 justify-center'>
+                <h1>Thống kê</h1>
+                <ExportButton />
+            </div>
             <div className='mx-[4vw] mt-[8vh] grid grid-cols-2 space-x-40 max-h-screen'>
-
                 <div>
                     {/*<h1 className="text-2xl font-bold text-center">Biểu đồ cột</h1>*/}
                     <select
@@ -251,3 +256,4 @@ function Statistics() {
 }
 
 export default Statistics;
+

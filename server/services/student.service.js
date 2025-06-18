@@ -86,26 +86,36 @@ class StudentService {
     }
 
     static getStudentLearningOutcomeScore = async (studentID) => {
-        if (!studentID) throw new Error('Missing student ID');
+        // Check student existence only if studentID is provided
+        if (studentID) {
+            const student = await Student.findOne({
+                where: { id: studentID }
+            });
 
-        const student = await Student.findOne({
-            where: {
-                id: studentID,
-            }
-        });
-        if (!student) throw new Error('Student not found');
+            if (!student) throw new Error('Student not found');
+        }
 
-        const learningOutcomeScore = await LearningOutcomeScore.findAll({
-            where: {
-                studentID: studentID,
-            },
+        // Build query condition for LearningOutcomeScore
+        const whereConditions = {};
+        if (studentID) {
+            whereConditions.studentID = studentID;
+        }
+
+        const learningOutcomeScores = await LearningOutcomeScore.findAll({
+            where: whereConditions,
+            attributes: ['id', 'studentID', 'highestLevel', 'learningOutcomeID'],
             include: {
                 model: LearningOutcome,
+
                 attributes: ['learningOutcomeCode'],
             },
         });
-        if (!learningOutcomeScore) throw new Error('Learning Outcome Score not found');
-        return learningOutcomeScore;
+
+        if (!learningOutcomeScores || learningOutcomeScores.length === 0) {
+            throw new Error('Learning Outcome Scores not found');
+        }
+
+        return learningOutcomeScores;
     }
 
     static getStudentGraduate = async (studentID) => {

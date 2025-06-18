@@ -50,7 +50,7 @@ class StudentController {
     getStudentLearningOutcomeScore = async (req, res, next) => {
         new CREATED({
             message: "GET Student Learning Outcome Score OK",
-            metadata: await StudentService.getStudentLearningOutcomeScore(req.params.studentID),
+            metadata: await StudentService.getStudentLearningOutcomeScore(req.query.studentID),
             options: {
                 limit: 10,
             }

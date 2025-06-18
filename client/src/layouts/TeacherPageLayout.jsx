@@ -60,8 +60,8 @@ function TeacherPageLayout(props) {
                         <h1 className="text-3xl text-[#1DA599] font-bold pl-10">{appName}</h1>
                     </div>
 
-                    <NavLink style={navLinkStyles} to="/teacher" end>{title1}</NavLink>
-                    <NavLink style={navLinkStyles} to="/teacher/statistics">{title2}</NavLink>
+                    <NavLink style={navLinkStyles} to="/teacher" end>Course Management</NavLink>
+                    <NavLink style={navLinkStyles} to="/teacher/statistics">Dashboard</NavLink>
 
                     <button
                         className='fixed right-10 space-x-8'

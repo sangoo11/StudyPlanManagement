@@ -136,7 +136,7 @@ function App() {
                     <Route path='student/results' element={<LearningResults />} />
                     <Route path='student/outcome' element={<StudentLearningOutcome />} />
                     <Route path='student/award' element={<Award />} />
-                    <Route path='student/account/:accountID' element={<StudentAccount />} />
+                    <Route path='student/account/:accountID' element={<AccountPage />} />
                     <Route path='student/domainfield' element={<StudentDomainField />} />
                     <Route path='student/certificate' element={<StudentCertificate />} />
                 </Route>
@@ -146,7 +146,7 @@ function App() {
                     <Route path='/teacher/coursedetail/:courseID' element={<CourseDetail />} />
                     <Route path='/teacher/statistics' element={<Statistics />} />
                     <Route path='teacher/editpoint/:studentID' element={<EditPoint />} />
-                    <Route path='teacher/account/:accountID' element={<TeacherAccount />} />
+                    <Route path='teacher/account/:accountID' element={<AccountPage />} />
                 </Route>
 
                 <Route path='admin' element={<AdminPageLayout />}>
