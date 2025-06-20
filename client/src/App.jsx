@@ -165,7 +165,7 @@ function App() {
                     <Route path='cerexpired' element={<ExpiredCertificate />} />
 
                     <Route path='awardstudent' element={<AwardStudent />} />
-                    <Route path='awardstudent/approvalaward' element={<ApprovalAward />} />
+                    <Route path='approvalaward' element={<ApprovalAward />} />
                 </Route>
 
                 {/* Student modals */}

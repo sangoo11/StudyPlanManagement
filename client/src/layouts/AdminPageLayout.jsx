@@ -74,7 +74,7 @@ function AdminPageLayout(props) {
                             {nav === 'Award' &&
                                 (<div className='absolute bg-white z-10  shadow-md'>
                                     <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/awardstudent">Award Students</NavLink>
-                                    <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/awardstudent/approvalaward">Approval Award Students</NavLink>
+                                    <NavLink className={'block p-2'} style={navLinkStyles} to="/admin/approvalaward">Approval Award Students</NavLink>
                                 </div>)
                             }
                         </button>
