@@ -2,20 +2,20 @@ import React from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function DeleteStudent({ onClose, studentData, onStudentDeleted }) {
+function DeleteStudent({ onClose, studentData, courseID, onStudentDeleted }) {
     const handleDelete = async () => {
-        console.log(studentData.id);
         try {
-            const response = await axios.put(
-                `http://localhost:8080/v1/api/student/delete-student/${studentData.id}`
+            const response = await axios.delete(
+                `http://localhost:8080/v1/api/enrollment/${courseID}`,
+                {
+                    data: { studentID: studentData.id },
+                }
             );
             toast.success("Student deleted successfully!");
-            console.log("Student deleted successfully:", response.data);
             if (onStudentDeleted) {
                 onStudentDeleted();
             }
             onClose();
-            
         } catch (error) {
             toast.error("Failed to delete student.");
             console.error("Error deleting student:", error);
@@ -27,8 +27,8 @@ function DeleteStudent({ onClose, studentData, onStudentDeleted }) {
             <div className="flex flex-col w-[50vw] h-auto bg-gray-200 p-6 rounded">
                 <h2 className="flex w-full justify-center text-3xl font-bold mb-4">Xóa sinh viên</h2>
                 <h2 className="flex w-full justify-center text-xl mb-4 text-red-500">
-                    Bạn có chắc muốn xóa sinh viên <strong className="ml-1"> {studentData.id}</strong> ?
-                </h2> 
+                    Bạn có chắc muốn xóa sinh viên <strong className="ml-1 mr-1">{studentData.fullName}</strong> khỏi lớp <strong className="ml-1">{courseID}</strong>?
+                </h2>
 
                 {/* Display student details */}
                 <div className="bg-white p-4 rounded shadow-md mb-6">

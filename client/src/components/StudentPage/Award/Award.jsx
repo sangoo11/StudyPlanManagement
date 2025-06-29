@@ -104,7 +104,6 @@ function Award() {
                             <tr>
                                 <th className="p-3 border">Mã giải thưởng</th>
                                 <th className="p-3 border">Loại</th>
-                                <th className="p-3 border">Mô tả</th>
                                 <th className="p-3 border">Ngày nhận</th>
                                 <th className="p-3 border">Trạng thái</th>
                                 <th className="p-3 border">Lý do không hợp lệ</th>
@@ -116,7 +115,6 @@ function Award() {
                                 <tr key={award.id} className="border-t hover:bg-gray-50">
                                     <td className="p-3 border">{award.awardNumber}</td>
                                     <td className="p-3 border">{getAwardTypeTitle(award.awardTypeID) || 'Không rõ'}</td>
-                                    <td className="p-3 border">{award.description}</td>
                                     <td className="p-3 border">{award.receivedAt ? new Date(award.receivedAt).toLocaleDateString() : ''}</td>
                                     <td className="p-3 border">
                                         <span

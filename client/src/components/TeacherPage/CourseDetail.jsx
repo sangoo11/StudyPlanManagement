@@ -21,6 +21,40 @@ function CourseDetail() {
         editPoint: { visible: false, studentId: null },
     });
 
+    const refetchStudentsAndScores = useCallback(async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/v1/api/course/get-student-course/${courseID}`);
+            setStudentArray(response.data.metadata);
+        } catch (error) {
+            console.error(error.response?.data?.message || error.message);
+        }
+    }, [courseID]);
+
+    // Fetch students by course
+    useEffect(() => {
+        refetchStudentsAndScores();
+    }, [refetchStudentsAndScores]);
+
+    // Fetch scores for each student
+    useEffect(() => {
+        const fetchStudentScores = async () => {
+            const updatedScores = {};
+            for (const student of studentArray) {
+                try {
+                    const response = await axios.get(`http://localhost:8080/v1/api/score/${student.id}`);
+                    updatedScores[student.id] = response.data.metadata;
+                } catch (error) {
+                    console.error(`Error fetching score for student ${student.id}`, error.message);
+                    updatedScores[student.id] = null;
+                }
+            }
+            setStudentScores(updatedScores);
+        };
+        if (studentArray.length > 0) {
+            fetchStudentScores();
+        }
+    }, [studentArray]);
+
     // Fetch course details
     useEffect(() => {
         const getCourseById = async () => {
@@ -125,7 +159,7 @@ function CourseDetail() {
                                                         const labelMap = {
                                                             final: 'Điểm cuối kì',
                                                             midterm: 'Điểm giữa kì',
-                                                            progress: 'Điểm thường kì',
+                                                            progress: 'Điểm quá trình',
                                                         };
                                                     
                                                         return (
@@ -171,9 +205,10 @@ function CourseDetail() {
             {modals.editPoint.visible && (
                 <EditPoint
                     studentId={modals.editPoint.studentId}
-                    onClose={() =>
-                        setModals(prev => ({ ...prev, editPoint: { visible: false, studentId: null } }))
-                    }
+                    onClose={() => {
+                        setModals(prev => ({ ...prev, editPoint: { visible: false, studentId: null } }));
+                        refetchStudentsAndScores(); // Refetch after closing EditPoint
+                    }}
                 />
             )}
         </div>

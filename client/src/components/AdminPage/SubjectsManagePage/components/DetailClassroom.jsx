@@ -7,6 +7,7 @@ import ReturnIcon from '../../../../assets/images/returnIcon.png';
 import SearchIcon from '../../../../assets/images/searchIcon.png';
 import EditClassroom from './EditClassroom';
 import AddStudent from './AddStudent';
+import DeleteStudent from './DeleteStudent';
 
 function DetailClassroom() {
     const { courseID } = useParams();
@@ -18,7 +19,11 @@ function DetailClassroom() {
     const [teachers, setTeachers] = useState([]);
     const [modals, setModals] = useState({
         editClassroom: { visible: false, courseId: null },
-        addStudent: { visible: false, courseId: null},
+        addStudent: { visible: false, courseId: null },
+    });
+    const [deleteStudentModal, setDeleteStudentModal] = useState({
+        visible: false,
+        student: null,
     });
 
     const toggleClassesVisibility = useCallback((courseId) => {
@@ -28,7 +33,6 @@ function DetailClassroom() {
         }));
     }, []);
 
-    // Use async function inside useEffect
     useEffect(() => {
         const fetchCourseDetails = async () => {
             try {
@@ -72,7 +76,18 @@ function DetailClassroom() {
         fetchCourseDetails();
     }, [courseID]);
 
-    
+    // Refresh students after delete
+    const refreshStudents = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`http://localhost:8080/v1/api/course/get-student-course/${courseID}`);
+            setStudents(response.data.metadata || []);
+        } catch (err) {
+            setError('Failed to fetch students for the course.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 mt-[6vh]">
@@ -87,32 +102,32 @@ function DetailClassroom() {
                 <div className="flex flex-col mb-2 mt-[2vh]">
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Năm học:</label>
-                        <div className='flex w-auto border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md ml-[2vw]'>
+                        <div className='flex w-[10vw] h-[6vh] justify-center border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md ml-[2vw]'>
                             <h2>{courseDetails?.year || 'Loading...'}</h2>
                         </div>
                     </div>
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Học kì:</label>
-                        <div className='flex w-auto border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md ml-[3.2vw]'>
+                        <div className='flex w-[10vw] h-[6vh] justify-center border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md ml-[3.2vw]'>
                             <h2>{courseDetails?.semester || 'Loading...'}</h2>
                         </div>
                     </div>
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Mã lớp:</label>
-                        <div className='flex w-auto border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md ml-[3vw]'>
+                        <div className='flex w-[10vw] h-[6vh] justify-center border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md ml-[2.8vw]'>
                             <h2>{courseDetails?.courseCode || 'Loading...'}</h2>
                         </div>
                     </div>
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Mã giáo viên:</label>
-                        <div className='flex w-auto border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md'>
-                            <h2>{courseDetails?.teacherID || 'Loading...'}</h2>
+                        <div className='flex w-[10vw] h-[6vh] justify-center border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md'>
+                            <h2>{courseDetails?.teacherID || ''}</h2>
                         </div>
                     </div>
                     <div className="flex mb-[1vh] items-center ml-[2vw]">
                         <label className="text-gray-700 font-medium mr-4">Tên giáo viên:</label>
-                        <div className='flex w-auto border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md'>
-                            <h2>{teachers?.fullName || 'Loading...'}</h2>
+                        <div className='flex w-[10vw] h-[6vh] justify-center border-[1px] border-4 bg-white border-bray-400 p-2 rounded-md'>
+                            <h2>{teachers?.fullName || ''}</h2>
                         </div>
                         <div className='flex ml-[2vw]'>
                             <button 
@@ -166,12 +181,13 @@ function DetailClassroom() {
                                         <p><strong>Ngành:</strong> {student.major}</p>
                                         <p><strong>Trạng thái:</strong> {student.status}</p>
                                     </div>
-                                            
                                     {/* Delete button */}
                                     <div className="flex w-8 h-full items-center justify-end mr-[4vw] rounded-full">
                                         <button
                                             className="w-8 h-full text-white rounded-full hover:border-4 hover:border-yellow-400"
-                                            //onClick={() => setDeleteStudentVisible(true)}
+                                            onClick={() =>
+                                                setDeleteStudentModal({ visible: true, student })
+                                            }
                                         >
                                             <img src={minusButton} alt="Delete Student" />
                                         </button>
@@ -181,7 +197,6 @@ function DetailClassroom() {
                         </ul>
                     )}
                 </div>
-
 
                 <div className='flex h-[4vh] w-full items-center justify-end mt-[4vh]'>
                     <button
@@ -209,6 +224,15 @@ function DetailClassroom() {
                     <AddStudent
                         courseId={courseDetails.id}
                         onClose={() => setModals(prev => ({ ...prev, addStudent: { visible: false, courseId: null } }))}
+                    />
+                )}
+
+                {deleteStudentModal.visible && courseDetails && (
+                    <DeleteStudent
+                        onClose={() => setDeleteStudentModal({ visible: false, student: null })}
+                        studentData={deleteStudentModal.student}
+                        courseID={courseDetails.id}
+                        onStudentDeleted={refreshStudents}
                     />
                 )}
             </div>

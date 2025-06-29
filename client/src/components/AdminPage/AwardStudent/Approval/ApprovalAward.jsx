@@ -15,7 +15,9 @@ const ApprovalAward = () => {
   const [selectedAward, setSelectedAward] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [imageModal, setImageModal] = useState({ open: false, src: "" });
+  const [awardTypes, setAwardTypes] = useState([]);
 
+  // Fetch awards
   const fetchAwards = async () => {
     try {
       const res = await axios.get("http://localhost:8080/v1/api/award/");
@@ -25,8 +27,19 @@ const ApprovalAward = () => {
     }
   };
 
+  // Fetch award types
+  const fetchAwardTypes = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/v1/api/award-type/");
+      setAwardTypes(res.data.metadata);
+    } catch (err) {
+      toast.error("Không thể tải loại giải thưởng");
+    }
+  };
+
   useEffect(() => {
     fetchAwards();
+    fetchAwardTypes();
   }, []);
 
   const handleEdit = (award) => {
@@ -60,6 +73,12 @@ const ApprovalAward = () => {
     setImageModal({ open: false, src: "" });
   };
 
+  // Get award type title by id
+  const getAwardTypeTitle = (id) => {
+    const found = awardTypes.find(t => String(t.id) === String(id));
+    return found ? found.title : 'Không rõ';
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Danh sách giải thưởng</h2>
@@ -68,7 +87,7 @@ const ApprovalAward = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-2 px-4 border-b">Mã giải thưởng</th>
-              <th className="py-2 px-4 border-b">Mô tả</th>
+              <th className="py-2 px-4 border-b">Loại</th>
               <th className="py-2 px-4 border-b">Ảnh</th>
               <th className="py-2 px-4 border-b">Ngày nhận</th>
               <th className="py-2 px-4 border-b">Trạng thái</th>
@@ -79,7 +98,7 @@ const ApprovalAward = () => {
             {awards.map((award) => (
               <tr key={award.id} className="hover:bg-gray-50">
                 <td className="py-2 px-4 border-b">{award.awardNumber}</td>
-                <td className="py-2 px-4 border-b">{award.description}</td>
+                <td className="p-3 border">{getAwardTypeTitle(award.awardTypeID)}</td>
                 <td className="py-2 px-4 border-b">
                   <img
                     crossOrigin="anonymous"
