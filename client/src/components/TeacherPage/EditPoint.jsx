@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-function EditCriteria({ onClose, studentId }) {
+function EditPoint({ onClose, studentId }) {
     const accountID = Number(localStorage.getItem("accountID"));
     const { courseID } = useParams();
     const courseId = Number(courseID);
@@ -14,6 +14,7 @@ function EditCriteria({ onClose, studentId }) {
         { scoreType: "midterm", score: "" },
         { scoreType: "final", score: "" }
     ]);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     const scoreTypeMap = {
         progress: "Quá trình",
@@ -55,6 +56,23 @@ function EditCriteria({ onClose, studentId }) {
         fetchStudentData();
     }, [studentId]);
 
+    // Validate the score input
+    const isValidScore = (score) => {
+        const num = parseFloat(score);
+        return !isNaN(num) && num >= 0 && num <= 10;
+    };
+
+    // Check if all 3 scores have data (completed)
+    const checkIfCompleted = (scoresArray) => {
+        return scoresArray.every(score => {
+            const scoreValue = score.score;
+            return scoreValue !== "" && 
+                   scoreValue !== null && 
+                   scoreValue !== undefined &&
+                   isValidScore(scoreValue);
+        });
+    };
+
     // Fetch student scores
     useEffect(() => {
         if (!studentId || !courseId) return;
@@ -64,6 +82,13 @@ function EditCriteria({ onClose, studentId }) {
                     `http://localhost:8080/v1/api/score/${studentId}`,
                     { params: { courseID: courseId } }
                 );
+                
+                const defaultScores = [
+                    { scoreType: "progress", score: "" },
+                    { scoreType: "midterm", score: "" },
+                    { scoreType: "final", score: "" }
+                ];
+
                 if (
                     response.status === 200 &&
                     Array.isArray(response.data.metadata) &&
@@ -72,34 +97,42 @@ function EditCriteria({ onClose, studentId }) {
                     const studentScoreData = response.data.metadata.find(
                         (item) => Number(item.courseID) === Number(courseId)
                     );
-                    // Always show all 3 fields, fill in values from API if available
-                    const defaultScores = [
-                        { scoreType: "progress", score: "" },
-                        { scoreType: "midterm", score: "" },
-                        { scoreType: "final", score: "" }
-                    ];
+                    
+                    let mergedScores = defaultScores;
                     if (studentScoreData && Array.isArray(studentScoreData.scores)) {
-                        const mergedScores = defaultScores.map(def => {
+                        mergedScores = defaultScores.map(def => {
                             const found = studentScoreData.scores.find(s => s.scoreType === def.scoreType);
                             return found
                                 ? { ...def, score: parseFloat(found.score) }
                                 : def;
                         });
-                        setScores(mergedScores);
-                    } else {
-                        setScores(defaultScores);
                     }
+                    
+                    setScores(mergedScores);
+                    
+                    // Chỉ kiểm tra completed khi fetch dữ liệu
+                    const completed = checkIfCompleted(mergedScores);
+                    setIsCompleted(completed);
+                    
+                } else {
+                    // No scores found, reset to default
+                    setScores(defaultScores);
+                    setIsCompleted(false);
                 }
             } catch (error) {
                 console.error("Lỗi khi lấy điểm sinh viên:", error);
+                // Set default scores even if there's an error
+                setScores([
+                    { scoreType: "progress", score: "" },
+                    { scoreType: "midterm", score: "" },
+                    { scoreType: "final", score: "" }
+                ]);
+                setIsCompleted(false);
             }
         };
 
         fetchStudentScores();
     }, [studentId, courseId]);
-
-
-
 
     // Handle input changes for student data
     const handleInputChange = (e) => {
@@ -110,26 +143,42 @@ function EditCriteria({ onClose, studentId }) {
         }));
     };
 
-    // Handle score change
+    // Handle score change - chỉ cập nhật scores, không thay đổi completed status
     const handleScoreChange = (index, e) => {
         const { value } = e.target;
-        setScores((prevScores) =>
-            prevScores.map((score, i) =>
-                i === index ? { ...score, score: value } : score
-            )
+        const newScores = scores.map((score, i) =>
+            i === index ? { ...score, score: value } : score
         );
+        setScores(newScores);
     };
 
-    // Validate the score input
-    const isValidScore = (score) => {
-        const num = parseFloat(score);
-        return !isNaN(num) && num >= 0 && num <= 10;
+    // Check if we can submit - có ít nhất 1 điểm hợp lệ
+    const canSubmit = () => {
+        if (isCompleted) return false; // Không cho submit nếu đã hoàn thành
+        
+        const filledScores = scores.filter(score => 
+            score.score !== "" && 
+            score.score !== null && 
+            score.score !== undefined
+        );
+        
+        // Phải có ít nhất 1 điểm và tất cả điểm đã điền phải hợp lệ
+        return filledScores.length > 0 && filledScores.every(score => isValidScore(score.score));
     };
 
     // Handle form submission
     const handleSubmit = async () => {
+        if (isCompleted) {
+            alert("Đã hoàn thành chấm điểm cho sinh viên này!");
+            return;
+        }
+
         // Only validate and submit scores that are not empty
-        const filledScores = scores.filter(score => score.score !== "" && score.score !== null && score.score !== undefined);
+        const filledScores = scores.filter(score => 
+            score.score !== "" && 
+            score.score !== null && 
+            score.score !== undefined
+        );
 
         if (filledScores.length === 0) {
             alert("Vui lòng nhập ít nhất một loại điểm!");
@@ -159,11 +208,16 @@ function EditCriteria({ onClose, studentId }) {
             );
             if (response.status === 201) {
                 alert("Cập nhật điểm thành công!");
+                
+                // Kiểm tra xem sau khi submit có đủ 3 loại điểm không
+                const updatedCompleted = checkIfCompleted(scores);
+                setIsCompleted(updatedCompleted);
+                
                 onClose();
             }
         } catch (error) {
             console.error("Error saving score data:", error);
-            alert("Error saving score data. Please try again.");
+            alert("Có lỗi xảy ra khi lưu điểm. Vui lòng thử lại!");
         }
     };
 
@@ -230,14 +284,33 @@ function EditCriteria({ onClose, studentId }) {
                                             type="number"
                                             value={score.score}
                                             onChange={(e) => handleScoreChange(index, e)}
-                                            className="border-none outline-none rounded w-full items-center pb-2"
-                                            placeholder={`Điểm ${scoreTypeMap[score.scoreType] || score.scoreType}`}
+                                            className={`border-none outline-none rounded w-full items-center pb-2 text-center ${
+                                                isCompleted ? 'bg-gray-100 cursor-not-allowed text-gray-500' : 'bg-white'
+                                            }`}
+                                            placeholder={`Nhập điểm ${scoreTypeMap[score.scoreType]}`}
+                                            disabled={isCompleted}
+                                            min="0"
+                                            max="10"
+                                            step="0.1"
                                         />
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    
+                    {/* Hiển thị trạng thái */}
+                    {isCompleted && (
+                        <div className="text-green-600 text-center mt-4 font-semibold text-lg">
+                            ✓ Đã hoàn thành chấm điểm (3/3 loại điểm)
+                        </div>
+                    )}
+                    
+                    {!isCompleted && (
+                        <div className="text-blue-600 text-center mt-4 font-medium">
+                            Bạn có thể nhập 1, 2 hoặc cả 3 loại điểm
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex space-x-4 justify-end">
@@ -251,9 +324,14 @@ function EditCriteria({ onClose, studentId }) {
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="px-6 py-2 bg-[#1DA599] text-white font-bold rounded hover:bg-green-400"
+                        className={`px-6 py-2 font-bold rounded transition-colors ${
+                            !canSubmit() || isCompleted
+                                ? "bg-gray-400 text-gray-600 cursor-not-allowed" 
+                                : "bg-[#1DA599] text-white hover:bg-green-600"
+                        }`}
+                        disabled={!canSubmit() || isCompleted}
                     >
-                        Xác nhận
+                        {isCompleted ? "Đã hoàn thành" : "Xác nhận"}
                     </button>
                 </div>
             </div>
@@ -261,4 +339,4 @@ function EditCriteria({ onClose, studentId }) {
     );
 }
 
-export default EditCriteria;
+export default EditPoint;

@@ -90,18 +90,7 @@ function SubjectManagement() {
             </h1>
 
             <div className="flex items-center justify-between mb-4">
-                {/* <div className="flex">
-                    <label className="text-gray-700 font-medium mr-4 mt-2">Chuyên ngành:</label>
-                    <select
-                        className="px-4 py-2 border rounded-md bg-white"
-                        value={selectedMajor}
-                        onChange={(e) => setSelectedMajor(e.target.value)}
-                    >
-                        <option value="Công nghệ phần mềm">Công nghệ phần mềm</option>
-                        <option value="Khoa học máy tính">Khoa học máy tính</option>
-                        <option value="Hệ thống thông tin">Hệ thống thông tin</option>
-                    </select>
-                </div> */}
+
                 <button
                     className="w-10 h-10 bg-[#1DA599] text-white rounded-full"
                     onClick={() => setModals((prev) => ({ ...prev, addSubject: true }))}

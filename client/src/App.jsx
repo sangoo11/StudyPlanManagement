@@ -105,6 +105,7 @@ import EditPoint from './components/TeacherPage/EditPoint';
 import TeacherAccount from './components/TeacherPage/TeacherAccount';
 import CodeVerifyPage from './components/CodeVerifyPage/CodeVerifyPage';
 import ForgotPasswordPage from './components/ForgotPasswordPage/ForgotPasswordPage';
+import StudentGraduate from './components/StudentPage/Graduate/Graduate';
 
 function App() {
     const isLoggedIn = localStorage.getItem('loggedIn');
@@ -139,6 +140,7 @@ function App() {
                     <Route path='student/account/:accountID' element={<AccountPage />} />
                     <Route path='student/domainfield' element={<StudentDomainField />} />
                     <Route path='student/certificate' element={<StudentCertificate />} />
+                    <Route path='student/graduate' element={<StudentGraduate />} />
                 </Route>
 
                 <Route element={<TeacherPageLayout />}>
