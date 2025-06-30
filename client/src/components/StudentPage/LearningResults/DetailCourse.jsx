@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const getScoreByType = (scores, type) => {
     const scoreObj = scores?.find((s) => s.scoreType === type);
@@ -19,24 +19,23 @@ const getStatusLabel = (status) => {
 };
 
 const DetailCourse = ({ courses, onClose }) => {
-    if (!courses || courses.length === 0) {
-        return (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-                <div className="bg-white rounded-lg p-6 min-w-[350px]">
-                    <h2 className="text-xl font-semibold mb-4">Chi tiết lớp học</h2>
-                    <p>Không có dữ liệu lớp học.</p>
-                    <button
-                        className="mt-4 px-4 py-2 bg-[#1DA599] text-white rounded hover:bg-[#17897d]"
-                        onClick={onClose}
-                    >
-                        Đóng
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    const [learningOutcomes, setLearningOutcomes] = useState([]);
 
     const subject = courses[0]?.Course?.Subject;
+
+    useEffect(() => {
+        if (subject?.id) {
+            fetch(`http://localhost:8080/v1/api/learning-outcome/get-all-learning-outcome/${subject.id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data?.metadata) setLearningOutcomes(data.metadata);
+                })
+                .catch(() => setLearningOutcomes([]));
+        }
+    }, [subject?.id]);
+
+    // Determine if the student passed this subject
+    const isPassed = courses.some((item) => item.status === 'pass');
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
@@ -79,6 +78,36 @@ const DetailCourse = ({ courses, onClose }) => {
                                     <td className="px-3 py-2 border-b">{getStatusLabel(item.status)}</td>
                                 </tr>
                             ))}
+                        </tbody>
+                    </table>
+                </div>
+                {/* New Table for Learning Outcomes */}
+                <div className="overflow-x-auto mt-6">
+                    <h3 className="text-lg font-semibold mb-2 text-[#1DA599]">Chuẩn đầu ra môn học</h3>
+                    <table className="table-auto w-full border border-gray-200">
+                        <thead className="bg-[#1DA599] text-white">
+                            <tr>
+                                <th className="px-3 py-2 text-left">Mã tiêu chuẩn</th>
+                                <th className="px-3 py-2 text-left">Mức độ</th>
+                                <th className="px-3 py-2 text-left">Mức độ đạt được</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {learningOutcomes.length === 0 ? (
+                                <tr>
+                                    <td colSpan={3} className="px-3 py-2 text-center text-gray-500">Không có dữ liệu</td>
+                                </tr>
+                            ) : (
+                                learningOutcomes.map((outcome, idx) => (
+                                    <tr key={outcome.learningOutcomeID || idx} className="hover:bg-gray-50">
+                                        <td className="px-3 py-2 border-b">{outcome.learningOutcomeID || 'N/A'}</td>
+                                        <td className="px-3 py-2 border-b">{outcome.level || 'N/A'}</td>
+                                        <td className="px-3 py-2 border-b">
+                                            {isPassed ? (outcome.level || 'N/A') : 'N/A'}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
