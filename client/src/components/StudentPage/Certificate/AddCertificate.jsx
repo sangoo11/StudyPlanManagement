@@ -85,11 +85,22 @@ function AddCertificate({ onClose, onAdded }) {
     }
   };
 
+  // Validate expiredAt >= takenAt
+  const isDateValid =
+    !formData.takenAt ||
+    !formData.expiredAt ||
+    new Date(formData.expiredAt) >= new Date(formData.takenAt);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!studentID) {
       toast.warning("Không thể gửi vì thiếu studentID.");
+      return;
+    }
+
+    if (!isDateValid) {
+      toast.error("Ngày hết hạn phải lớn hơn hoặc bằng ngày có hiệu lực.");
       return;
     }
 
@@ -126,7 +137,8 @@ function AddCertificate({ onClose, onAdded }) {
     formData.takenAt &&
     formData.expiredAt &&
     formData.image &&
-    studentID;
+    studentID &&
+    isDateValid;
 
   return (
     <>
@@ -168,6 +180,7 @@ function AddCertificate({ onClose, onAdded }) {
               onChange={handleChange}
               required
             />
+            <label className="block font-semibold">Ngày có hiệu lực</label>
             <input
               type="date"
               name="takenAt"
@@ -176,6 +189,7 @@ function AddCertificate({ onClose, onAdded }) {
               onChange={handleChange}
               required
             />
+            <label className="block font-semibold">Ngày hết hạn</label>
             <input
               type="date"
               name="expiredAt"
@@ -183,7 +197,13 @@ function AddCertificate({ onClose, onAdded }) {
               value={formData.expiredAt}
               onChange={handleChange}
               required
+              min={formData.takenAt || undefined}
             />
+            {!isDateValid && (
+              <div className="text-red-600 text-sm">
+                Ngày hết hạn phải lớn hơn hoặc bằng ngày có hiệu lực.
+              </div>
+            )}
             <input
               type="file"
               name="image"

@@ -101,8 +101,19 @@ function EditCertificate({ id, onClose, onEdited }) {
     }
   };
 
+  // Validate expiredAt >= takenAt
+  const isDateValid =
+    !form.takenAt ||
+    !form.expiredAt ||
+    new Date(form.expiredAt) >= new Date(form.takenAt);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isDateValid) {
+      toast.error("Ngày hết hạn phải lớn hơn hoặc bằng ngày có hiệu lực.");
+      return;
+    }
 
     try {
       const data = new FormData();
@@ -189,7 +200,7 @@ function EditCertificate({ id, onClose, onEdited }) {
             className="w-full p-2 border rounded"
           />
 
-          <label className="block font-semibold">Ngày cấp</label>
+          <label className="block font-semibold">Ngày có hiệu lực</label>
           <input
             type="date"
             name="takenAt"
@@ -207,7 +218,13 @@ function EditCertificate({ id, onClose, onEdited }) {
             onChange={handleChange}
             required
             className="w-full p-2 border rounded"
+            min={form.takenAt || undefined}
           />
+          {!isDateValid && (
+            <div className="text-red-600 text-sm">
+              Ngày hết hạn phải lớn hơn hoặc bằng ngày có hiệu lực.
+            </div>
+          )}
 
           <label className="block font-semibold">Trạng thái</label>
           <select
@@ -280,6 +297,7 @@ function EditCertificate({ id, onClose, onEdited }) {
             <button
               type="submit"
               className="px-4 py-2 bg-[#1DA599] text-white rounded hover:bg-[#178a7d]"
+              disabled={!isDateValid}
             >
               Lưu
             </button>

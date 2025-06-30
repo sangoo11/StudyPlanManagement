@@ -236,7 +236,7 @@ function OutputCriteriaManagePage() {
           >
             {/* Header */}
             <header className="flex justify-between items-center p-4 bg-[#f9f9f9] border-b border-gray-200">
-              <h2 className={`text-xl font-semibold ${outcome.active ? 'text-green-500' : 'text-red-500'}`}>
+              <h2 className={`text-xl font-semibold ${outcome.active ? 'text-black' : 'text-red-500'}`}>
                 {outcome.learningOutcomeCode}: {outcome.learningOutcomeName}
               </h2>
               <div className="flex items-center space-x-2">
