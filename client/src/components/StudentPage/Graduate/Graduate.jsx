@@ -7,6 +7,7 @@ function Graduate() {
     const [error, setError] = useState("");
     const [studentID, setStudentID] = useState(null);
 
+
     useEffect(() => {
         const fetchStudentID = async () => {
             try {
@@ -70,6 +71,7 @@ function Graduate() {
                             <tr>
                                 <th className="p-3 border text-left">Tiêu chí</th>
                                 <th className="p-3 border text-left">Trạng thái</th>
+                                <th className="p-3 border text-left">Điều kiện</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,30 +80,35 @@ function Graduate() {
                                 <td className={`p-3 border ${statusColor(data.metadata.result.minCredit)}`}>
                                     {statusText(data.metadata.result.minCredit)}
                                 </td>
+                                <td className='p-3 borderborder'>Tối thiểu 130 tín chỉ</td>
                             </tr>
                             <tr className="border-t hover:bg-gray-50">
                                 <td className="p-3 border">Ngoại ngữ</td>
                                 <td className={`p-3 border ${statusColor(data.metadata.result.foreignLanguage)}`}>
                                     {statusText(data.metadata.result.foreignLanguage)}
                                 </td>
+                                <td className='p-3 borderborder'>Cần ít nhất 1 chứng chỉ ngoại ngữ</td>
                             </tr>
                             <tr className="border-t hover:bg-gray-50">
                                 <td className="p-3 border">Chứng chỉ GDANQP</td>
                                 <td className={`p-3 border ${statusColor(data.metadata.result.GDANQPCertificate)}`}>
                                     {statusText(data.metadata.result.GDANQPCertificate)}
                                 </td>
+                                <td className='p-3 borderborder'>Cần nộp chứng chỉ GDAN&QP</td>
                             </tr>
                             <tr className="border-t hover:bg-gray-50">
                                 <td className="p-3 border">Hoàn thành tất cả học phần</td>
                                 <td className={`p-3 border ${statusColor(data.metadata.result.allCoursesCompleted)}`}>
                                     {statusText(data.metadata.result.allCoursesCompleted, "Đã hoàn thành", "Chưa hoàn thành")}
                                 </td>
+                                <td className='p-3 borderborder'>Không có học phần nào đang học</td>
                             </tr>
                             <tr className="border-t hover:bg-gray-50">
                                 <td className="p-3 border">Đậu tất cả môn học</td>
                                 <td className={`p-3 border ${statusColor(data.metadata.result.allSubjectsPassed)}`}>
                                     {statusText(data.metadata.result.allSubjectsPassed, "Đã đậu", "Chưa đậu")}
                                 </td>
+                                <td className='p-3 borderborder'>Không có học phần nào không đạt</td>
                             </tr>
                         </tbody>
                     </table>

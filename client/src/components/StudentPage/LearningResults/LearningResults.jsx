@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DetailCourse from './DetailCourse';
 import LearningOutcomeSubjectsModal from './DetailLO';
+import ExportPoint from './ExportPoint';
+import ExportPointPdf from './ExportPointPdf';
 
 
 const StudentLearningResults = () => {
@@ -13,6 +15,7 @@ const StudentLearningResults = () => {
     const [loModalOpen, setLoModalOpen] = useState(false);
     const [loSubjects, setLoSubjects] = useState([]);
     const [loModalTitle, setLoModalTitle] = useState('');
+
 
     useEffect(() => {
         const getStudentData = async () => {
@@ -111,7 +114,7 @@ const StudentLearningResults = () => {
                 <h1 className='text-4xl font-semibold text-center text-[#1DA599] pb-8'>KẾT QUẢ HỌC TẬP</h1>
 
                 {/* Score Table */}
-                <div className='overflow-x-auto mb-12'>
+                <div className='overflow-x-auto mb-8'>
                     {scoreTable.length > 0 ? (
                         <table className='table-auto w-full border border-gray-200'>
                             <thead className='bg-[#1DA599] text-white'>
@@ -160,6 +163,11 @@ const StudentLearningResults = () => {
                     ) : (
                         <p className='text-center text-gray-500 mt-4'>No score data available.</p>
                     )}
+                </div>
+
+                <div className='flex gap-4 items-center justify-center'>
+                    <ExportPoint scores={scoreTable} />
+                    <ExportPointPdf scores={scoreTable} />
                 </div>
 
                 <h1 className='text-4xl font-semibold text-center text-[#1DA599] pb-8'>TIÊU CHUẨN ĐẦU RA</h1>

@@ -54,7 +54,7 @@ const SignInScreen = () => {
                 console.log(decoded.accountableType);
                 navigate('/teacher');
             } else if (decoded.accountableType === 'admin') {
-                navigate('/admin');
+                navigate('/admin/statistics');
             } else {
                 navigate('/student');
             }

@@ -164,11 +164,11 @@ function LearningOutcome() {
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Page Title & Search */}
       <header className="flex flex-col items-center justify-center mt-[8vh] mb-4">
-        <h1 className="text-3xl font-bold text-[#1DA599] mb-4 text-center">
+        <h1 className="text-3xl font-bold text-[#1DA599] text-center">
           Tiêu chuẩn đầu ra
         </h1>
         <div className="w-full flex flex-col items-center relative">
-          <div className="flex w-full justify-center items-center mt-[9vh]">
+          <div className="flex w-full justify-center items-center mt-8">
             <input
               type="text"
               className="border border-gray-300 rounded px-3 py-2 w-[30vw] mr-2"
@@ -189,6 +189,7 @@ function LearningOutcome() {
             >
               Thu gọn
             </button>
+            <a target="_blank" className="ml-4" href="https://daa.uit.edu.vn/danh-muc-mon-hoc-dai-hoc">View all subject</a>
           </div>
           {/* Recommendations dropdown */}
           {recommendations.length > 0 && (
@@ -218,9 +219,8 @@ function LearningOutcome() {
           <div
             key={outcome.id}
             ref={(el) => (outcomeRefs.current[outcome.id] = el)}
-            className={`flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden transition-all duration-300 ${
-              highlightedOutcomeIds.includes(outcome.id) ? "ring-4 ring-yellow-400" : ""
-            }`}
+            className={`flex flex-col bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden transition-all duration-300 ${highlightedOutcomeIds.includes(outcome.id) ? "ring-4 ring-yellow-400" : ""
+              }`}
           >
             {/* Header */}
             <header className="flex justify-between items-center p-4 bg-[#f9f9f9] border-b border-gray-200">
