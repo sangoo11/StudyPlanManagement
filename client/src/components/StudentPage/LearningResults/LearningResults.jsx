@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import DetailPoint from './DetailPoint';
+import DetailCourse from './DetailCourse';
 import LearningOutcomeSubjectsModal from './DetailLO';
 
 
@@ -198,7 +198,7 @@ const StudentLearningResults = () => {
 
                 {/* Modal for course details */}
                 {modalOpen && (
-                    <DetailPoint
+                    <DetailCourse
                         courses={selectedSubjectCourses}
                         onClose={() => setModalOpen(false)}
                     />
